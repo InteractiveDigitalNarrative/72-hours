@@ -42,6 +42,16 @@ VAR heard_broadcast = false
   Storm arrives at 22:00.
 
 * [Continue]
+     -> emergency_broadcast
+
+=== emergency_broadcast ===
+# CLEAR
+# RADIO_BROADCAST
+~ heard_broadcast = true
+
+The broadcast switches to emergency information...
+
+* [Continue]
      -> living_room
 
 
@@ -129,11 +139,8 @@ You mentally go through what needs to be done...
 
   + {not has_radio} [📻 Find the battery-powered radio]
       ~ has_radio = true
-      ~ has_emergency_numbers = true
-      ~ heard_broadcast = true
       ~ action_slots_used++
-      You dig through the closet and find the old radio. You test it. Static, then a station comes through...
-      # RADIO_BROADCAST
+      You dig through the closet and find the old radio. Batteries are low, but it works. This will be your connection to the outside world if the power goes out.
       -> next_action
 
   + {not has_emergency_numbers} [📝 Write down emergency numbers]
@@ -282,6 +289,9 @@ What number do you dial?
 {call_outcome == "help_success":
     -> ending_good
 }
+{call_outcome == "help_partial":
+    -> ending_partial
+}
 {call_outcome == "help_delayed":
     -> ending_delayed
 }
@@ -297,17 +307,32 @@ What number do you dial?
 === ending_good ===
 #CLEAR
 
-Within the hour, a rescue coordination vehicle arrives.
+Within the hour, a medical team arrives.
 
-The paramedics check on grandmother. "She'll be fine," they say. "You did the right thing calling the right number."
+They check on grandmother thoroughly. "She's dehydrated but stable," they say. "You did exactly the right thing calling the health advice line."
 
-As they help her to the vehicle, you feel a sense of relief.
+As they help stabilize her, you feel a sense of relief.
 
 You were prepared. You paid attention. And when it mattered, you knew exactly what to do.
 
 <b>THE END</b>
 
-<i>You successfully navigated the crisis by preparing well and remembering the correct emergency number: 1247 for rescue coordination.</i>
+<i>You successfully navigated the crisis by preparing well and remembering the correct number: 1220 for family doctor and health advice.</i>
+
+-> END
+
+=== ending_partial ===
+#CLEAR
+
+Help arrives, though it took a bit longer than necessary.
+
+The rescue team checks on grandmother. "She'll be fine," they say. "Though for medical situations like this, the health advice line 1220 would have been faster. We're mainly handling rescue operations during the storm."
+
+Grandmother is stabilized. You made a reasonable choice, even if not the perfect one.
+
+<b>THE END</b>
+
+<i>You called 1247 (Rescue Coordination) - they helped, but 1220 (Family Doctor / Health Advice) would have been the ideal choice for a medical situation.</i>
 
 -> END
 
@@ -322,7 +347,7 @@ Calling 112 for a non-life-threatening emergency tied up critical resources and 
 
 <b>THE END</b>
 
-<i>Remember: 112 is for life-threatening emergencies only. For rescue coordination and non-emergency assistance, call 1247.</i>
+<i>Remember: 112 is for life-threatening emergencies only. For health advice and non-emergency medical situations, call 1220.</i>
 
 -> END
 
@@ -341,6 +366,7 @@ If only you had known the right number to call...
 
 <i>In an emergency, knowing the right numbers can save lives:
 • 112 - Life-threatening emergencies
+• 1220 - Family doctor / health advice
 • 1247 - Rescue coordination
 • 1343 - Power outage reporting</i>
 

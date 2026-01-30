@@ -206,6 +206,11 @@
   box-shadow: 0 0 40px rgba(45, 143, 45, 0.2);
 }
 
+.call-result.partial {
+  border-color: rgba(100, 149, 237, 0.5);
+  box-shadow: 0 0 40px rgba(100, 149, 237, 0.2);
+}
+
 .call-result.wrong {
   border-color: rgba(255, 165, 0, 0.5);
   box-shadow: 0 0 40px rgba(255, 165, 0, 0.2);

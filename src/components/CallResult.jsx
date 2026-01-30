@@ -18,18 +18,33 @@ You explain grandmother's condition.
 They transfer you, but it takes extra time. Help will arrive, but delayed.`,
       outcome: 'help_delayed'
     },
-    '1247': {
+    '1220': {
       type: 'success',
       icon: '✓',
+      title: 'Family Doctor Advice Line',
+      message: `"Health advice line, how can I help?"
+
+You explain grandmother's condition - weak, dehydrated, needs medical attention but stable.
+
+"You did the right thing calling. Based on what you're describing, she needs fluids and monitoring. I'm connecting you with crisis medical support who can send someone to check on her."
+
+Within the hour, a medical team arrives. They stabilize grandmother and praise your quick thinking.
+
+You called the right number for the right situation.`,
+      outcome: 'help_success'
+    },
+    '1247': {
+      type: 'partial',
+      icon: '◐',
       title: 'Rescue Coordination',
       message: `"Rescue coordination, how can we help?"
 
-You explain grandmother's condition - weak, needs medical attention but stable.
+You explain grandmother's condition.
 
-"We understand. We're dispatching assistance to your location. Keep her warm and hydrated. Help will arrive within the hour."
+"We can dispatch assistance, but for medical advice you should call 1220 - the family doctor line. They can better assess her condition. We'll still send someone, but it may take longer as we're prioritizing rescue operations."
 
-You did the right thing. The correct number for the right situation.`,
-      outcome: 'help_success'
+Help arrives, but a direct call to 1220 would have been faster and more appropriate.`,
+      outcome: 'help_partial'
     },
     '1343': {
       type: 'wrong',
@@ -43,7 +58,7 @@ You did the right thing. The correct number for the right situation.`,
 
 This isn't what you need. You hang up and lose precious time.
 
-You need the rescue coordination number... what was it?`,
+What was the health advice number again?`,
       outcome: 'wrong_number',
       allowRetry: true
     },
@@ -55,9 +70,9 @@ You need the rescue coordination number... what was it?`,
 
 "The number you have dialed is not in service."
 
-You don't know the right number to call. Without the radio broadcast, you never learned the emergency numbers.
+You don't know the right number to call. Without paying attention to the emergency broadcast, you never learned the correct numbers.
 
-You'll have to wait and hope for the best.`,
+You'll have to wait and hope someone comes to check on you.`,
       outcome: 'no_help'
     }
   }

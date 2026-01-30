@@ -171,6 +171,10 @@ function InkStory() {
         if (tag === 'RADIO_BROADCAST') {
           console.log('Showing radio broadcast');
           setShowRadioBroadcast(true);
+          // Stop processing - don't show choices until broadcast is closed
+          setStoryText(lines);
+          setChoices([]); // Hide choices while broadcast is showing
+          return; // Exit early - story will continue after broadcast closes
         }
       }
     }
@@ -259,8 +263,8 @@ function InkStory() {
 
   const handleRadioBroadcastClose = () => {
     setShowRadioBroadcast(false);
-    // Don't call continueStory() - the story has already advanced
-    // The broadcast is just an overlay that doesn't affect story state
+    // Now continue the story to show the next choices
+    continueStory();
   };
 
   // ============================================
@@ -362,13 +366,16 @@ function InkStory() {
               <p>This is an emergency broadcast from the National Crisis Center.</p>
               <p>A severe storm is affecting coastal regions. Power outages have been reported across multiple districts.</p>
               <p className="broadcast-numbers">
-                <strong>If you have a life-threatening emergency, call <span className="number">1-1-2</span></strong>
+                <strong>Life-threatening emergency: <span className="number">1-1-2</span></strong>
               </p>
               <p className="broadcast-numbers">
-                <strong>For rescue coordination and non-emergency assistance, call <span className="number">1-2-4-7</span></strong>
+                <strong>Family doctor / health advice: <span className="number">1-2-2-0</span></strong>
               </p>
               <p className="broadcast-numbers">
-                <strong>To report a power outage, call <span className="number">1-3-4-3</span></strong>
+                <strong>Rescue coordination: <span className="number">1-2-4-7</span></strong>
+              </p>
+              <p className="broadcast-numbers">
+                <strong>Power outage reporting: <span className="number">1-3-4-3</span></strong>
               </p>
               <p>Stay indoors. Conserve phone battery. Check on elderly neighbors if safe to do so.</p>
               <p className="broadcast-static">[STATIC CRACKLE]</p>
