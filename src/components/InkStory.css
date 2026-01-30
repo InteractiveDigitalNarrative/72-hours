@@ -110,13 +110,18 @@
 
 .resource-item {
   font-size: 24px;
-  opacity: 0.3;  /* Dimmed when not collected */
+  opacity: 0.3;  /* Dimmed when not prepared */
   filter: grayscale(100%);
   transition: all 0.3s ease;
 }
 
-.resource-item.collected {
-  opacity: 1;  /* Bright when collected */
+.resource-item.prep-basic {
+  opacity: 0.7;  /* Partially bright for basic preparation */
+  filter: grayscale(30%);
+}
+
+.resource-item.prep-thorough {
+  opacity: 1;  /* Fully bright for thorough preparation */
   filter: grayscale(0%);
 }
 

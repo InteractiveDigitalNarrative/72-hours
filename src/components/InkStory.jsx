@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import './InkStory.css';
 import PhoneKeypad from './PhoneKeypad';
 import CallResult from './CallResult';
+import TimeBar from './TimeBar';
 
 function InkStory() {
   // ============================================
@@ -34,15 +35,18 @@ function InkStory() {
   // Track game variables from Ink
   const [gameVars, setGameVars] = useState({
     temperature: -18,
-    action_slots_used: 0,
-    has_torch: false,
-    has_water: false,
-    has_stove: false,
-    has_firewood: false,
-    has_medication: false,
-    has_radio: false,
-    has_emergency_numbers: false,
-    has_gate_release: false,
+    // Preparation categories (0 = not done, 1 = basic, 2 = thorough)
+    prep_water: 0,
+    prep_food: 0,
+    prep_heat: 0,
+    prep_light: 0,
+    prep_info: 0,
+    prep_medication: 0,
+    // Time tracking
+    current_time: 1200,
+    storm_time: 1320,
+    start_time: 1200,
+    in_preparation: false,
   });
 
   // ============================================
@@ -185,15 +189,18 @@ function InkStory() {
     // Read game variables from Ink
     setGameVars({
       temperature: story.variablesState["temperature"],
-      action_slots_used: story.variablesState["action_slots_used"],
-      has_torch: story.variablesState["has_torch"],
-      has_water: story.variablesState["has_water"],
-      has_stove: story.variablesState["has_stove"],
-      has_firewood: story.variablesState["has_firewood"],
-      has_medication: story.variablesState["has_medication"],
-      has_radio: story.variablesState["has_radio"],
-      has_emergency_numbers: story.variablesState["has_emergency_numbers"],
-      has_gate_release: story.variablesState["has_gate_release"],
+      // Preparation categories
+      prep_water: story.variablesState["prep_water"],
+      prep_food: story.variablesState["prep_food"],
+      prep_heat: story.variablesState["prep_heat"],
+      prep_light: story.variablesState["prep_light"],
+      prep_info: story.variablesState["prep_info"],
+      prep_medication: story.variablesState["prep_medication"],
+      // Time tracking
+      current_time: story.variablesState["current_time"],
+      storm_time: story.variablesState["storm_time"],
+      start_time: story.variablesState["start_time"],
+      in_preparation: story.variablesState["in_preparation"],
     });
 
     // Get current choices from Ink
@@ -272,21 +279,28 @@ function InkStory() {
   // ============================================
 
   // Build inline style for background
-  const containerStyle = background
-    ? { backgroundImage: `url(${background})` }
-    : {};
+  // Add extra padding when time bar is visible
+  const containerStyle = {
+    ...(background ? { backgroundImage: `url(${background})` } : {}),
+    ...(gameVars.in_preparation ? { paddingTop: '140px' } : {}),
+  };
 
-  // List of resources with their icons and labels
-  const resources = [
-    { key: 'has_torch', icon: '🔦', label: 'Torch' },
-    { key: 'has_water', icon: '💧', label: 'Water' },
-    { key: 'has_stove', icon: '🔥', label: 'Stove' },
-    { key: 'has_firewood', icon: '🪵', label: 'Firewood' },
-    { key: 'has_medication', icon: '💊', label: 'Medication' },
-    { key: 'has_radio', icon: '📻', label: 'Radio' },
-    { key: 'has_emergency_numbers', icon: '📝', label: 'Numbers' },
-    { key: 'has_gate_release', icon: '🔧', label: 'Gate' },
+  // List of preparation categories with their icons and labels
+  const categories = [
+    { key: 'prep_water', icon: '💧', label: 'Water' },
+    { key: 'prep_food', icon: '🍞', label: 'Food' },
+    { key: 'prep_heat', icon: '🔥', label: 'Heat' },
+    { key: 'prep_light', icon: '🔦', label: 'Light' },
+    { key: 'prep_info', icon: '📻', label: 'Info' },
+    { key: 'prep_medication', icon: '💊', label: 'Meds' },
   ];
+
+  // Helper to get preparation level class
+  const getPrepClass = (level) => {
+    if (level === 0) return '';
+    if (level === 1) return 'prep-basic';
+    return 'prep-thorough';
+  };
 
   return (
     <div className="ink-story-container" style={containerStyle}>
@@ -296,17 +310,26 @@ function InkStory() {
           🌡️ {gameVars.temperature}°C
         </div>
         <div className="resources">
-          {resources.map((res) => (
+          {categories.map((cat) => (
             <span
-              key={res.key}
-              className={`resource-item ${gameVars[res.key] ? 'collected' : ''}`}
-              title={res.label}
+              key={cat.key}
+              className={`resource-item ${getPrepClass(gameVars[cat.key])}`}
+              title={`${cat.label}: ${gameVars[cat.key] === 0 ? 'Not prepared' : gameVars[cat.key] === 1 ? 'Basic' : 'Thorough'}`}
             >
-              {res.icon}
+              {cat.icon}
             </span>
           ))}
         </div>
       </div>
+
+      {/* Time Bar - visible during preparation phase */}
+      {!!gameVars.in_preparation && (
+        <TimeBar
+          currentTime={gameVars.current_time}
+          stormTime={gameVars.storm_time}
+          startTime={gameVars.start_time}
+        />
+      )}
 
       <div className="story-content">
         {!storyLoaded ? (

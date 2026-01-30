@@ -4,18 +4,19 @@
 // === VARIABLES ===
 VAR temperature = -18
 
-VAR action_slots_used = 0
-VAR action_slots_max = 4
+// Time tracking (in minutes from midnight, so 20:00 = 1200, 22:00 = 1320)
+VAR current_time = 1200
+VAR storm_time = 1320
+VAR start_time = 1200
+VAR in_preparation = false
 
-// Preparation items
-VAR has_torch = false
-VAR has_water = false
-VAR has_stove = false
-VAR has_firewood = false
-VAR has_medication = false
-VAR has_radio = false
-VAR has_emergency_numbers = false
-VAR has_gate_release = false
+// Preparation categories (0 = not done, 1 = basic, 2 = thorough)
+VAR prep_water = 0
+VAR prep_food = 0
+VAR prep_heat = 0
+VAR prep_light = 0
+VAR prep_info = 0
+VAR prep_medication = 0
 
 // Phone call outcome tracking
 VAR call_outcome = ""
@@ -90,90 +91,372 @@ Martin: "Power's going to be out for days.
     -> hurry
 === hurry ===
 #CLEAR
-You realize that you don't have enough time to prepare for everything. You can only choose 3-5 actions at most...
+You realize time is limited. You'll need to prioritize what to prepare before the storm hits...
 * [Start Preparation]
     -> preparation_intro 
 
 === preparation_intro ===
 
 # CLEAR
+~ in_preparation = true
 
-You mentally go through what needs to be done...
+You have about 2 hours before the storm hits. What do you want to prepare?
 
-* [Think of actions]
-    -> preparation_phase
-    
-=== preparation_phase ===
+-> preparation_hub
 
-  Actions Chosen {action_slots_used} of 4
+=== preparation_hub ===
 
-  + {not has_torch} [🔦 Collect batteries for torch]
-      ~ has_torch = true
-      ~ action_slots_used++
-      You check the torch. Fresh batteries. Good.
-      -> next_action
+# CLEAR
 
-  + {not has_water} [💧 Fill bottles with tap water]
-      ~ has_water = true
-      ~ action_slots_used++
-      You fill several bottles. Heavy to carry, but essential.
-      -> next_action
+{
+    - current_time >= storm_time - 10:
+        The wind is picking up. No more time to prepare.
+        -> preparation_complete
+}
 
-  + {not has_stove} [🔥 Check the wood stove works]
-      ~ has_stove = true
-      ~ action_slots_used++
-      The old wood stove in the corner. You haven't used it in years. You check the flue, clear the ash. It works.
-      -> next_action
+What do you want to prepare?
 
-  + {not has_firewood} [🪵 Bring extra firewood inside]
-      ~ has_firewood = true
-      ~ action_slots_used++
-      You haul armload after armload from the shed. Your back protests, but now you have enough for days.
-      -> next_action
++ [💧 Water{prep_water: ✓}]
+    -> category_water
 
-  + {not has_medication} [💊 Check you have grandmother's medication supply]
-      ~ has_medication = true
-      ~ action_slots_used++
-      You check Helgi's medication. Five days left. That should be enough... you hope.
-      -> next_action
++ [🍞 Food{prep_food: ✓}]
+    -> category_food
 
-  + {not has_radio} [📻 Find the battery-powered radio]
-      ~ has_radio = true
-      ~ action_slots_used++
-      You dig through the closet and find the old radio. Batteries are low, but it works. This will be your connection to the outside world if the power goes out.
-      -> next_action
++ [🔥 Heat{prep_heat: ✓}]
+    -> category_heat
 
-  + {not has_emergency_numbers} [📝 Write down emergency numbers]
-      ~ has_emergency_numbers = true
-      ~ action_slots_used++
-      You copy the emergency numbers from the fridge magnet onto paper. Phone batteries don't last forever.
-      -> next_action
++ [🔦 Light{prep_light: ✓}]
+    -> category_light
 
-  + {not has_gate_release} [🔧 Check the manual release on the front gate]
-      ~ has_gate_release = true
-      ~ action_slots_used++
-      The electric gate won't work without power. You test the manual release mechanism. Stiff, but functional.
-      -> next_action
++ [📻 Information{prep_info: ✓}]
+    -> category_info
 
-  === next_action ===
++ [💊 Medication{prep_medication: ✓}]
+    -> category_medication
 
-  {action_slots_used < 4:
-      -> preparation_phase
-  - else:                                                        
-      * [Continue]                                               
-          -> preparation_complete
-  }
++ [Done preparing - wait for storm]
+    -> preparation_complete
+
+
+// ============================================
+// WATER CATEGORY
+// ============================================
+=== category_water ===
+# CLEAR
+
+You're in the kitchen, looking at the tap.
+
+{
+    - prep_water == 0:
+        The water is still running, but if the power goes out, the electric pump won't work.
+    - prep_water == 1:
+        You've filled a couple of bottles. Is that enough?
+    - else:
+        You've filled plenty of containers. You should be good for days.
+}
+
++ {prep_water == 0} [Fill 2 bottles (10 min)]
+    ~ prep_water = 1
+    ~ current_time = current_time + 10
+    -> water_result_basic
+
++ {prep_water < 2} [Fill many containers (25 min)]
+    ~ prep_water = 2
+    ~ current_time = current_time + 25
+    -> water_result_thorough
+
++ [← Back]
+    -> preparation_hub
+
+=== water_result_basic ===
+# CLEAR
+
+You fill two large bottles. Quick and easy.
+
+The water sloshes as you set them aside. It's something, but will it be enough for days?
+
++ [← Back to preparation]
+    -> preparation_hub
+
+=== water_result_thorough ===
+# CLEAR
+
+You find every container you can - bottles, pots, even the bathtub.
+
+Heavy work, but now you have water for days. Your arms ache, but it's worth it.
+
++ [← Back to preparation]
+    -> preparation_hub
+
+
+// ============================================
+// FOOD CATEGORY
+// ============================================
+=== category_food ===
+# CLEAR
+
+You're in the kitchen, checking the pantry.
+
+{
+    - prep_food == 0:
+        If the power goes out, the fridge won't work. You need food that doesn't require cooking or refrigeration.
+    - prep_food == 1:
+        You've gathered some basics - bread, crackers, fruit.
+    - else:
+        You've organized a proper supply of long-lasting food.
+}
+
++ {prep_food == 0} [Grab bread and crackers (5 min)]
+    ~ prep_food = 1
+    ~ current_time = current_time + 5
+    -> food_result_basic
+
++ {prep_food < 2} [Organize proper emergency food (20 min)]
+    ~ prep_food = 2
+    ~ current_time = current_time + 20
+    -> food_result_thorough
+
++ [← Back]
+    -> preparation_hub
+
+=== food_result_basic ===
+# CLEAR
+
+You grab bread, crackers, and some fruit. It'll do for a day or two.
+
+You place them on the counter where they're easy to reach in the dark.
+
++ [← Back to preparation]
+    -> preparation_hub
+
+=== food_result_thorough ===
+# CLEAR
+
+You gather canned food, dried goods, nuts, and chocolate. Nothing that needs cooking or refrigeration.
+
+You organize everything in a box - enough for a week if needed. Grandmother always said to be prepared.
+
++ [← Back to preparation]
+    -> preparation_hub
+
+
+// ============================================
+// HEAT CATEGORY
+// ============================================
+=== category_heat ===
+# CLEAR
+
+The old wood stove sits in the corner of the living room.
+
+{
+    - prep_heat == 0:
+        You haven't used it in years. If the heating goes out, it could get dangerously cold.
+    - prep_heat == 1:
+        You've gathered blankets and warm clothes.
+    - else:
+        The wood stove is ready and you have plenty of firewood inside.
+}
+
++ {prep_heat == 0} [Gather blankets and warm clothes (10 min)]
+    ~ prep_heat = 1
+    ~ current_time = current_time + 10
+    -> heat_result_basic
+
++ {prep_heat < 2} [Prepare wood stove and bring firewood (40 min)]
+    ~ prep_heat = 2
+    ~ current_time = current_time + 40
+    -> heat_result_thorough
+
++ [← Back]
+    -> preparation_hub
+
+=== heat_result_basic ===
+# CLEAR
+
+You gather every blanket and warm item you can find.
+
+Wool sweaters, thick socks, grandmother's old quilts. Layering will help if it gets cold.
+
++ [← Back to preparation]
+    -> preparation_hub
+
+=== heat_result_thorough ===
+# CLEAR
+
+You check the stove's flue, clear old ash, and haul armloads of firewood from the shed.
+
+Your back protests with each trip, but now you have enough wood stacked inside to heat the house for days. The stove is ready to light at a moment's notice.
+
++ [← Back to preparation]
+    -> preparation_hub
+
+
+// ============================================
+// LIGHT CATEGORY
+// ============================================
+=== category_light ===
+# CLEAR
+
+You think about light sources.
+
+{
+    - prep_light == 0:
+        Your phone has a flashlight, but the battery won't last forever.
+    - prep_light == 1:
+        You found the flashlight. Batteries seem okay.
+    - else:
+        You have the flashlight with fresh batteries, plus candles and matches.
+}
+
++ {prep_light == 0} [Find the flashlight (10 min)]
+    ~ prep_light = 1
+    ~ current_time = current_time + 10
+    -> light_result_basic
+
++ {prep_light < 2} [Fresh batteries + gather candles (20 min)]
+    ~ prep_light = 2
+    ~ current_time = current_time + 20
+    -> light_result_thorough
+
++ [← Back]
+    -> preparation_hub
+
+=== light_result_basic ===
+# CLEAR
+
+You find the flashlight in the closet. The beam is a bit dim, but it works.
+
+You click it on and off a few times. The batteries might last a night or two.
+
++ [← Back to preparation]
+    -> preparation_hub
+
+=== light_result_thorough ===
+# CLEAR
+
+You replace the flashlight batteries with fresh ones. The beam is bright and strong.
+
+You also gather candles and matches, placing them strategically around the house - living room, kitchen, grandmother's room. You won't be left in the dark.
+
++ [← Back to preparation]
+    -> preparation_hub
+
+
+// ============================================
+// INFORMATION CATEGORY
+// ============================================
+=== category_info ===
+# CLEAR
+
+You need a way to get information if the power goes out.
+
+{
+    - prep_info == 0:
+        Your phone works now, but batteries drain fast. And cell towers might go down.
+    - prep_info == 1:
+        You found the old radio. Batteries are low, but it works.
+    - else:
+        The radio has fresh batteries and you've tested it. You're ready to stay informed.
+}
+
++ {prep_info == 0} [Find the battery radio (15 min)]
+    ~ prep_info = 1
+    ~ current_time = current_time + 15
+    -> info_result_basic
+
++ {prep_info < 2} [Radio with fresh batteries (25 min)]
+    ~ prep_info = 2
+    ~ current_time = current_time + 25
+    -> info_result_thorough
+
++ [← Back]
+    -> preparation_hub
+
+=== info_result_basic ===
+# CLEAR
+
+You dig through the closet and find the old radio.
+
+You turn the dial and hear static, then voices - the emergency broadcast station. Batteries are low, but it works. This could be your lifeline to the outside world.
+
++ [← Back to preparation]
+    -> preparation_hub
+
+=== info_result_thorough ===
+# CLEAR
+
+You find the radio and replace the batteries with fresh ones.
+
+You tune it to the emergency broadcast frequency and test it. Crystal clear. If anything happens, you'll know about it. You set it on the kitchen table, ready to go.
+
++ [← Back to preparation]
+    -> preparation_hub
+
+
+// ============================================
+// MEDICATION CATEGORY
+// ============================================
+=== category_medication ===
+# CLEAR
+
+Grandmother takes blood pressure medication daily.
+
+{
+    - prep_medication == 0:
+        Her pills are on the kitchen counter, but you haven't checked how many are left.
+    - prep_medication == 1:
+        You checked - there's about 5 days worth left.
+    - else:
+        You've checked the supply and organized everything she needs within reach.
+}
+
++ {prep_medication == 0} [Check medication supply (5 min)]
+    ~ prep_medication = 1
+    ~ current_time = current_time + 5
+    -> medication_result_basic
+
++ {prep_medication < 2} [Organize all her medical needs (15 min)]
+    ~ prep_medication = 2
+    ~ current_time = current_time + 15
+    -> medication_result_thorough
+
++ [← Back]
+    -> preparation_hub
+
+=== medication_result_basic ===
+# CLEAR
+
+You count the pills. Five days left. Should be enough... you hope.
+
+You make a mental note of where they are. Grandmother will need them in the morning.
+
++ [← Back to preparation]
+    -> preparation_hub
+
+=== medication_result_thorough ===
+# CLEAR
+
+You check all her medications and organize them by day in a small box.
+
+You place the box with a glass of water by her bed, along with her reading glasses and a small bell she can ring if she needs you in the night. She'll have everything within reach.
+
++ [← Back to preparation]
+    -> preparation_hub
 
 === preparation_complete ===
 
-  # CLEAR
+# CLEAR
+~ in_preparation = false
 
-  You've done what you can. 
+You've done what you can.
 
-  The storm will be here in less than an hour.
+{current_time >= storm_time - 10:
+    The wind is howling outside. The storm is here.
+- else:
+    The storm will arrive soon.
+}
 
-  Time to rest before it hits.
-
+Time to rest before the worst of it hits.
 
 * [Sleep]
     -> blackout
@@ -227,8 +510,8 @@ The power is out.
 
 You make your way through the dark house.
 
-{has_torch:
-    Your torch lights the way. You find grandmother quickly.
+{prep_light >= 1:
+    Your flashlight lights the way. You find grandmother quickly.
 - else:
     You use your phone's flashlight. The battery indicator drops to 47%.
 }
@@ -245,19 +528,23 @@ Grandmother is awake, confused by the darkness.
 
 Hours pass. The storm rages outside.
 
-{has_stove && has_firewood:
+{prep_heat >= 2:
     The wood stove keeps the house warm. Grandmother rests comfortably.
 - else:
-    Without heat, the temperature inside drops steadily. You bundle grandmother in blankets.
+    {prep_heat == 1:
+        The blankets help, but the house is still cold. You huddle together for warmth.
+    - else:
+        Without heat, the temperature inside drops dangerously. You pile every blanket you can find on grandmother.
+    }
 }
 
-{has_water:
+{prep_water >= 1:
     You give her water with her medication.
 - else:
     You realize you have nothing to drink. The taps don't work without the electric pump.
 }
 
-By morning, grandmother's condition has worsened. She's weak, dehydrated, and needs medical attention.
+By morning, grandmother's condition has worsened. She's weak and needs medical attention.
 
 The power is still out. You need to call for help.
 
