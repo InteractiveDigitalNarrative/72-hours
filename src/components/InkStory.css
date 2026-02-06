@@ -34,8 +34,13 @@
   width: 100%;
   max-height: 100%;
   overflow-y: auto;
+  scrollbar-width: none;
   position: relative;  /* Ensures content appears above the dark overlay */
   z-index: 1;
+}
+
+.story-content::-webkit-scrollbar {
+  display: none;
 }
 
 .story-text {
@@ -69,6 +74,10 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+.choice-btn:focus {
+  outline: none;
 }
 
 .choice-btn:hover {

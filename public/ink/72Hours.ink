@@ -43,6 +43,7 @@ VAR food_yogurt = false
 // Shopping list
 VAR shop_water = false
 VAR shop_water_amount = 0
+VAR shop_food = false
 VAR shop_visited = false
 
 // Phone call outcome tracking
@@ -174,7 +175,7 @@ What do you want to prepare?
 + [💊 Medication{prep_medication: ✓}]
     -> category_medication
 
-+ {shop_water && not shop_visited} [🛒 Go to Store]
++ {(shop_water || shop_food) && not shop_visited} [🛒 Go to Store]
     -> go_to_store
 
 + [Done preparing - wait for storm]
@@ -434,12 +435,20 @@ The store is busy — others had the same idea.
     ~ prep_water = 2
 }
 
-You hurry back home with your supplies.
+{shop_food:
+    Now for food. You grab a basket and head to the aisles.
+    + [Start picking food]
+        -> grocery_shopping
+}
 
-<b>Time spent: 35 minutes</b>
+{not shop_food:
+    You hurry back home with your supplies.
 
-+ [← Back to preparation]
-    -> preparation_hub
+    <b>Time spent: 35 minutes</b>
+
+    + [← Back to preparation]
+        -> preparation_hub
+}
 
 
 // ============================================
@@ -456,7 +465,7 @@ You think about food supplies.
     - prep_food == 1:
         You've gathered some basics from the kitchen. It might last a day or two.
     - else:
-        You went to the store and got proper emergency supplies.
+        You've got proper emergency food supplies.
 }
 
 + {prep_food == 0} [Check what's in the kitchen (10 min)]
@@ -464,9 +473,9 @@ You think about food supplies.
     ~ current_time = current_time + 10
     -> food_kitchen_result
 
-+ {prep_food < 2} [Go to the nearby grocery store (35 min)]
-    ~ current_time = current_time + 35
-    -> food_grocery_store
++ {not shop_food} [Add emergency food to shopping list]
+    ~ shop_food = true
+    -> food_added_to_list
 
 + [← Back]
     -> preparation_hub
@@ -480,22 +489,22 @@ There's some bread that will go stale in a day, a few cans of beans, half a pack
 
 Not ideal for an emergency, but it's something. The bread and apples won't last long though...
 
++ {not shop_food} [Add emergency food to shopping list]
+    ~ shop_food = true
+    -> food_added_to_list
+
 + [← Back to preparation]
     -> preparation_hub
 
-// ============================================
-// GROCERY STORE
-// ============================================
-=== food_grocery_store ===
+=== food_added_to_list ===
 # CLEAR
 
-You hurry to the small grocery store down the street.
+You add <b>emergency food</b> to your shopping list.
 
-Other people had the same idea - the shelves are getting emptier. A sign says "CLOSING EARLY - STORM WARNING."
+You'll pick the right items at the store — things that don't need refrigeration or cooking.
 
-You grab a basket. What do you put in it?
-
--> grocery_shopping
++ [← Back to preparation]
+    -> preparation_hub
 
 === grocery_shopping ===
 # CLEAR
@@ -641,10 +650,10 @@ You put it back.
 # CLEAR
 ~ prep_food = 2
 
-You pay quickly and hurry home with your supplies.
+You pay and hurry home with your supplies.
 
 {food_canned || food_crackers || food_nuts || food_energy_bars || food_chocolate || food_longlife_bread:
-    You've got good emergency food - things that don't need refrigeration or cooking.
+    You've got good emergency food — things that don't need refrigeration or cooking.
 - else:
     You didn't grab much useful food. Hopefully what's in the kitchen will be enough...
 }
@@ -655,6 +664,8 @@ You pay quickly and hurry home with your supplies.
 • Nuts, dried fruit, energy bars
 • Chocolate, honey, jam
 • Avoid anything that needs refrigeration or cooking!
+
+<b>Time spent: 35 minutes</b>
 
 + [← Back to preparation]
     -> preparation_hub
