@@ -47,6 +47,19 @@ VAR heard_broadcast = false
 
 
 // === STORY START ===
+-> pen_and_paper
+
+=== pen_and_paper ===
+# CLEAR
+
+<span style="font-size:4rem">✏️</span>
+
+Grab a <b>pen and paper</b> — you'll need to note things down.
+
+* [I'm ready]
+    -> tv_start
+
+=== tv_start ===
 # AUDIOLOOP: ../Sound/wind.wav
 # CLASS: tv-scene
 # BACKGROUND: https://images.unsplash.com/photo-1552858725-2758b5fb1286?w=800
@@ -200,6 +213,8 @@ You live here with grandmother. That's 2 people.
 The storm could last up to 3 days.
 
 How much water do you need in total?
+
+<span class="note-hint">📝 Remember the formula — it could help later.</span>
 
 + [6 liters]
     -> water_calc_wrong_low
@@ -922,6 +937,8 @@ Grandmother needs help. Not a life-threatening emergency, but she needs medical 
 - else:
     You never heard the emergency numbers. You'll have to guess or try to remember what they might be...
 }
+
+<span class="note-hint">📝 Check your notes — which number fits this situation?</span>
 
 What number do you dial?
 

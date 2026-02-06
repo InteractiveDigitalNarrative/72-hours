@@ -270,8 +270,14 @@ function InkStory() {
 
   const handleRadioBroadcastClose = () => {
     setShowRadioBroadcast(false);
-    // Now continue the story to show the next choices
+    // Continue the story, then auto-select the first choice to skip the extra "Continue"
+    const story = storyRef.current;
+    if (!story) return;
     continueStory();
+    if (story.currentChoices.length > 0) {
+      story.ChooseChoiceIndex(0);
+      continueStory();
+    }
   };
 
   // ============================================
@@ -402,6 +408,7 @@ function InkStory() {
               </p>
               <p>Stay indoors. Conserve phone battery. Check on elderly neighbors if safe to do so.</p>
               <p className="broadcast-static">[STATIC CRACKLE]</p>
+              <p className="broadcast-hint">📝 Write these numbers down — you may need them later.</p>
             </div>
             <button className="broadcast-close-btn" onClick={handleRadioBroadcastClose}>
               Continue

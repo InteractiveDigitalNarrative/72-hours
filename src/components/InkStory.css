@@ -2,7 +2,8 @@
 
 .ink-story-container {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background-color: #000;
   background-size: cover;
   background-position: center;
@@ -11,8 +12,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 20px 20px 20px;  /* Extra top padding for resource bar */
+  padding: 80px 20px 70px 20px;  /* Top for resource bar, bottom for time bar */
   position: relative;
+  box-sizing: border-box;
 }
 
 /* Dark overlay on top of background image */
@@ -30,6 +32,8 @@
 .story-content {
   max-width: 800px;
   width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
   position: relative;  /* Ensures content appears above the dark overlay */
   z-index: 1;
 }
@@ -89,6 +93,7 @@
   left: 0;
   width: 100%;
   padding: 15px 30px;
+  box-sizing: border-box;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: space-between;
@@ -106,10 +111,12 @@
 .resources {
   display: flex;
   gap: 15px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .resource-item {
-  font-size: 24px;
+  font-size: 48px;
   opacity: 0.3;  /* Dimmed when not prepared */
   filter: grayscale(100%);
   transition: all 0.3s ease;
@@ -195,6 +202,29 @@
   color: #666;
   font-style: italic;
   text-align: center;
+}
+
+.broadcast-hint {
+  text-align: center;
+  color: #ffcc80;
+  font-style: italic;
+  margin-top: 15px;
+  font-size: 0.9rem;
+  animation: hint-glow 2s ease-in-out infinite;
+}
+
+@keyframes hint-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); text-shadow: 0 0 8px rgba(255, 204, 128, 0.4); }
+}
+
+.note-hint {
+  display: block;
+  color: #ffcc80;
+  font-style: italic;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  animation: hint-glow 2s ease-in-out infinite;
 }
 
 .broadcast-numbers {
