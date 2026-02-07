@@ -451,6 +451,7 @@ This water isn't for drinking — but it's useful for flushing toilets and washi
 // ============================================
 === go_to_store ===
 # CLEAR
+# STORE_SHOPPING
 
 ~ current_time = current_time + 35
 ~ shop_visited = true
@@ -459,42 +460,8 @@ You grab your coat and head to the nearby shop. The wind is already picking up.
 
 The store is busy — others had the same idea.
 
-{shop_water:
-    ~ shop_water_amount = water_target - water_collected
-    {shop_water_amount < 0:
-        ~ shop_water_amount = 0
-    }
-    You grab several large bottles of water — <b>{shop_water_amount} liters</b>.
-    ~ water_collected = water_collected + shop_water_amount
-    ~ prep_water = 2
-}
-
-{shop_batteries:
-    You pick up a pack of fresh batteries — enough for the flashlight and radio.
-    ~ light_batteries = true
-    ~ info_radio_batteries = true
-    {light_flashlight:
-        ~ prep_light = 2
-    }
-    {info_radio:
-        ~ prep_info = 2
-    }
-}
-
-{shop_food:
-    Now for food. You grab a basket and head to the aisles.
-    + [Start picking food]
-        -> grocery_shopping
-}
-
-{not shop_food:
-    You hurry back home with your supplies.
-
-    <b>Time spent: 35 minutes</b>
-
-    + [← Back to preparation]
-        -> preparation_hub
-}
+* [Continue]
+    -> grocery_checkout
 
 
 // ============================================
@@ -552,155 +519,28 @@ You'll pick the right items at the store — things that don't need refrigeratio
 + [← Back to preparation]
     -> preparation_hub
 
-=== grocery_shopping ===
-# CLEAR
-
-<b>Your basket:</b>
-{food_canned: Canned food (meat, fish, vegetables) ✓}
-{food_dried: Dried foods (pasta, rice, cereals) ✓}
-{food_crackers: Crackers and biscuits ✓}
-{food_nuts: Nuts and dried fruit ✓}
-{food_energy_bars: Energy bars ✓}
-{food_chocolate: Chocolate ✓}
-{food_longlife_bread: Long-life bread ✓}
-{food_honey_jam: Honey and jam ✓}
-{food_frozen: Frozen meals ✓}
-{food_fresh_produce: Fresh vegetables ✓}
-{food_milk: Fresh milk ✓}
-{food_yogurt: Yogurt ✓}
-
-+ {not food_canned} [Add canned food (meat, fish, vegetables)]
-    ~ food_canned = true
-    -> grocery_feedback_good
-
-+ {not food_dried} [Add dried foods (pasta, rice, cereals)]
-    ~ food_dried = true
-    -> grocery_feedback_okay
-
-+ {not food_crackers} [Add crackers and biscuits]
-    ~ food_crackers = true
-    -> grocery_feedback_good
-
-+ {not food_nuts} [Add nuts and dried fruit]
-    ~ food_nuts = true
-    -> grocery_feedback_good
-
-+ {not food_energy_bars} [Add energy bars]
-    ~ food_energy_bars = true
-    -> grocery_feedback_good
-
-+ {not food_chocolate} [Add chocolate]
-    ~ food_chocolate = true
-    -> grocery_feedback_good
-
-+ {not food_longlife_bread} [Add long-life bread]
-    ~ food_longlife_bread = true
-    -> grocery_feedback_good
-
-+ {not food_honey_jam} [Add honey and jam]
-    ~ food_honey_jam = true
-    -> grocery_feedback_good
-
-+ {not food_frozen} [Add frozen meals]
-    ~ food_frozen = true
-    -> grocery_feedback_bad_frozen
-
-+ {not food_fresh_produce} [Add fresh vegetables]
-    ~ food_fresh_produce = true
-    -> grocery_feedback_bad_fresh
-
-+ {not food_milk} [Add fresh milk]
-    ~ food_milk = true
-    -> grocery_feedback_bad_milk
-
-+ {not food_yogurt} [Add yogurt]
-    ~ food_yogurt = true
-    -> grocery_feedback_bad_yogurt
-
-+ [Done shopping - head home]
-    -> grocery_checkout
-
-=== grocery_feedback_good ===
-# CLEAR
-
-<b>Good choice!</b>
-
-This doesn't need refrigeration and is ready to eat. Perfect for an emergency.
-
-+ [Continue shopping]
-    -> grocery_shopping
-
-=== grocery_feedback_okay ===
-# CLEAR
-
-<b>Okay choice.</b>
-
-Dried foods last long, but remember - you might not be able to cook pasta or rice without power. Cereals are good though!
-
-+ [Continue shopping]
-    -> grocery_shopping
-
-=== grocery_feedback_bad_frozen ===
-# CLEAR
-
-<b>Not ideal...</b>
-
-Frozen meals will thaw and spoil when the power goes out. They'll only last a few hours.
-
-You put it back on the shelf.
-~ food_frozen = false
-
-+ [Continue shopping]
-    -> grocery_shopping
-
-=== grocery_feedback_bad_fresh ===
-# CLEAR
-
-<b>Not ideal...</b>
-
-Fresh vegetables will wilt and spoil within days without refrigeration. For a 72-hour emergency, they're not the best choice.
-
-You put them back.
-~ food_fresh_produce = false
-
-+ [Continue shopping]
-    -> grocery_shopping
-
-=== grocery_feedback_bad_milk ===
-# CLEAR
-
-<b>Bad choice!</b>
-
-Fresh milk spoils quickly without refrigeration - within hours in a warm house. It could make you sick.
-
-You put it back.
-~ food_milk = false
-
-+ [Continue shopping]
-    -> grocery_shopping
-
-=== grocery_feedback_bad_yogurt ===
-# CLEAR
-
-<b>Bad choice!</b>
-
-Yogurt needs to stay cold. Without power, it will spoil and could cause food poisoning.
-
-You put it back.
-~ food_yogurt = false
-
-+ [Continue shopping]
-    -> grocery_shopping
-
 === grocery_checkout ===
 # CLEAR
-~ prep_food = 2
 
 You pay and hurry home with your supplies.
 
-{food_canned || food_crackers || food_nuts || food_energy_bars || food_chocolate || food_longlife_bread:
-    You've got good emergency food — things that don't need refrigeration or cooking.
-- else:
+{shop_water:
+    You bought <b>{shop_water_amount}L of water</b> — that tops up your supply.
+}
+
+{shop_batteries:
+    You grabbed <b>fresh batteries</b> for the flashlight and radio.
+}
+
+{food_canned || food_crackers || food_nuts || food_energy_bars || food_chocolate || food_longlife_bread || food_honey_jam:
+    <b>Good picks!</b> You chose food that doesn't need refrigeration or cooking — perfect for an emergency.
+}
+
+{food_dried:
+    You grabbed dried foods — pasta and rice last long, but remember you might not be able to cook without power. Cereals are fine though!
+}
+
+{not food_canned && not food_crackers && not food_nuts && not food_energy_bars && not food_chocolate && not food_longlife_bread && not food_honey_jam && not food_dried && shop_food:
     You didn't grab much useful food. Hopefully what's in the kitchen will be enough...
 }
 

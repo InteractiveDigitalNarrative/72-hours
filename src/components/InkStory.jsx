@@ -5,6 +5,7 @@ import './InkStory.css';
 import PhoneKeypad from './PhoneKeypad';
 import CallResult from './CallResult';
 import TimeBar from './TimeBar';
+import StoreOverlay from './StoreOverlay';
 
 function InkStory() {
   // ============================================
@@ -34,6 +35,9 @@ function InkStory() {
 
   // SMS overlay state
   const [showSMS, setShowSMS] = useState(false);
+
+  // Store overlay state
+  const [showStore, setShowStore] = useState(false);
 
   // Track game variables from Ink
   const [gameVars, setGameVars] = useState({
@@ -192,6 +196,15 @@ function InkStory() {
           setChoices([]); // Hide choices while broadcast is showing
           return; // Exit early - story will continue after broadcast closes
         }
+
+        // Check for STORE_SHOPPING tag
+        if (tag === 'STORE_SHOPPING') {
+          console.log('Showing store overlay');
+          setShowStore(true);
+          setStoryText(lines);
+          setChoices([]);
+          return;
+        }
       }
     }
 
@@ -306,6 +319,69 @@ function InkStory() {
     // Continue the story, then auto-select the first choice to skip the extra "Continue"
     const story = storyRef.current;
     if (!story) return;
+    continueStory();
+    if (story.currentChoices.length > 0) {
+      story.ChooseChoiceIndex(0);
+      continueStory();
+    }
+  };
+
+  // ============================================
+  // STORE OVERLAY HANDLER
+  // ============================================
+
+  const handleStoreClose = (basketItems) => {
+    setShowStore(false);
+    const story = storyRef.current;
+    if (!story) return;
+
+    // Set water variables
+    if (story.variablesState["shop_water"]) {
+      let amount = story.variablesState["water_target"] - story.variablesState["water_collected"];
+      if (amount < 0) amount = 0;
+      story.variablesState["water_collected"] = story.variablesState["water_collected"] + amount;
+      story.variablesState["shop_water_amount"] = amount;
+      story.variablesState["prep_water"] = 2;
+    }
+
+    // Set battery variables
+    if (story.variablesState["shop_batteries"]) {
+      story.variablesState["light_batteries"] = true;
+      story.variablesState["info_radio_batteries"] = true;
+      if (story.variablesState["light_flashlight"]) {
+        story.variablesState["prep_light"] = 2;
+      }
+      if (story.variablesState["info_radio"]) {
+        story.variablesState["prep_info"] = 2;
+      }
+    }
+
+    // Set food variables based on basket
+    const foodMap = {
+      canned: 'food_canned',
+      crackers: 'food_crackers',
+      nuts: 'food_nuts',
+      energy_bars: 'food_energy_bars',
+      chocolate: 'food_chocolate',
+      bread: 'food_longlife_bread',
+      honey_jam: 'food_honey_jam',
+      dried: 'food_dried',
+      frozen: 'food_frozen',
+      fresh: 'food_fresh_produce',
+      milk: 'food_milk',
+      yogurt: 'food_yogurt',
+    };
+
+    for (const [basketId, inkVar] of Object.entries(foodMap)) {
+      story.variablesState[inkVar] = basketItems.includes(basketId);
+    }
+
+    // If any food was picked, set prep_food
+    if (story.variablesState["shop_food"]) {
+      story.variablesState["prep_food"] = 2;
+    }
+
+    // Continue the story and auto-select the first choice to proceed to checkout
     continueStory();
     if (story.currentChoices.length > 0) {
       story.ChooseChoiceIndex(0);
@@ -487,6 +563,17 @@ function InkStory() {
             </button>
           </div>
         </div>
+      )}
+
+      {/* Store Overlay */}
+      {showStore && (
+        <StoreOverlay
+          shopWater={gameVars.shop_water}
+          shopFood={gameVars.shop_food}
+          shopBatteries={gameVars.shop_batteries}
+          shopWaterAmount={gameVars.shop_water_amount}
+          onClose={handleStoreClose}
+        />
       )}
     </div>
   );
