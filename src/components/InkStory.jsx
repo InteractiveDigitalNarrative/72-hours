@@ -6,8 +6,9 @@ import PhoneKeypad from './PhoneKeypad';
 import CallResult from './CallResult';
 import TimeBar from './TimeBar';
 import StoreOverlay from './StoreOverlay';
+import EndingScreen from './EndingScreen';
 
-function InkStory() {
+function InkStory({ onReturnToMenu }) {
   // ============================================
   // STATE MANAGEMENT
   // ============================================
@@ -38,6 +39,9 @@ function InkStory() {
 
   // Store overlay state
   const [showStore, setShowStore] = useState(false);
+
+  // Ending screen state
+  const [showEndingScreen, setShowEndingScreen] = useState(false);
 
   // Track game variables from Ink
   const [gameVars, setGameVars] = useState({
@@ -205,6 +209,15 @@ function InkStory() {
           setChoices([]);
           return;
         }
+
+        // Check for ENDING_SCREEN tag
+        if (tag === 'ENDING_SCREEN') {
+          console.log('Showing ending screen');
+          setShowEndingScreen(true);
+          setStoryText(lines);
+          setChoices([]);
+          return;
+        }
       }
     }
 
@@ -232,6 +245,11 @@ function InkStory() {
       shop_food: story.variablesState["shop_food"],
       shop_batteries: story.variablesState["shop_batteries"],
       shop_visited: story.variablesState["shop_visited"],
+      // Ending tracking
+      ending_type: story.variablesState["ending_type"],
+      total_prep: story.variablesState["total_prep"],
+      call_outcome: story.variablesState["call_outcome"],
+      dialed_number: story.variablesState["dialed_number"],
     });
 
     // Get current choices from Ink
@@ -573,6 +591,15 @@ function InkStory() {
           shopBatteries={gameVars.shop_batteries}
           shopWaterAmount={gameVars.shop_water_amount}
           onClose={handleStoreClose}
+        />
+      )}
+
+      {/* Ending Screen Overlay */}
+      {showEndingScreen && (
+        <EndingScreen
+          gameVars={gameVars}
+          endingType={gameVars.ending_type}
+          onPlayAgain={onReturnToMenu}
         />
       )}
     </div>
