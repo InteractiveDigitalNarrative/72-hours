@@ -10,12 +10,17 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.95);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   z-index: 2000;
   overflow-y: auto;
   animation: crisis-fade-in 0.6s ease;
   backdrop-filter: blur(10px);
+}
+
+/* When content overflows viewport, align to top so scrolling works */
+.crisis-screen {
+  margin: auto;
 }
 
 @keyframes crisis-fade-in {
