@@ -85,6 +85,10 @@ function InkStory({ onReturnToMenu }) {
   // We use it to store the Ink story instance
   const storyRef = useRef(null);
 
+  // History stack for back button
+  const historyRef = useRef([]);
+  const [historyLength, setHistoryLength] = useState(0);
+
   // ============================================
   // LOAD INK.JS AND INITIALIZE STORY
   // ============================================
@@ -314,10 +318,46 @@ function InkStory({ onReturnToMenu }) {
 
     if (!story) return;
 
+    // Save current state before making the choice
+    historyRef.current.push({
+      inkState: story.state.toJson(),
+      background,
+    });
+    setHistoryLength(historyRef.current.length);
+
     // Tell Ink which choice was selected
     story.ChooseChoiceIndex(choiceIndex);
 
     // Get next part of story
+    continueStory();
+  };
+
+  // Back button handler
+  const handleBack = () => {
+    const story = storyRef.current;
+    if (!story || historyRef.current.length === 0) return;
+
+    const prev = historyRef.current.pop();
+    setHistoryLength(historyRef.current.length);
+
+    // Restore Ink state
+    story.state.LoadJson(prev.inkState);
+
+    // Restore background
+    setBackground(prev.background);
+
+    // Dismiss any active overlays
+    setShowKeypad(false);
+    setKeypadScenario(null);
+    setCallResult(null);
+    setDialedNumber('');
+    setShowRadioBroadcast(false);
+    setShowSMS(false);
+    setShowStore(false);
+    setShowEndingScreen(false);
+    setCrisisPhase(null);
+
+    // Re-continue from restored state
     continueStory();
   };
 
@@ -500,8 +540,15 @@ function InkStory({ onReturnToMenu }) {
     <div className="ink-story-container" style={containerStyle}>
       {/* Resource Bar - always visible */}
       <div className="resource-bar">
-        <div className="temperature">
-          🌡️ {gameVars.temperature}°C
+        <div className="resource-bar-left">
+          {historyLength > 0 && (
+            <button className="back-btn" onClick={handleBack} title="Go back">
+              ←
+            </button>
+          )}
+          <div className="temperature">
+            🌡️ {gameVars.temperature}°C
+          </div>
         </div>
         <div className="resource-bar-right">
           <div className="resources">
