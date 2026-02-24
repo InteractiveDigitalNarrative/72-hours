@@ -267,6 +267,22 @@
   margin-left: 4px;
 }
 
+.score-breakdown {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 16px;
+  color: #aaa;
+}
+
+.score-breakdown small {
+  font-size: 12px;
+  color: #666;
+  margin-left: 3px;
+}
+
 /* ============================================
    PLAY AGAIN BUTTON
    ============================================ */

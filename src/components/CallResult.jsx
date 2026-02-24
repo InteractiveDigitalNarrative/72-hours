@@ -64,17 +64,16 @@ What was the health advice number again?`,
       allowRetry: true
     },
     'default': {
-      type: 'critical',
-      icon: '✗',
+      type: 'wrong',
+      icon: '⚠️',
       title: 'Number Not Recognized',
       message: `Beep... beep... beep...
 
 "The number you have dialed is not in service."
 
-You don't know the right number to call. Without paying attention to the emergency broadcast, you never learned the correct numbers.
-
-You'll have to wait and hope someone comes to check on you.`,
-      outcome: 'no_help'
+That number doesn't exist. You need one of the real emergency lines.`,
+      outcome: 'wrong_number',
+      allowRetry: true
     }
   },
 
@@ -139,17 +138,16 @@ What was the health advice number again?`,
       allowRetry: true
     },
     'default': {
-      type: 'critical',
-      icon: '✗',
+      type: 'wrong',
+      icon: '⚠️',
       title: 'Number Not Recognized',
       message: `Beep... beep... beep...
 
 "The number you have dialed is not in service."
 
-You don't know the right number to call. Without paying attention to the emergency broadcast, you never learned the correct numbers.
-
-You'll have to wait and hope someone comes to check on you.`,
-      outcome: 'no_help'
+That number doesn't exist. Try one of the real emergency lines.`,
+      outcome: 'wrong_number',
+      allowRetry: true
     }
   },
 
@@ -215,17 +213,16 @@ What was the rescue coordination number again?`,
       allowRetry: true
     },
     'default': {
-      type: 'critical',
-      icon: '✗',
+      type: 'wrong',
+      icon: '⚠️',
       title: 'Number Not Recognized',
       message: `Beep... beep... beep...
 
 "The number you have dialed is not in service."
 
-You don't know the right number. Without paying attention to the emergency broadcast, you never learned which number sends help directly to you.
-
-You wait. And wait.`,
-      outcome: 'no_help'
+That number doesn't exist. You need the line that sends help directly to you.`,
+      outcome: 'wrong_number',
+      allowRetry: true
     }
   },
 
@@ -290,17 +287,16 @@ Your child needs emergency help. What was that number?`,
       allowRetry: true
     },
     'default': {
-      type: 'critical',
-      icon: '✗',
+      type: 'wrong',
+      icon: '⚠️',
       title: 'Number Not Recognized',
       message: `Beep... beep... beep...
 
 "The number you have dialed is not in service."
 
-Your child needs help right now and you don't know the right number.
-
-You never wrote down the emergency numbers from the broadcast.`,
-      outcome: 'no_help'
+Your child needs help right now. That number doesn't exist — try the right emergency line.`,
+      outcome: 'wrong_number',
+      allowRetry: true
     }
   },
 
@@ -365,24 +361,27 @@ Not the right number. Try 1343.`,
       allowRetry: true
     },
     'default': {
-      type: 'critical',
-      icon: '✗',
+      type: 'wrong',
+      icon: '⚠️',
       title: 'Number Not Recognized',
       message: `Beep... beep... beep...
 
 "The number you have dialed is not in service."
 
-You don't know the right number to report the outage.
-
-If only you'd written down those numbers from the broadcast...`,
-      outcome: 'no_help'
+That number doesn't exist. Try one of the real emergency lines.`,
+      outcome: 'wrong_number',
+      allowRetry: true
     }
   },
 };
 
-function CallResult({ dialedNumber, scenario, onContinue, onRetry }) {
+function CallResult({ dialedNumber, scenario, attempts = 0, onContinue, onRetry }) {
   const scenarioConsequences = CALL_CONSEQUENCES[scenario] || CALL_CONSEQUENCES.grandmother_emergency;
   const consequence = scenarioConsequences[dialedNumber] || scenarioConsequences['default'];
+
+  const attemptsUsed = attempts + 1;        // current attempt number (1-based)
+  const canRetry = consequence.allowRetry && attempts < 2;
+  const isLastChance = consequence.allowRetry && attempts === 1; // next wrong = final
 
   return (
     <div className="call-result-overlay">
@@ -391,15 +390,27 @@ function CallResult({ dialedNumber, scenario, onContinue, onRetry }) {
         <h3>{consequence.title}</h3>
         <p style={{ whiteSpace: 'pre-line' }}>{consequence.message}</p>
 
-        {consequence.allowRetry ? (
+        {consequence.allowRetry && (
+          <p className="call-attempt-counter">
+            Attempt {attemptsUsed} / 3
+            {isLastChance && <span className="last-chance"> — last chance</span>}
+          </p>
+        )}
+
+        {canRetry ? (
           <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
             <button className="continue-btn" onClick={onRetry}>
               Try Again
             </button>
-            <button className="continue-btn" onClick={() => onContinue(consequence.outcome)}>
+            <button className="continue-btn secondary-btn" onClick={() => onContinue('no_help')}>
               Give Up
             </button>
           </div>
+        ) : consequence.allowRetry ? (
+          // attempts >= 2: third wrong dial — no more retries
+          <button className="continue-btn" onClick={() => onContinue('no_help')}>
+            Continue
+          </button>
         ) : (
           <button className="continue-btn" onClick={() => onContinue(consequence.outcome)}>
             Continue

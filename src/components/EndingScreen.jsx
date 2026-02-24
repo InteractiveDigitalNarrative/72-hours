@@ -18,7 +18,7 @@ function getCorrectNumber(household) {
   return                               { number: '1343', desc: 'Power outage reporting' };
 }
 
-function EndingScreen({ gameVars, endingType, household, onPlayAgain }) {
+function EndingScreen({ gameVars, endingType, household, callScore, onPlayAgain }) {
   const elderlyName = household?.elderlyRelation || 'your relative';
   const correctEntry = getCorrectNumber(household);
 
@@ -81,7 +81,7 @@ function EndingScreen({ gameVars, endingType, household, onPlayAgain }) {
 
   const totalPrep = gameVars.total_prep || 0;
   const dialedNumber = gameVars.dialed_number || '';
-  const callPoints = dialedNumber === correctEntry.number ? 3 : 0;
+  const callPoints = callScore ?? 0;
   const totalScore = totalPrep + callPoints;
 
   const getBadge = (score) => {
@@ -191,9 +191,11 @@ function EndingScreen({ gameVars, endingType, household, onPlayAgain }) {
         <div className="prep-score">
           <span className="score-number">{totalScore}</span>
           <span className="score-label">/ 15</span>
-          <span className="score-breakdown">
-            ({totalPrep} prep + {callPoints} call)
-          </span>
+          <div className="score-breakdown">
+            <span>{totalPrep} <small>preparation</small></span>
+            <span>+</span>
+            <span>{callPoints} <small>emergency call</small></span>
+          </div>
         </div>
 
         {/* Play Again */}

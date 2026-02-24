@@ -144,6 +144,10 @@ function InkStory({ onReturnToMenu }) {
 
   // Weather stage: 0 = default, 1 = prep done (storm arriving), 2 = 3:47 AM (crisis)
   const [weatherStage, setWeatherStage] = useState(0);
+
+  // Tracks wrong dials in the current call (resets per call scenario)
+  const [callAttempts, setCallAttempts] = useState(0);
+  const [callScore, setCallScore] = useState(0);
   const wasPrepActiveRef = useRef(false);
 
   // ============================================
@@ -305,6 +309,7 @@ function InkStory({ onReturnToMenu }) {
           console.log('Showing phone keypad for scenario:', scenario);
           setKeypadScenario(scenario);
           setShowKeypad(true);
+          setCallAttempts(0);
         }
 
         // Check for SMS tag
@@ -474,20 +479,21 @@ function InkStory({ onReturnToMenu }) {
   const handleCallResultContinue = (outcome) => {
     const story = storyRef.current;
 
-    // Set the call outcome in Ink so the story can branch
     if (story && story.variablesState) {
       story.variablesState['call_outcome'] = outcome;
       story.variablesState['dialed_number'] = dialedNumber;
     }
 
+    // Score: correct on 1st try = 3, 2nd = 2, 3rd = 1, anything else = 0
+    setCallScore(outcome === 'help_success' ? Math.max(1, 3 - callAttempts) : 0);
+
     setCallResult(null);
     setDialedNumber('');
-
-    // Continue the story after call result
     continueStory();
   };
 
   const handleCallRetry = () => {
+    setCallAttempts(prev => prev + 1);
     setCallResult(null);
     setDialedNumber('');
     setShowKeypad(true);
@@ -1021,6 +1027,7 @@ function InkStory({ onReturnToMenu }) {
         <CallResult
           dialedNumber={callResult.number}
           scenario={callResult.scenario}
+          attempts={callAttempts}
           onContinue={handleCallResultContinue}
           onRetry={handleCallRetry}
         />
@@ -1137,6 +1144,7 @@ function InkStory({ onReturnToMenu }) {
           gameVars={gameVars}
           endingType={gameVars.ending_type}
           household={household}
+          callScore={callScore}
           onPlayAgain={onReturnToMenu}
         />
       )}

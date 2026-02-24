@@ -293,3 +293,27 @@
   transform: translateY(-2px);
 }
 
+.call-result .continue-btn.secondary-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #aaa;
+}
+
+.call-result .continue-btn.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ddd;
+  transform: translateY(-1px);
+}
+
+.call-attempt-counter {
+  font-size: 13px;
+  color: #888;
+  margin: 4px 0 16px;
+  text-align: center;
+}
+
+.call-attempt-counter .last-chance {
+  color: #e07040;
+  font-weight: 600;
+}
+

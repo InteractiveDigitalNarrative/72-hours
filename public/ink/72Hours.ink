@@ -1441,7 +1441,7 @@ You pick up your phone. The battery shows 23%.
 
 <span class="note-hint">🗒️ Check your notes — which number fits this situation?</span>
 
-* [Continue]
++ [Continue]
     -> call_result
 
 === call_rescue_scenario ===
@@ -1461,7 +1461,7 @@ You pick up your phone. The battery shows 23%.
 
 <span class="note-hint">🗒️ Check your notes — which number sends help directly to you?</span>
 
-* [Continue]
++ [Continue]
     -> call_result
 
 === call_child_emergency ===
@@ -1481,7 +1481,7 @@ Your child is having a severe reaction — hives spreading, throat swelling. Thi
 
 <span class="note-hint">🗒️ Check your notes — which number do you call for a life-threatening emergency?</span>
 
-* [Continue]
++ [Continue]
     -> call_result
 
 === call_power_outage ===
@@ -1501,7 +1501,7 @@ The power has been out for over 12 hours. You're lightheaded and cold. You need 
 
 <span class="note-hint">🗒️ Check your notes — which number handles power outages?</span>
 
-* [Continue]
++ [Continue]
     -> call_result
 
 // Legacy knot kept for compatibility
@@ -1521,7 +1521,7 @@ Grandmother needs help. Not a life-threatening emergency, but she needs medical 
 
 <span class="note-hint">🗒️ Check your notes — which number fits this situation?</span>
 
-* [Continue]
++ [Continue]
     -> call_result
 
 === call_result ===
