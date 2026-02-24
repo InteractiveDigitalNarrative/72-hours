@@ -1,43 +1,42 @@
 import { useState } from 'react';
 import './WaterCalculation.css';
 
-const PEOPLE = 2;
-const DAYS = 3;
-const L_PER_PERSON_DAY = 3;
-const CORRECT = PEOPLE * DAYS * L_PER_PERSON_DAY; // 18
+function WaterCalculation({ familySize = 2, onClose }) {
+  const PEOPLE = familySize;
+  const DAYS = 3;
+  const L_PER_PERSON_DAY = 3;
+  const CORRECT = PEOPLE * DAYS * L_PER_PERSON_DAY;
 
-const OPTIONS = [
-  {
-    value: 6,
-    label: '6 litres',
-    correct: false,
-    ridiculous: false,
-    feedback: `That's only enough for one person for ${DAYS} days. You need to account for every member of your household.`,
-  },
-  {
-    value: CORRECT,
-    label: `${CORRECT} litres`,
-    correct: true,
-    ridiculous: false,
-    feedback: `Exactly right. ${L_PER_PERSON_DAY}L × ${PEOPLE} people × ${DAYS} days = ${CORRECT} litres. Your household is well prepared.`,
-  },
-  {
-    value: 12,
-    label: '12 litres',
-    correct: false,
-    ridiculous: false,
-    feedback: `Close, but that uses 2L per person per day. The guideline is ${L_PER_PERSON_DAY}L — don't forget the extra litre for cooking and hygiene.`,
-  },
-  {
-    value: 100,
-    label: '100 litres',
-    correct: false,
-    ridiculous: true,
-    feedback: `That's more than most households use in a week of normal life. You need enough to survive, not to fill a paddling pool.`,
-  },
-];
+  const OPTIONS = [
+    {
+      value: PEOPLE * L_PER_PERSON_DAY,
+      label: `${PEOPLE * L_PER_PERSON_DAY} litres`,
+      correct: false,
+      feedback: `That's only 1 day of water. You need ${DAYS} days' worth.`,
+    },
+    {
+      value: CORRECT,
+      label: `${CORRECT} litres`,
+      correct: true,
+      feedback: `Exactly right. ${L_PER_PERSON_DAY}L × ${PEOPLE} people × ${DAYS} days = ${CORRECT} litres.`,
+    },
+    {
+      value: PEOPLE * 2 * DAYS,
+      label: `${PEOPLE * 2 * DAYS} litres`,
+      correct: false,
+      feedback: `That uses only 2L per person per day. The guideline is ${L_PER_PERSON_DAY}L.`,
+    },
+    {
+      value: 100,
+      label: '100 litres',
+      correct: false,
+      ridiculous: true,
+      feedback: `That's more than most households use in a normal week.`,
+    },
+  ].filter((opt, i, arr) =>
+    arr.findIndex(o => o.value === opt.value) === i
+  );
 
-function WaterCalculation({ onClose }) {
   const [screen, setScreen] = useState(1);
   const [selected, setSelected] = useState(null);
   const [measuredLitres, setMeasuredLitres] = useState('');
@@ -53,20 +52,16 @@ function WaterCalculation({ onClose }) {
     setMeasuredLitres(isNaN(val) || val < 0 ? '' : val);
   };
 
-  // After a wrong pick: keep the correct option enabled so the player can
-  // still choose 18L. Disable everything once they get it right.
   const isDisabled = (opt) => {
     if (!selected) return false;
-    if (selected.correct) return true;   // got it right → lock all
-    if (opt.correct) return false;       // correct option stays clickable
-    return true;                         // other wrong options locked
+    if (selected.correct) return true;
+    if (opt.correct) return false;
+    return true;
   };
 
-  // Fade wrong options that aren't selected, but never fade the correct
-  // option while the player still has a chance to pick it.
   const isFaded = (opt) => {
     if (!selected || selected.value === opt.value) return false;
-    if (!selected.correct && opt.correct) return false; // keep 18L visible
+    if (!selected.correct && opt.correct) return false;
     return true;
   };
 
@@ -114,7 +109,7 @@ function WaterCalculation({ onClose }) {
               </div>
 
               <p className="wc-text">
-                Your household has <strong>{PEOPLE} people</strong>. The storm is forecast
+                Your household has <strong>{PEOPLE} {PEOPLE === 1 ? 'person' : 'people'}</strong>. The storm is forecast
                 to last up to <strong>{DAYS} days</strong>. How much water should you store?
               </p>
 

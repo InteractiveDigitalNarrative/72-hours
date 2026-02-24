@@ -4,6 +4,13 @@
 // === VARIABLES ===
 VAR temperature = -18
 
+// Family composition (set by React FamilySetup overlay)
+VAR family_size = 2
+VAR elderly_relation = "Grandmother"
+VAR has_elderly = true
+VAR has_children = false
+VAR children_count = 0
+
 // Time tracking (in minutes from midnight, so 20:00 = 1200, 22:00 = 1320)
 VAR current_time = 1200
 VAR storm_time = 1320
@@ -56,6 +63,7 @@ VAR shop_visited = false
 VAR call_outcome = ""
 VAR dialed_number = ""
 VAR heard_broadcast = false
+VAR current_call_scenario = ""
 
 // Ending tracking
 VAR total_prep = 0
@@ -67,6 +75,7 @@ VAR ending_type = ""
 
 === pen_and_paper ===
 # CLEAR
+# FAMILY_SETUP
 
 <span style="font-size:4rem">🗒️</span>
 
@@ -116,9 +125,16 @@ The broadcast switches to emergency information...
 
 <i>[Your living room. Evening.]</i>
 
-Your grandmother is asleep in her room.
+{
+    - has_elderly:
+        Your {elderly_relation} is asleep in their room.
 
-Her blood pressure medication is on the kitchen counter.
+        Their blood pressure medication is on the kitchen counter.
+    - has_children:
+        {children_count == 1: Your child is asleep. | Your children are asleep.} Keep things quiet.
+    - else:
+        The flat is quiet. Just you tonight.
+}
 
 A text appear on your mobile...
 
@@ -232,7 +248,7 @@ Before you start filling containers, you need to figure out how much water you'l
 
 The rule is: <b>3 liters per person per day</b>
 
-You live here with grandmother. That's 2 people.
+That's {family_size} people in your household.
 The storm could last up to 3 days.
 
 How much water do you need in total?
@@ -396,7 +412,7 @@ Harder to pour from and takes up counter space, but a reliable way to store extr
 === water_container_result_extra_bottles ===
 # CLEAR
 
-You search the whole house — closets, garage, grandmother's room. You find old juice bottles, a thermos, and some glass jars.
+You search the whole house — closets, garage, every room. You find old juice bottles, a thermos, and some glass jars.
 
 You rinse them out and fill them from the tap.
 
@@ -427,7 +443,7 @@ This water isn't for drinking — but it's useful for flushing toilets and washi
         ~ prep_water = 2
         <b>Well done!</b>
 
-        You've collected {water_collected} liters of drinking water — that covers the {water_target}L needed for 2 people over 3 days.
+        You've collected {water_collected} liters of drinking water — that covers the {water_target}L needed for {family_size} people over 3 days.
 
     - water_collected > 0 && shop_water:
         ~ prep_water = 1
@@ -644,7 +660,12 @@ What do you want to do?
     ~ current_time = current_time + 3
     -> heat_result_sealed
 
-+ {not heat_one_room} [Move grandmother to living room — 3 min]
++ {not heat_one_room && has_elderly} [Move {elderly_relation} to living room — 3 min]
+    ~ heat_one_room = true
+    ~ current_time = current_time + 3
+    -> heat_result_one_room
+
++ {not heat_one_room && not has_elderly} [Set up warm room — 3 min]
     ~ heat_one_room = true
     ~ current_time = current_time + 3
     -> heat_result_one_room
@@ -680,7 +701,11 @@ You switch off the forced ventilation, shut every window, and stuff towels along
 === heat_result_one_room ===
 # CLEAR
 
-You set up a comfortable spot for grandmother in the living room — pillows, her blanket, medication nearby. You close the doors to all other rooms.
+{has_elderly:
+    You set up a comfortable spot for {elderly_relation} in the living room — pillows, their blanket, medication nearby. You close the doors to all other rooms.
+- else:
+    You set up the living room as the warm room — close the doors to all other rooms to concentrate heat.
+}
 
 <b>One room is easier to heat, and every person gives off body heat — staying together helps.</b>
 
@@ -710,7 +735,11 @@ You wrap exposed pipes with old towels and rags. Not perfect insulation, but it 
 === heat_result_clothing ===
 # CLEAR
 
-You dig out wool sweaters, thermal socks, grandmother's thick quilts. Warm clothes for both of you, ready to go.
+{has_elderly:
+    You dig out wool sweaters, thermal socks, {elderly_relation}'s thick quilts. Warm clothes for everyone, ready to go.
+- else:
+    You dig out wool sweaters, thermal socks, thick quilts. Warm clothes ready to go.
+}
 
 <b>Layer up: thermal base, wool/fleece middle, windproof outer. Don't forget hat, gloves, and thick socks.</b>
 
@@ -1095,7 +1124,14 @@ VAR med_first_aid = false
 
 {
     - prep_medication == 0:
-        Grandmother takes blood pressure medication daily. If pharmacies close, she can't get more.
+        {
+            - has_elderly:
+                {elderly_relation} takes blood pressure medication daily. If pharmacies close, they can't get more.
+            - has_children:
+                {children_count == 1: Your child may need | Your children may need} fever reducers or prescription medication.
+            - else:
+                Check your personal medication supply and first-aid kit.
+        }
 
         In a crisis, pharmacies may be closed for days. What should you check first?
 
@@ -1109,7 +1145,11 @@ VAR med_first_aid = false
             -> med_quiz_firstaid
 
     - else:
-        You've started preparing grandmother's medication.
+        {has_elderly:
+            You've started preparing {elderly_relation}'s medication.
+        - else:
+            You've started preparing your medication supplies.
+        }
 }
 
 + {prep_medication > 0} [Continue preparing]
@@ -1161,7 +1201,12 @@ A first-aid kit is important, but grandmother's daily prescription medication is
 {med_organized: ✓ Medication organized}
 {med_first_aid: ✓ First-aid kit checked}
 
-+ {not med_pills_counted} [Count grandmother's pills — 2 min]
++ {not med_pills_counted && has_elderly} [Count {elderly_relation}'s pills — 2 min]
+    ~ med_pills_counted = true
+    ~ current_time = current_time + 2
+    -> med_result_count
+
++ {not med_pills_counted && not has_elderly} [Count prescription pills — 2 min]
     ~ med_pills_counted = true
     ~ current_time = current_time + 2
     -> med_result_count
@@ -1182,7 +1227,11 @@ A first-aid kit is important, but grandmother's daily prescription medication is
 === med_result_count ===
 # CLEAR
 
-You find grandmother's blood pressure pills on the kitchen counter and count them carefully.
+{has_elderly:
+    You find {elderly_relation}'s blood pressure pills on the kitchen counter and count them carefully.
+- else:
+    You count your prescription pills carefully.
+}
 
 <b>5 days' worth left.</b> That should last through the storm — but just barely.
 
@@ -1194,11 +1243,19 @@ You find grandmother's blood pressure pills on the kitchen counter and count the
 === med_result_organize ===
 # CLEAR
 
-You sort grandmother's pills into a small box, organized by day. Morning dose, evening dose — clearly separated.
+{has_elderly:
+    You sort {elderly_relation}'s pills into a small box, organized by day. Morning dose, evening dose — clearly separated.
 
-You place the box by her bed with a glass of water, her reading glasses, and a small bell she can ring if she needs you.
+    You place the box by their bed with a glass of water, their reading glasses, and a small bell they can ring if they need you.
 
-<b>She'll have everything within reach, even in the dark.</b>
+    <b>They'll have everything within reach, even in the dark.</b>
+- else:
+    You sort the pills into a small box, organized by day. Morning dose, evening dose — clearly separated.
+
+    You place the box within easy reach with a glass of water.
+
+    <b>Everything within reach, even in the dark.</b>
+}
 
 + [Continue]
     -> medication_hub
@@ -1223,10 +1280,10 @@ Bandages, antiseptic, painkillers, fever reducers... mostly intact. The painkill
 {
     - med_pills_counted && med_organized && med_first_aid:
         ~ prep_medication = 2
-        Grandmother's medication is sorted and within reach. First-aid kit is checked. You're well prepared.
+        {has_elderly: {elderly_relation}'s medication is sorted and within reach. | Medication sorted and within reach.} First-aid kit is checked. You're well prepared.
     - med_pills_counted || med_first_aid:
         ~ prep_medication = 1
-        You've done the basics. {not med_organized: Organizing the pills by day would make things easier for grandmother in the dark.}
+        You've done the basics. {not med_organized: {has_elderly: Organizing the pills by day would make things easier for {elderly_relation} in the dark. | Organizing the pills by day would make things easier in the dark.}}
     - else:
         ~ prep_medication = 1
         You've thought about medication, but haven't done much yet.
@@ -1333,15 +1390,121 @@ The power is out. The storm must have taken down the lines.
         Freezing. Nothing to eat or drink. No idea what's happening outside.
 }
 
-Then grandmother calls out — weak, strained. She's dizzy. Her blood pressure feels wrong.
+{
+    - has_elderly && has_children:
+        {elderly_relation} is in serious distress. The roads are blocked and you can't leave —
+        {children_count == 1: your child needs you here. | your children need you here.} They need someone to come to you.
+        <span class="note-hint">🗒️ Check your notes — which number sends help to you?</span>
+    - has_elderly:
+        {elderly_relation} calls out — weak, strained. Dizzy. Blood pressure feels wrong.
+        They need medical attention. Not life-threatening, but they need help. The roads are blocked.
+        <span class="note-hint">🗒️ Check your notes — which number fits this situation?</span>
+    - has_children:
+        Your child has broken out in hives and their throat is swelling. This is serious.
+        This could be life-threatening. The roads are blocked.
+        <span class="note-hint">🗒️ Check your notes — which number do you call for a life-threatening emergency?</span>
+    - else:
+        The power has been out for over 12 hours. You're not sure if it's been reported.
+        You're starting to feel unwell — lightheaded and cold.
+        <span class="note-hint">🗒️ Check your notes — which number handles power outages?</span>
+}
 
-She needs medical attention. Not life-threatening, but she needs help. The roads are blocked.
++ {has_elderly && has_children} [Get your phone]
+    -> call_rescue_scenario
+
++ {has_elderly && not has_children} [Get your phone]
+    -> call_elderly_medical
+
++ {not has_elderly && has_children} [Get your phone]
+    -> call_child_emergency
+
++ {not has_elderly && not has_children} [Get your phone]
+    -> call_power_outage
+
+// ============================================
+// PHONE CALL KNOTS
+// ============================================
+=== call_elderly_medical ===
+# CLEAR
+~ current_call_scenario = "elderly_medical"
+# PHONE_KEYPAD: elderly_medical
+
+You pick up your phone. The battery shows 23%.
+
+{elderly_relation} needs help. They're dizzy, strained — blood pressure feels wrong. Not life-threatening, but they need medical attention and you can't drive out. The roads are blocked.
+
+{heard_broadcast:
+    You remember the radio broadcast mentioned different numbers for different situations...
+- else:
+    You never heard the emergency numbers. You'll have to guess or try to remember what they might be...
+}
 
 <span class="note-hint">🗒️ Check your notes — which number fits this situation?</span>
 
-* [Get your phone]
-    -> call_for_help
+* [Continue]
+    -> call_result
 
+=== call_rescue_scenario ===
+# CLEAR
+~ current_call_scenario = "rescue_coordination"
+# PHONE_KEYPAD: rescue_coordination
+
+You pick up your phone. The battery shows 23%.
+
+{elderly_relation} is in serious distress. {children_count == 1: Your child needs you here | Your children need you here} — you can't leave. You need someone to come to you. The roads are blocked.
+
+{heard_broadcast:
+    You remember the radio broadcast mentioned different numbers for different situations...
+- else:
+    You never heard the emergency numbers. You'll have to guess or try to remember what they might be...
+}
+
+<span class="note-hint">🗒️ Check your notes — which number sends help directly to you?</span>
+
+* [Continue]
+    -> call_result
+
+=== call_child_emergency ===
+# CLEAR
+~ current_call_scenario = "child_emergency"
+# PHONE_KEYPAD: child_emergency
+
+You pick up your phone. The battery shows 23%.
+
+Your child is having a severe reaction — hives spreading, throat swelling. This is life-threatening. The roads are blocked and every second counts.
+
+{heard_broadcast:
+    You remember the radio broadcast mentioned different numbers for different situations...
+- else:
+    You never heard the emergency numbers. You'll have to guess or try to remember what they might be...
+}
+
+<span class="note-hint">🗒️ Check your notes — which number do you call for a life-threatening emergency?</span>
+
+* [Continue]
+    -> call_result
+
+=== call_power_outage ===
+# CLEAR
+~ current_call_scenario = "power_outage"
+# PHONE_KEYPAD: power_outage
+
+You pick up your phone. The battery shows 23%.
+
+The power has been out for over 12 hours. You're lightheaded and cold. You need to report this and get help.
+
+{heard_broadcast:
+    You remember the radio broadcast mentioned different numbers for different situations...
+- else:
+    You never heard the emergency numbers. You'll have to guess or try to remember what they might be...
+}
+
+<span class="note-hint">🗒️ Check your notes — which number handles power outages?</span>
+
+* [Continue]
+    -> call_result
+
+// Legacy knot kept for compatibility
 === call_for_help ===
 #CLEAR
 # PHONE_KEYPAD: grandmother_emergency
@@ -1357,8 +1520,6 @@ Grandmother needs help. Not a life-threatening emergency, but she needs medical 
 }
 
 <span class="note-hint">🗒️ Check your notes — which number fits this situation?</span>
-
-What number do you dial?
 
 * [Continue]
     -> call_result
@@ -1376,6 +1537,10 @@ What number do you dial?
     -> ending_delayed
 }
 {call_outcome == "wrong_number":
+    {current_call_scenario == "elderly_medical":   -> call_elderly_medical}
+    {current_call_scenario == "rescue_coordination": -> call_rescue_scenario}
+    {current_call_scenario == "child_emergency":   -> call_child_emergency}
+    {current_call_scenario == "power_outage":      -> call_power_outage}
     -> call_for_help
 }
 {call_outcome == "no_help":
@@ -1388,11 +1553,33 @@ What number do you dial?
 ~ ending_type = "good"
 #CLEAR
 
-Within the hour, a medical team arrives.
+{
+    - has_elderly && has_children:
+        Within the hour, a rescue team arrives. They stabilize {elderly_relation} on site and check on {children_count == 1: the child. | the children.}
 
-They check on grandmother thoroughly. "She's dehydrated but stable," they say. "You did exactly the right thing calling the health advice line."
+        "You did the right thing — calling 1247 brought a team directly to you."
 
-As they help stabilize her, you feel a sense of relief.
+    - has_elderly:
+        Within the hour, a medical team arrives.
+
+        They check on {elderly_relation} thoroughly. "They're dehydrated but stable," they say. "You did exactly the right thing calling the health advice line."
+
+        As they help stabilize them, you feel a sense of relief.
+
+    - has_children:
+        The ambulance arrives in minutes. The paramedics administer epinephrine immediately.
+
+        "You called the right number. A few more minutes and this could have been much worse."
+
+        Your child stabilizes. You breathe again.
+
+    - else:
+        The power company logs your report as a priority area. By afternoon, a welfare check team arrives.
+
+        "Good call using 1343 — that's exactly what it's for."
+
+        The power comes back on by evening.
+}
 
 You were prepared. You paid attention. And when it mattered, you knew exactly what to do.
 
@@ -1405,9 +1592,13 @@ You were prepared. You paid attention. And when it mattered, you knew exactly wh
 
 Help arrives, though it took a bit longer than necessary.
 
-The rescue team checks on grandmother. "She'll be fine," they say. "Though for medical situations like this, the health advice line 1220 would have been faster. We're mainly handling rescue operations during the storm."
+{has_elderly:
+    "They'll be fine," they say. "Though you could have called a more specific number for this situation — it would have been faster."
 
-Grandmother is stabilized. You made a reasonable choice, even if not the perfect one.
+    {elderly_relation} is stabilized. You made a reasonable choice, even if not the perfect one.
+- else:
+    Help arrives. You made a reasonable choice — it got there, just not as fast as it could have been.
+}
 
 * [See your results]
     -> ending_summary
@@ -1418,9 +1609,11 @@ Grandmother is stabilized. You made a reasonable choice, even if not the perfect
 
 Help arrives, but it took longer than it should have.
 
-The paramedics check on grandmother. "She's dehydrated and her blood pressure is concerning," they say. "We need to take her in."
-
-Calling 112 for a non-life-threatening emergency tied up critical resources and delayed your call being processed.
+{has_elderly:
+    "We need to take {elderly_relation} in," they say. "Calling 112 for a non-emergency tied up critical resources and delayed your call."
+- else:
+    Calling 112 when it wasn't a life-threatening emergency tied up critical resources and delayed your situation being handled.
+}
 
 * [See your results]
     -> ending_summary
@@ -1431,9 +1624,20 @@ Calling 112 for a non-life-threatening emergency tied up critical resources and 
 
 You wait. Hours pass.
 
-Eventually, a neighbor with a working car checks on you and takes grandmother to the hospital.
+{
+    - has_elderly:
+        Eventually, a neighbor with a working car checks on you and takes {elderly_relation} to the hospital.
 
-She recovers, but it was close.
+        They recover, but it was close.
+    - has_children:
+        Eventually, a neighbor drives you and your child to the nearest clinic.
+
+        It was close.
+    - else:
+        Eventually, a welfare worker doing rounds finds you.
+
+        You recover, but it took far too long.
+}
 
 If only you had known the right number to call...
 

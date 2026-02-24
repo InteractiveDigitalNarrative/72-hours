@@ -1,0 +1,347 @@
+/* ============================================
+   FAMILY SETUP OVERLAY
+   ============================================ */
+
+.fs-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 10, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 2500;
+  backdrop-filter: blur(8px);
+  animation: fs-fade 0.3s ease;
+  padding: var(--top-bar-height, 60px) 20px var(--bottom-bar-height, 20px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 160, 255, 0.3) transparent;
+}
+
+@keyframes fs-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.fs-panel {
+  background: linear-gradient(145deg, #141c2a, #1a2438);
+  border: 1px solid rgba(70, 130, 210, 0.25);
+  border-radius: 20px;
+  padding: clamp(18px, 3vh, 36px) clamp(18px, 4vw, 32px);
+  max-width: 480px;
+  width: 100%;
+  margin: auto 0;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(70, 130, 210, 0.08);
+  animation: fs-up 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2.5vh, 22px);
+}
+
+@keyframes fs-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Header ──────────────────────────────── */
+
+.fs-icon {
+  display: block;
+  font-size: clamp(28px, 5vh, 40px);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.fs-header {
+  text-align: center;
+}
+
+.fs-header h2 {
+  color: #dceeff;
+  font-size: clamp(16px, 2.5vh, 22px);
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.fs-subtitle {
+  color: #5a8ab0;
+  font-size: clamp(12px, 1.6vh, 14px);
+  margin: 0;
+}
+
+/* ── Member list ─────────────────────────── */
+
+.fs-member-list {
+  background: rgba(20, 50, 90, 0.35);
+  border: 1px solid rgba(60, 120, 200, 0.18);
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fs-member-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(60, 120, 200, 0.1);
+}
+
+.fs-member-row:last-child {
+  border-bottom: none;
+}
+
+.fs-member-name {
+  flex: 1;
+  color: #b8d0e8;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.fs-member-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.fs-tag-you {
+  background: rgba(60, 120, 210, 0.15);
+  color: #60a8e0;
+  border: 1px solid rgba(60, 120, 210, 0.3);
+}
+
+.fs-tag-adult {
+  background: rgba(80, 160, 80, 0.15);
+  color: #70c870;
+  border: 1px solid rgba(80, 160, 80, 0.3);
+}
+
+.fs-tag-elderly {
+  background: rgba(200, 150, 60, 0.15);
+  color: #e0b860;
+  border: 1px solid rgba(200, 150, 60, 0.3);
+}
+
+.fs-tag-child {
+  background: rgba(160, 80, 200, 0.15);
+  color: #c080e0;
+  border: 1px solid rgba(160, 80, 200, 0.3);
+}
+
+.fs-remove-btn {
+  background: none;
+  border: 1px solid rgba(200, 80, 60, 0.3);
+  color: #c06050;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.fs-remove-btn:hover {
+  background: rgba(200, 80, 60, 0.15);
+  border-color: rgba(200, 80, 60, 0.6);
+  color: #e07060;
+}
+
+/* ── Add buttons ─────────────────────────── */
+
+.fs-add-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fs-add-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #9ab8d0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.fs-add-btn:hover {
+  background: rgba(60, 120, 210, 0.12);
+  border-color: rgba(60, 120, 210, 0.4);
+  color: #c0d8f0;
+  transform: translateY(-1px);
+}
+
+.fs-add-elderly {
+  border-color: rgba(200, 150, 60, 0.25);
+  color: #c8a050;
+}
+
+.fs-add-elderly:hover {
+  background: rgba(200, 150, 60, 0.1);
+  border-color: rgba(200, 150, 60, 0.5);
+  color: #e0c070;
+}
+
+.fs-add-child {
+  border-color: rgba(160, 80, 200, 0.25);
+  color: #a870c8;
+}
+
+.fs-add-child:hover {
+  background: rgba(160, 80, 200, 0.1);
+  border-color: rgba(160, 80, 200, 0.5);
+  color: #c090e0;
+}
+
+/* ── Elderly name form ────────────────────── */
+
+.fs-elderly-form {
+  background: rgba(200, 150, 60, 0.07);
+  border: 1px solid rgba(200, 150, 60, 0.25);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fs-fade 0.2s ease;
+}
+
+.fs-elderly-label {
+  color: #c8a050;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fs-elderly-input {
+  background: rgba(8, 22, 50, 0.7);
+  border: 1px solid rgba(200, 150, 60, 0.4);
+  border-radius: 8px;
+  color: #e0c070;
+  padding: 10px 14px;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.fs-elderly-input:focus {
+  border-color: rgba(200, 150, 60, 0.7);
+  box-shadow: 0 0 10px rgba(200, 150, 60, 0.15);
+}
+
+.fs-elderly-hint {
+  color: #7a6030;
+  font-size: 12px;
+  font-style: italic;
+  margin: 0;
+}
+
+.fs-elderly-add-btn {
+  background: linear-gradient(145deg, #7a5010, #5a3a0a);
+  border: 1px solid rgba(200, 150, 60, 0.5);
+  color: #e0c070;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.fs-elderly-add-btn:hover:not(:disabled) {
+  background: linear-gradient(145deg, #9a6818, #7a5010);
+  transform: translateY(-1px);
+}
+
+.fs-elderly-add-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Water preview ──────────────────────── */
+
+.fs-water-preview {
+  background: rgba(20, 60, 100, 0.35);
+  border: 1px solid rgba(60, 130, 200, 0.22);
+  border-radius: 12px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fs-water-people {
+  color: #7aaccc;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.fs-water-divider {
+  color: rgba(60, 120, 200, 0.4);
+  font-size: 16px;
+}
+
+.fs-water-target {
+  color: #7aaccc;
+  font-size: 14px;
+}
+
+.fs-water-target strong {
+  color: #80c8f8;
+  font-size: 16px;
+}
+
+/* ── Done button ─────────────────────────── */
+
+.fs-done-btn {
+  background: linear-gradient(145deg, #1a5cb0, #0e3d7a);
+  border: 1px solid rgba(70, 130, 220, 0.5);
+  color: #b8d8f8;
+  padding: 15px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  width: 100%;
+  letter-spacing: 0.5px;
+}
+
+.fs-done-btn:hover {
+  background: linear-gradient(145deg, #2470cc, #1a5cb0);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(26, 92, 176, 0.45);
+}
+
+.fs-done-btn:active {
+  transform: translateY(0);
+}

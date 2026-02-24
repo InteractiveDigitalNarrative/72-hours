@@ -9,6 +9,7 @@ import StoreOverlay from './StoreOverlay';
 import WaterCalculation from './WaterCalculation';
 import EndingScreen from './EndingScreen';
 import CrisisScreen from './CrisisScreen';
+import FamilySetup from './FamilySetup';
 
 // Prep hub choice metadata — icon, description, and the Ink variable to check for completion
 const PREP_CHOICE_META = {
@@ -89,6 +90,15 @@ function InkStory({ onReturnToMenu }) {
 
   // Crisis screen state
   const [crisisPhase, setCrisisPhase] = useState(null); // 'night' or 'morning'
+
+  // Family setup state
+  const [showFamilySetup, setShowFamilySetup] = useState(false);
+  const [household, setHousehold] = useState({
+    size: 2,
+    elderlyRelation: 'Grandmother',
+    hasElderly: true,
+    hasChildren: false,
+  });
 
   // Text speed: 'slow' (fade-in) or 'instant'
   const [textSpeed, setTextSpeed] = useState(() => {
@@ -289,6 +299,15 @@ function InkStory({ onReturnToMenu }) {
           return;
         }
 
+        // Check for FAMILY_SETUP tag
+        if (tag === 'FAMILY_SETUP') {
+          console.log('Showing family setup');
+          setShowFamilySetup(true);
+          setStoryText(lines);
+          setChoices([]);
+          return;
+        }
+
         // Check for RADIO_BROADCAST tag
         if (tag === 'RADIO_BROADCAST') {
           console.log('Showing radio broadcast');
@@ -412,6 +431,7 @@ function InkStory({ onReturnToMenu }) {
     setShowStore(false);
     setShowEndingScreen(false);
     setCrisisPhase(null);
+    setShowFamilySetup(false);
 
     // Re-continue from restored state
     continueStory();
@@ -509,6 +529,34 @@ function InkStory({ onReturnToMenu }) {
     if (pendingIndex !== null) {
       handleChoiceClick(pendingIndex);
     }
+  };
+
+  // ============================================
+  // FAMILY SETUP HANDLER
+  // ============================================
+
+  const handleFamilySetupClose = ({ extras }) => {
+    setShowFamilySetup(false);
+    const size = 1 + extras.length;
+    const elderlyMember = extras.find(m => m.type === 'elderly');
+    const elderlyRelation = elderlyMember?.relation?.trim() || null;
+    const hasElderly = !!elderlyMember;
+    const childrenCount = extras.filter(m => m.type === 'child').length;
+    const hasChildren = childrenCount > 0;
+    const h = { size, elderlyRelation, hasElderly, hasChildren };
+    setHousehold(h);
+
+    const story = storyRef.current;
+    if (!story) return;
+    story.variablesState["family_size"]      = size;
+    story.variablesState["elderly_relation"] = elderlyRelation || "";
+    story.variablesState["has_elderly"]      = hasElderly;
+    story.variablesState["has_children"]     = hasChildren;
+    story.variablesState["children_count"]   = childrenCount;
+    story.variablesState["water_target"]     = size * 3 * 3;
+
+    // Continue the story from where it paused to get the remaining text + choices
+    continueStory();
   };
 
   // STORE OVERLAY HANDLER
@@ -1024,7 +1072,7 @@ function InkStory({ onReturnToMenu }) {
 
       {/* Water Calculation Quiz */}
       {showWaterCalc && (
-        <WaterCalculation onClose={handleWaterCalcClose} />
+        <WaterCalculation familySize={household.size} onClose={handleWaterCalcClose} />
       )}
 
       {/* Store Overlay */}
@@ -1044,6 +1092,7 @@ function InkStory({ onReturnToMenu }) {
         <CrisisScreen
           phase={crisisPhase}
           gameVars={gameVars}
+          household={household}
           onContinue={handleCrisisClose}
         />
       )}
@@ -1053,8 +1102,14 @@ function InkStory({ onReturnToMenu }) {
         <EndingScreen
           gameVars={gameVars}
           endingType={gameVars.ending_type}
+          household={household}
           onPlayAgain={onReturnToMenu}
         />
+      )}
+
+      {/* Family Setup Overlay */}
+      {showFamilySetup && (
+        <FamilySetup onClose={handleFamilySetupClose} />
       )}
     </div>
   );
