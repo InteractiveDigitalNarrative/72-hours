@@ -286,6 +286,55 @@
   animation: wc-fade 0.3s ease;
 }
 
+/* ── Kitchen input (screen 3) ────────────── */
+
+.wc-input-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0;
+}
+
+.wc-number-input {
+  width: 90px;
+  padding: 10px 14px;
+  background: rgba(8, 22, 50, 0.7);
+  border: 1px solid rgba(60, 120, 200, 0.45);
+  border-radius: 10px;
+  color: #80c8f8;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: inherit;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  -moz-appearance: textfield;
+}
+
+.wc-number-input::-webkit-outer-spin-button,
+.wc-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.wc-number-input:focus {
+  border-color: rgba(60, 140, 220, 0.8);
+  box-shadow: 0 0 12px rgba(60, 140, 220, 0.25);
+}
+
+.wc-input-unit {
+  color: #5a8ab0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.wc-text-hint {
+  color: #3a5a6a;
+  font-size: clamp(11px, 1.4vh, 13px);
+  font-style: italic;
+}
+
 /* ── Primary button ──────────────────────── */
 
 .wc-btn-primary {

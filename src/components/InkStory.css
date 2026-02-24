@@ -1363,16 +1363,106 @@
   }
 }
 
+/* ── Prep hub fixed action footer (mobile) ────────────────────────────
+   position: fixed keeps Shop and Done always on screen regardless of
+   scroll position. padding-bottom on the layout gives enough scroll
+   room to bring all 6 category cards above the fixed footer. */
+@media (max-width: 639px) {
+  /* Give the scroll container an explicit height using dvh so mobile
+     browser chrome (address bar etc.) is accounted for */
+  .ink-story-container.prep-hub-container {
+    height: 100dvh;
+  }
+
+  .story-wrapper.prep-hub-mode {
+    /* Explicit height instead of max-height: 100% which can mis-resolve */
+    height: calc(100dvh - var(--top-bar-height) - var(--bottom-bar-height));
+    max-height: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .prep-action-footer {
+    position: fixed;
+    bottom: var(--bottom-bar-height);
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 10px 10px;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.95) 28%);
+    z-index: 100;
+  }
+
+  /* Generous bottom padding so all 6 cards can scroll fully above the footer */
+  .prep-hub-layout {
+    padding-bottom: 300px;
+  }
+}
+
+/* ── Mobile radio broadcast fix (portrait / narrow) ───────────────────
+   The panel has a fixed height on mobile which collapses broadcast-content
+   to zero on small screens. Drop the fixed height, give the transcript box
+   a minimum visible height, and let the overlay handle scrolling instead. */
+@media (max-width: 639px) {
+  .radio-broadcast {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* Left column no longer fills a fixed-height flex parent */
+  .radio-broadcast-left {
+    flex: none;
+  }
+
+  /* Transcript box: guaranteed minimum height, scroll if content overflows */
+  .broadcast-content {
+    flex: none;
+    min-height: 130px;
+    max-height: 35vh;
+    overflow-y: auto;
+  }
+}
+
 @media (max-width: 768px) {
   .ink-story-container {
     padding: 55px 10px 55px 10px;
   }
 
+  /* ── Single scroll zone on mobile ────────────────────────────────────
+     Remove the inner max-height cap from the text panel so story-wrapper
+     is the one and only scroll container. This prevents two competing
+     scroll areas and lets all content breathe. */
   .story-content {
     padding: 20px 18px;
     border-radius: 12px;
-    max-height: 50vh;
+    max-height: none;
+    overflow-y: visible;
   }
+
+  /* Inner fade no longer needed — wrapper gradient handles the hint */
+  .story-content::after {
+    display: none;
+  }
+
+  /* Show a thin gold scrollbar so users know the area is scrollable */
+  .story-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(185, 124, 44, 0.4) transparent;
+  }
+
+  .story-wrapper::-webkit-scrollbar {
+    display: block;
+    width: 3px;
+  }
+
+  .story-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(185, 124, 44, 0.4);
+    border-radius: 2px;
+  }
+
 
   .resource-bar-right {
     gap: 10px;
@@ -1512,7 +1602,7 @@
   .story-content {
     padding: 18px 14px;
     border-radius: 10px;
-    max-height: 45vh;
+    /* max-height removed — story-wrapper is the sole scroll zone on mobile */
   }
 
   .story-text {

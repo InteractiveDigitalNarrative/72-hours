@@ -71,7 +71,7 @@ function CrisisScreen({ phase, gameVars, onContinue }) {
 
   const renderDots = (level) => (
     <span className="crisis-dots">
-      {[0, 1, 2].map((i) => (
+      {[0, 1].map((i) => (
         <span key={i} className={`crisis-dot ${i < level ? 'filled' : ''}`} />
       ))}
     </span>

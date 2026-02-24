@@ -40,9 +40,17 @@ const OPTIONS = [
 function WaterCalculation({ onClose }) {
   const [screen, setScreen] = useState(1);
   const [selected, setSelected] = useState(null);
+  const [measuredLitres, setMeasuredLitres] = useState('');
 
   const handleSelect = (opt) => {
     setSelected(opt);
+  };
+
+  const handleMeasuredChange = (e) => {
+    const raw = e.target.value;
+    if (raw === '') { setMeasuredLitres(''); return; }
+    const val = parseInt(raw, 10);
+    setMeasuredLitres(isNaN(val) || val < 0 ? '' : val);
   };
 
   // After a wrong pick: keep the correct option enabled so the player can
@@ -121,6 +129,44 @@ function WaterCalculation({ onClose }) {
           </div>
         )}
 
+        {/* ── SCREEN 3: Kitchen measurement ─────────────── */}
+        {screen === 3 && (
+          <div className="wc-screen">
+            <div className="wc-header">
+              <span className="wc-icon">🚰</span>
+              <h2>Check Your Water Supply</h2>
+              <p className="wc-subtitle">Go to your kitchen right now</p>
+            </div>
+
+            <div className="wc-info-block">
+              <p className="wc-text">
+                Look around your kitchen. Count any water you already have stored — bottles, jugs, pitchers, kettles, or any other containers.
+              </p>
+              <p className="wc-text">
+                How many litres do you currently have at home?
+              </p>
+              <div className="wc-input-group">
+                <input
+                  type="number"
+                  min="0"
+                  max="999"
+                  value={measuredLitres}
+                  onChange={handleMeasuredChange}
+                  className="wc-number-input"
+                />
+                <span className="wc-input-unit">litres</span>
+              </div>
+              <p className="wc-text wc-text-hint">
+                Enter 0 if you have nothing stored — that's okay, we'll work with what we have.
+              </p>
+            </div>
+
+            <button className="wc-btn-primary" onClick={() => onClose(selected?.correct ?? false, measuredLitres === '' ? 0 : Number(measuredLitres))}>
+              Continue →
+            </button>
+          </div>
+        )}
+
         {/* ── SCREEN 2: Quiz ────────────────────────────── */}
         {screen === 2 && (
           <div className="wc-screen">
@@ -160,8 +206,8 @@ function WaterCalculation({ onClose }) {
             </div>
 
             {selected && (
-              <button className="wc-btn-primary" onClick={() => onClose(selected.correct)}>
-                {selected.correct ? 'Prepare water supplies →' : 'Continue anyway →'}
+              <button className="wc-btn-primary" onClick={() => setScreen(3)}>
+                {selected.correct ? 'Check your water supply →' : 'Continue anyway →'}
               </button>
             )}
           </div>

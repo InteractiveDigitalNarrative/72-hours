@@ -24,6 +24,7 @@ VAR water_quiz_done = false
 // Water containers filled
 VAR water_target = 18
 VAR water_collected = 0
+VAR water_home_measured = 0
 VAR water_bottles = false
 VAR water_pots = false
 VAR water_bathtub = false
@@ -197,6 +198,10 @@ What do you want to prepare?
 === category_water ===
 # CLEAR
 
+{water_quiz_done && prep_water == 0:
+    -> water_containers_intro
+}
+
 You're in the kitchen, looking at the tap.
 
 {
@@ -210,9 +215,6 @@ You're in the kitchen, looking at the tap.
 
 + {prep_water == 0 && !water_quiz_done} [Figure out how much water you need]
     -> water_calculation
-
-+ {prep_water == 0 && water_quiz_done} [Start collecting water]
-    -> water_containers_intro
 
 + {prep_water > 0} [Fill more containers from tap]
     -> water_containers
@@ -291,18 +293,13 @@ That's the minimum you need for drinking. More is always better if you have time
 === water_containers_intro ===
 # CLEAR
 
-You look around the house for containers...
+{water_home_measured > 0:
+    You counted <b>{water_home_measured} litres</b> already in your home — that's a head start.
+- else:
+    You check every cupboard and shelf. Nothing. You're starting from zero.
+}
 
-You spot a few water bottles in the fridge and cupboard.
-
-~ water_bottles = true
-~ water_collected = water_collected + 4
-
-<b>+4 liters found (existing bottles)</b>
-
-What else can you do?
-
-+ [Continue]
++ [Start collecting more]
     -> water_containers
 
 === water_added_to_list ===
@@ -332,7 +329,8 @@ You have {water_collected}L at home — the store can cover the rest.
 
 <b>Water collected: {water_collected}L / {water_target}L target</b>
 
-{water_bottles: ✓ Water bottles (4L)}
+{water_home_measured > 0: ✓ Water found at home ({water_home_measured}L)}
+{water_bottles: ✓ Bottles filled from tap (4L)}
 {water_pots: ✓ Cooking pots (6L)}
 {water_extra_bottles: ✓ Extra bottles from around the house (6L)}
 {water_bathtub: ✓ Bathtub (non-drinking)}

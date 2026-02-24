@@ -490,7 +490,7 @@ function InkStory({ onReturnToMenu }) {
   // WATER CALCULATION QUIZ HANDLER
   // ============================================
 
-  const handleWaterCalcClose = () => {
+  const handleWaterCalcClose = (wasCorrect, measuredLitres = 0) => {
     setShowWaterCalc(false);
     const pendingIndex = waterCalcPendingIndex;
     setWaterCalcPendingIndex(null);
@@ -499,9 +499,12 @@ function InkStory({ onReturnToMenu }) {
     if (!story) return;
 
     // Tell the Ink story the quiz has been completed so category_water
-    // routes to water_containers_intro (the kitchen/4L scene) instead of
-    // its own built-in quiz knot, avoiding a duplicate quiz.
+    // routes to water_containers_intro instead of its own built-in quiz knot.
     story.variablesState["water_quiz_done"] = true;
+
+    // Store the amount the player measured in their kitchen
+    story.variablesState["water_home_measured"] = measuredLitres;
+    story.variablesState["water_collected"] = measuredLitres;
 
     if (pendingIndex !== null) {
       handleChoiceClick(pendingIndex);
@@ -857,48 +860,51 @@ function InkStory({ onReturnToMenu }) {
                       })}
                   </div>
 
-                  {/* Go to Shop — hidden once the storm arrives */}
-                  {!timeUp && (hasShopChoice ? (
-                    choices
+                  {/* Shop + Done — sticky footer so they're always visible on mobile */}
+                  <div className="prep-action-footer">
+                    {/* Go to Shop — hidden once the storm arrives */}
+                    {!timeUp && (hasShopChoice ? (
+                      choices
+                        .map((choice, index) => ({ choice, index }))
+                        .filter(({ choice }) => {
+                          const lower = choice.text.toLowerCase();
+                          return lower.includes('shop') || lower.includes('store');
+                        })
+                        .map(({ choice, index }) => (
+                          <button
+                            key={index}
+                            className="prep-action-btn prep-shop-btn"
+                            onClick={() => handleChoiceClick(index)}
+                          >
+                            🛒 {stripEmoji(choice.text)} <span className="prep-action-time">⏱ 20+ min</span>
+                          </button>
+                        ))
+                    ) : (
+                      <button
+                        className="prep-action-btn prep-shop-btn"
+                        onClick={() => { setStoreOpenedDirectly(true); setShowStore(true); }}
+                      >
+                        🛒 Go to Shop <span className="prep-action-time">⏱ 20+ min</span>
+                      </button>
+                    ))}
+
+                    {/* Done — full-width button at the very end */}
+                    {choices
                       .map((choice, index) => ({ choice, index }))
                       .filter(({ choice }) => {
                         const lower = choice.text.toLowerCase();
-                        return lower.includes('shop') || lower.includes('store');
+                        return lower.includes('done') || lower.includes('finish') || lower.includes('ready');
                       })
                       .map(({ choice, index }) => (
                         <button
                           key={index}
-                          className="prep-action-btn prep-shop-btn"
+                          className="prep-action-btn prep-done-btn"
                           onClick={() => handleChoiceClick(index)}
                         >
-                          🛒 {stripEmoji(choice.text)} <span className="prep-action-time">⏱ 20+ min</span>
+                          ✅ {timeUp ? 'Done Preparing' : choice.text}
                         </button>
-                      ))
-                  ) : (
-                    <button
-                      className="prep-action-btn prep-shop-btn"
-                      onClick={() => { setStoreOpenedDirectly(true); setShowStore(true); }}
-                    >
-                      🛒 Go to Shop <span className="prep-action-time">⏱ 20+ min</span>
-                    </button>
-                  ))}
-
-                  {/* Done — full-width button at the very end */}
-                  {choices
-                    .map((choice, index) => ({ choice, index }))
-                    .filter(({ choice }) => {
-                      const lower = choice.text.toLowerCase();
-                      return lower.includes('done') || lower.includes('finish') || lower.includes('ready');
-                    })
-                    .map(({ choice, index }) => (
-                      <button
-                        key={index}
-                        className="prep-action-btn prep-done-btn"
-                        onClick={() => handleChoiceClick(index)}
-                      >
-                        ✅ {timeUp ? 'Done Preparing' : choice.text}
-                      </button>
-                    ))}
+                      ))}
+                  </div>
                 </div>
               ) : (
                 /* Normal sections: vertical list */
