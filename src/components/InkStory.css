@@ -669,8 +669,22 @@
 .temperature {
   font-size: 18px;
   font-weight: bold;
-  color: #5cb8ff;  /* Cold blue color */
+  transition: color 0.8s ease;
 }
+
+.temperature.temp-mild    { color: #5cb8ff; }
+.temperature.temp-cold    { color: #2d8cff; }
+.temperature.temp-freezing { color: #b3d9ff; text-shadow: 0 0 6px rgba(179, 217, 255, 0.6); }
+
+.wind-speed {
+  font-size: 18px;
+  font-weight: bold;
+  transition: color 0.8s ease;
+}
+
+.wind-speed.wind-calm   { color: #aaaaaa; }
+.wind-speed.wind-strong { color: #ffbb44; }
+.wind-speed.wind-severe { color: #ff5533; text-shadow: 0 0 6px rgba(255, 85, 51, 0.5); }
 
 .resource-bar-right {
   display: flex;
@@ -1527,7 +1541,8 @@
     padding: 8px 15px;
   }
 
-  .temperature {
+  .temperature,
+  .wind-speed {
     font-size: 14px;
   }
 

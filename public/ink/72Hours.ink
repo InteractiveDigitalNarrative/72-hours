@@ -2,7 +2,7 @@
 // ACT 1: THE NIGHT
 
 // === VARIABLES ===
-VAR temperature = -18
+VAR temperature = -8
 
 // Family composition (set by React FamilySetup overlay)
 VAR family_size = 2

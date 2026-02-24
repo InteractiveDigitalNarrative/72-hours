@@ -115,7 +115,7 @@ function InkStory({ onReturnToMenu }) {
 
   // Track game variables from Ink
   const [gameVars, setGameVars] = useState({
-    temperature: -18,
+    temperature: -8,
     // Preparation categories (0 = not done, 1 = basic, 2 = thorough)
     prep_water: 0,
     prep_food: 0,
@@ -141,6 +141,10 @@ function InkStory({ onReturnToMenu }) {
   // History stack for back button
   const historyRef = useRef([]);
   const [historyLength, setHistoryLength] = useState(0);
+
+  // Weather stage: 0 = default, 1 = prep done (storm arriving), 2 = 3:47 AM (crisis)
+  const [weatherStage, setWeatherStage] = useState(0);
+  const wasPrepActiveRef = useRef(false);
 
   // ============================================
   // LOAD INK.JS AND INITIALIZE STORY
@@ -208,6 +212,19 @@ function InkStory({ onReturnToMenu }) {
       }
     };
   }, []); // Empty array = run once on mount
+
+  // ============================================
+  // WEATHER STAGE — advances at two narrative moments:
+  //   Stage 1: player finishes preparation (in_preparation flips false)
+  //   Stage 2: 3:47 AM / CRISIS_NIGHT tag fires
+  useEffect(() => {
+    if (gameVars.in_preparation) {
+      wasPrepActiveRef.current = true;
+    } else if (wasPrepActiveRef.current && weatherStage === 0) {
+      // Prep just ended → storm arriving
+      setWeatherStage(1);
+    }
+  }, [gameVars.in_preparation]);
 
   // ============================================
   // STORY FUNCTIONS
@@ -330,6 +347,7 @@ function InkStory({ onReturnToMenu }) {
         if (tag === 'CRISIS_NIGHT') {
           console.log('Showing crisis night screen');
           readGameVars(story);
+          setWeatherStage(2); // 3:47 AM — worst weather
           setCrisisPhase('night');
           setStoryText(lines);
           setChoices([]);
@@ -730,6 +748,19 @@ function InkStory({ onReturnToMenu }) {
     (c) => c.text.toLowerCase().includes('shop') || c.text.toLowerCase().includes('store')
   );
 
+  // Weather values keyed to narrative stages:
+  //   0 = preparation phase  →  cold but calm
+  //   1 = done preparation   →  storm arriving
+  //   2 = 3:47 AM / crisis   →  power out, worst conditions
+  const WEATHER_STAGES = [
+    { temp: -8,  wind: 15 },
+    { temp: -15, wind: 48 },
+    { temp: -22, wind: 85 },
+  ];
+  const { temp: displayTemp, wind: windSpeed } = WEATHER_STAGES[weatherStage];
+  const tempClass = displayTemp >= -12 ? 'temp-mild' : displayTemp >= -18 ? 'temp-cold' : 'temp-freezing';
+  const windClass = windSpeed < 30 ? 'wind-calm' : windSpeed < 60 ? 'wind-strong' : 'wind-severe';
+
   return (
     <div className={`ink-story-container${atPrepHub ? ' prep-hub-container' : ''}`} style={containerStyle}>
       {/* Resource Bar - always visible */}
@@ -740,8 +771,11 @@ function InkStory({ onReturnToMenu }) {
               ←
             </button>
           )}
-          <div className="temperature">
-            🌡️ {gameVars.temperature}°C
+          <div className={`temperature ${tempClass}`}>
+            🌡️ {displayTemp}°C
+          </div>
+          <div className={`wind-speed ${windClass}`}>
+            💨 {windSpeed} km/h
           </div>
         </div>
         <div className="resource-bar-right">
