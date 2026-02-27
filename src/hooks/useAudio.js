@@ -6,16 +6,16 @@ const BASE_URL = import.meta.env.BASE_URL;
 // Main ambient track source paths (relative to BASE_URL)
 // 'storm' is removed — wind is now a separate always-on layer
 const AMBIENT_SRCS = {
-  menu:  'Sound/room-ambient.mp3',
-  prep:  'Sound/room+electricity.wav',
+  menu:  'Sound/Menu.mp3',
+  prep:  'Sound/PreparationMusic.mp3',
   radio: 'Sound/radio_noise_loop.wav',
   outro: 'Sound/outro-music.mp3',
 };
 
 // Target playback volumes per main ambient track
 const AMBIENT_VOL = {
-  menu:  0.28,
-  prep:  0.35,
+  menu:  0.45,
+  prep:  0.5,
   radio: 0.5,
   outro: 0.7,
 };

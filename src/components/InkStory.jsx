@@ -248,10 +248,8 @@ function InkStory({ onReturnToMenu }) {
       playAmbient('radio');
     } else if (weatherStage >= 1) {
       playAmbient(null); // wind layer takes over
-    } else if (gameVars.in_preparation) {
-      playAmbient('prep');
     } else {
-      playAmbient('menu');
+      playAmbient('prep'); // intro narrative + preparation phase
     }
   }, [weatherStage, gameVars.in_preparation, showEndingScreen, showRadioBroadcast, playAmbient]);
 

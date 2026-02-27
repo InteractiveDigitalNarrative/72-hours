@@ -4,21 +4,28 @@
 import { useState, useEffect } from 'react';
 import Menu from './components/Menu.jsx';
 import InkStory from './components/InkStory.jsx';
+import LoadingScreen from './components/LoadingScreen.jsx';
 import { AudioProvider, useAudioContext } from './context/AudioContext.jsx';
 import './App.css';
 
 function AppContent() {
-  const [currentScreen, setCurrentScreen] = useState('menu');
+  const [currentScreen, setCurrentScreen] = useState('loading');
   const [hasSavedGame] = useState(false);
 
   const { playAmbient } = useAudioContext();
 
-  // Play menu ambient whenever we're on the menu screen
+  // Play menu ambient whenever we return to the menu (user has already interacted by then)
   useEffect(() => {
     if (currentScreen === 'menu') {
       playAmbient('menu');
     }
   }, [currentScreen, playAmbient]);
+
+  // Loading screen "ENTER" click — first user gesture, safe to start audio
+  const handleEnter = () => {
+    playAmbient('menu');
+    setCurrentScreen('menu');
+  };
 
   const handleStartGame = () => {
     setCurrentScreen('game');
@@ -34,6 +41,10 @@ function AppContent() {
 
   return (
     <div className="App">
+      {currentScreen === 'loading' && (
+        <LoadingScreen onEnter={handleEnter} />
+      )}
+
       {currentScreen === 'menu' && (
         <Menu
           onStartGame={handleStartGame}
