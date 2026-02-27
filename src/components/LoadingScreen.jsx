@@ -4,7 +4,6 @@ import './LoadingScreen.css';
 
 const BASE_URL = import.meta.env.BASE_URL;
 
-// Every audio file used anywhere in the game
 const AUDIO_ASSETS = [
   'Sound/Menu.mp3',
   'Sound/PreparationMusic.mp3',
@@ -18,30 +17,41 @@ const AUDIO_ASSETS = [
   'Sound/rustle.flac',
 ];
 
-const IMAGE_ASSETS = [
-  'Images/Room.jpg',
-];
+const IMAGE_ASSETS = ['Images/Room.jpg'];
 
 const TOTAL = AUDIO_ASSETS.length + IMAGE_ASSETS.length;
 
+// Rotating status lines shown while loading
+const STATUS_LINES = [
+  'Checking emergency frequencies…',
+  'Verifying supply routes…',
+  'Calibrating weather sensors…',
+  'Establishing communication links…',
+  'Assessing storm trajectory…',
+  'Loading mission parameters…',
+];
+
 export default function LoadingScreen({ onEnter }) {
-  const [loaded, setLoaded] = useState(0);
+  const [loaded, setLoaded]       = useState(0);
+  const [statusIdx, setStatusIdx] = useState(0);
+
+  // Cycle through status lines while loading
+  useEffect(() => {
+    const id = setInterval(() => {
+      setStatusIdx((i) => (i + 1) % STATUS_LINES.length);
+    }, 1600);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
-    let count = 0;
-
-    const done = () => {
-      count++;
-      setLoaded((n) => n + 1);
-    };
-
+    const done = () => setLoaded((n) => n + 1);
     const elements = [];
 
     AUDIO_ASSETS.forEach((src) => {
       const a = new Audio();
       a.preload = 'auto';
       a.addEventListener('canplay', done, { once: true });
-      a.addEventListener('error',    done, { once: true });
+      a.addEventListener('error',   done, { once: true });
       a.src = BASE_URL + src;
       elements.push(a);
     });
@@ -54,7 +64,6 @@ export default function LoadingScreen({ onEnter }) {
       elements.push(img);
     });
 
-    // Failsafe: never hang longer than 10 s
     const timeout = setTimeout(() => setLoaded(TOTAL), 10_000);
 
     return () => {
@@ -71,31 +80,45 @@ export default function LoadingScreen({ onEnter }) {
       className="loading-screen"
       style={{ backgroundImage: `url(${BASE_URL}Images/Room.jpg)` }}
     >
+      {/* Layered overlays for depth */}
       <div className="loading-overlay" />
+      <div className="loading-scanlines" />
+      <div className="loading-vignette" />
 
       <div className="loading-card">
-        <div className="loading-badge">EMERGENCY PROTOCOL</div>
-
-        <h1 className="loading-title">STORM ALERT</h1>
-        <p className="loading-subtitle">Crisis Management Simulation</p>
-
-        <div className="loading-bar-track">
-          <div
-            className="loading-bar-fill"
-            style={{ width: `${progress}%` }}
-          />
+        {/* Top alert band */}
+        <div className="loading-alert-band">
+          <span className="loading-alert-dot" />
+          EMERGENCY PROTOCOL ACTIVE
+          <span className="loading-alert-dot" />
         </div>
 
-        <p className="loading-status">
-          {ready ? 'All systems ready.' : `Loading… ${progress}%`}
-        </p>
+        {/* Title */}
+        <div className="loading-title-block">
+          <h1 className="loading-title">STORM<br />ALERT</h1>
+          <p className="loading-tagline">Every decision counts. Time is running out.</p>
+        </div>
 
+        {/* Divider */}
+        <div className="loading-divider" />
+
+        {/* Progress area */}
+        <div className="loading-progress-area">
+          <div className="loading-bar-track">
+            <div className="loading-bar-fill" style={{ width: `${progress}%` }} />
+          </div>
+          <p className="loading-status">
+            {ready ? 'All systems ready.' : STATUS_LINES[statusIdx]}
+          </p>
+        </div>
+
+        {/* Enter button */}
         <button
           className={`loading-enter-btn${ready ? ' ready' : ''}`}
           onClick={ready ? onEnter : undefined}
           disabled={!ready}
         >
-          ENTER
+          {ready ? 'ENTER' : `${progress}%`}
         </button>
       </div>
     </div>
