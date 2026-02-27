@@ -3,8 +3,8 @@
 // STEP 1: IMPORTS
 // Import React and the useState hook (for managing state)
 import React, { useState } from 'react';
-// Import the CSS file for this component
 import './Menu.css';
+import { useAudioContext } from '../context/AudioContext';
 
 // STEP 2: COMPONENT FUNCTION
 // This component receives 3 props from its parent:
@@ -13,33 +13,27 @@ import './Menu.css';
 // - hasSavedGame: boolean - true if there's a saved game
 function Menu({ onStartGame, onContinueGame, hasSavedGame }) {
 
-  // STEP 3: STATE
-  // Create a state variable to track if About modal is visible
-  // showAbout = current value (starts as false = hidden)
-  // setShowAbout = function to update the value
   const [showAbout, setShowAbout] = useState(false);
+  const { playSfx } = useAudioContext();
 
-  // STEP 4: EVENT HANDLERS
-  // These functions run when user clicks buttons
-
-  // When user clicks "Start Mission"
   const handleStartClick = () => {
-    onStartGame(); // Call the function passed from parent (App.jsx)
+    playSfx('open');
+    onStartGame();
   };
 
-  // When user clicks "Continue"
   const handleContinueClick = () => {
-    onContinueGame(); // Call the function passed from parent
+    playSfx('open');
+    onContinueGame();
   };
 
-  // When user clicks "About"
   const handleAboutClick = () => {
-    setShowAbout(true); // Update state - modal becomes visible
+    playSfx('open');
+    setShowAbout(true);
   };
 
-  // When user closes the About modal
   const handleCloseAbout = () => {
-    setShowAbout(false); // Update state - modal becomes hidden
+    playSfx('close');
+    setShowAbout(false);
   };
 
   // STEP 5: RETURN JSX (What the component displays)

@@ -1,6 +1,8 @@
 import './CrisisScreen.css';
+import { useAudioContext } from '../context/AudioContext';
 
 function CrisisScreen({ phase, gameVars, household, onContinue }) {
+  const { playSfx } = useAudioContext();
   const elderlyName = household?.elderlyRelation || 'your relative';
 
   const NIGHT_CATEGORIES = [
@@ -140,7 +142,7 @@ function CrisisScreen({ phase, gameVars, household, onContinue }) {
           </div>
         )}
 
-        <button className="crisis-continue-btn" onClick={onContinue}>
+        <button className="crisis-continue-btn" onClick={() => { playSfx('click'); onContinue(); }}>
           {buttonText}
         </button>
       </div>

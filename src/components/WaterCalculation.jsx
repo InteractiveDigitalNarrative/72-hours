@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import './WaterCalculation.css';
+import { useAudioContext } from '../context/AudioContext';
 
 function WaterCalculation({ familySize = 2, onClose }) {
+  const { playSfx } = useAudioContext();
   const PEOPLE = familySize;
   const DAYS = 3;
   const L_PER_PERSON_DAY = 3;
@@ -42,6 +44,7 @@ function WaterCalculation({ familySize = 2, onClose }) {
   const [measuredLitres, setMeasuredLitres] = useState('');
 
   const handleSelect = (opt) => {
+    playSfx(opt.correct ? 'success' : 'fail');
     setSelected(opt);
   };
 
@@ -118,7 +121,7 @@ function WaterCalculation({ familySize = 2, onClose }) {
               </div>
             </div>
 
-            <button className="wc-btn-primary" onClick={() => setScreen(2)}>
+            <button className="wc-btn-primary" onClick={() => { playSfx('click'); setScreen(2); }}>
               Test your knowledge →
             </button>
           </div>
@@ -156,7 +159,7 @@ function WaterCalculation({ familySize = 2, onClose }) {
               </p>
             </div>
 
-            <button className="wc-btn-primary" onClick={() => onClose(selected?.correct ?? false, measuredLitres === '' ? 0 : Number(measuredLitres))}>
+            <button className="wc-btn-primary" onClick={() => { playSfx('click'); onClose(selected?.correct ?? false, measuredLitres === '' ? 0 : Number(measuredLitres)); }}>
               Continue →
             </button>
           </div>
@@ -201,7 +204,7 @@ function WaterCalculation({ familySize = 2, onClose }) {
             </div>
 
             {selected && (
-              <button className="wc-btn-primary" onClick={() => setScreen(3)}>
+              <button className="wc-btn-primary" onClick={() => { playSfx('click'); setScreen(3); }}>
                 {selected.correct ? 'Check your water supply →' : 'Continue anyway →'}
               </button>
             )}

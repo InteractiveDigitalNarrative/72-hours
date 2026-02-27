@@ -1,43 +1,39 @@
 // App.jsx - Main application component
 
 // STEP 1: IMPORT
-import { useState } from 'react';  // Import useState hook
-import Menu from './components/Menu.jsx';  // Import our Menu component
-import InkStory from './components/InkStory.jsx';  // Import InkStory component
+import { useState, useEffect } from 'react';
+import Menu from './components/Menu.jsx';
+import InkStory from './components/InkStory.jsx';
+import { AudioProvider, useAudioContext } from './context/AudioContext.jsx';
 import './App.css';
 
-function App() {
-  // STEP 2: STATE MANAGEMENT
-  // Track which screen to show: 'menu' or 'game'
+function AppContent() {
   const [currentScreen, setCurrentScreen] = useState('menu');
+  const [hasSavedGame] = useState(false);
 
-  // Track if there's a saved game (for now, false)
-  const [hasSavedGame, setHasSavedGame] = useState(false);
+  const { playAmbient } = useAudioContext();
 
-  // STEP 3: EVENT HANDLERS
-  // These functions are passed to Menu as props
+  // Play menu ambient whenever we're on the menu screen
+  useEffect(() => {
+    if (currentScreen === 'menu') {
+      playAmbient('menu');
+    }
+  }, [currentScreen, playAmbient]);
 
   const handleStartGame = () => {
-    console.log('Start game clicked!');
-    setCurrentScreen('game');  // Switch to game screen
-    // Later we'll actually start the game here
+    setCurrentScreen('game');
   };
 
   const handleContinueGame = () => {
-    console.log('Continue game clicked!');
-    setCurrentScreen('game');  // Switch to game screen
-    // Later we'll load saved game here
+    setCurrentScreen('game');
   };
 
   const handleReturnToMenu = () => {
     setCurrentScreen('menu');
   };
 
-  // STEP 4: RENDER
   return (
     <div className="App">
-      {/* CONDITIONAL RENDERING: Show different screens based on state */}
-
       {currentScreen === 'menu' && (
         <Menu
           onStartGame={handleStartGame}
@@ -50,6 +46,14 @@ function App() {
         <InkStory onReturnToMenu={handleReturnToMenu} />
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AudioProvider>
+      <AppContent />
+    </AudioProvider>
   );
 }
 

@@ -10,6 +10,7 @@ import WaterCalculation from './WaterCalculation';
 import EndingScreen from './EndingScreen';
 import CrisisScreen from './CrisisScreen';
 import FamilySetup from './FamilySetup';
+import { useAudioContext } from '../context/AudioContext';
 
 // Prep hub choice metadata — icon, description, and the Ink variable to check for completion
 const PREP_CHOICE_META = {
@@ -43,6 +44,11 @@ const stripEmoji = (text) =>
   text.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]+\s*/gu, '').trim();
 
 function InkStory({ onReturnToMenu }) {
+  // ============================================
+  // AUDIO
+  // ============================================
+  const { muted, toggleMute, playAmbient, playSfx, setWindVolume, WIND_VOLS } = useAudioContext();
+
   // ============================================
   // STATE MANAGEMENT
   // ============================================
@@ -112,6 +118,8 @@ function InkStory({ onReturnToMenu }) {
       return next;
     });
   };
+
+  const [showSettings, setShowSettings] = useState(false);
 
   // Track game variables from Ink
   const [gameVars, setGameVars] = useState({
@@ -231,6 +239,28 @@ function InkStory({ onReturnToMenu }) {
   }, [gameVars.in_preparation]);
 
   // ============================================
+  // AMBIENT SOUND STATE MACHINE
+  //   ending → outro music | radio overlay → radio noise | storm stage → silence (wind carries it) | prep active → electricity | else → room
+  useEffect(() => {
+    if (showEndingScreen) {
+      playAmbient('outro');
+    } else if (showRadioBroadcast) {
+      playAmbient('radio');
+    } else if (weatherStage >= 1) {
+      playAmbient(null); // wind layer takes over
+    } else if (gameVars.in_preparation) {
+      playAmbient('prep');
+    } else {
+      playAmbient('menu');
+    }
+  }, [weatherStage, gameVars.in_preparation, showEndingScreen, showRadioBroadcast, playAmbient]);
+
+  // Wind volume tracks weather stage — fades to 0 at the ending screen
+  useEffect(() => {
+    setWindVolume(showEndingScreen ? 0 : (WIND_VOLS[weatherStage] ?? WIND_VOLS[0]));
+  }, [weatherStage, showEndingScreen, setWindVolume, WIND_VOLS]);
+
+  // ============================================
   // STORY FUNCTIONS
   // ============================================
 
@@ -310,11 +340,13 @@ function InkStory({ onReturnToMenu }) {
           setKeypadScenario(scenario);
           setShowKeypad(true);
           setCallAttempts(0);
+          playSfx('open');
         }
 
         // Check for SMS tag
         if (tag.startsWith('SMS:')) {
           console.log('Showing SMS overlay');
+          playSfx('open');
           setShowSMS(true);
           setStoryText(lines);
           setChoices([]);
@@ -411,10 +443,13 @@ function InkStory({ onReturnToMenu }) {
   };
 
   // Function to handle when user clicks a choice
-  const handleChoiceClick = (choiceIndex) => {
+  // sfxName defaults to 'click' but can be overridden by prep cards
+  const handleChoiceClick = (choiceIndex, sfxName = 'click') => {
     const story = storyRef.current;
 
     if (!story) return;
+
+    playSfx(sfxName);
 
     // Save current state before making the choice
     historyRef.current.push({
@@ -434,6 +469,7 @@ function InkStory({ onReturnToMenu }) {
   const handleBack = () => {
     const story = storyRef.current;
     if (!story || historyRef.current.length === 0) return;
+    playSfx('close');
 
     const prev = historyRef.current.pop();
     setHistoryLength(historyRef.current.length);
@@ -493,6 +529,7 @@ function InkStory({ onReturnToMenu }) {
   };
 
   const handleCallRetry = () => {
+    playSfx('open');
     setCallAttempts(prev => prev + 1);
     setCallResult(null);
     setDialedNumber('');
@@ -504,6 +541,7 @@ function InkStory({ onReturnToMenu }) {
   // ============================================
 
   const handleSMSClose = () => {
+    playSfx('close');
     setShowSMS(false);
     const story = storyRef.current;
     if (!story) return;
@@ -519,6 +557,7 @@ function InkStory({ onReturnToMenu }) {
   // ============================================
 
   const handleRadioBroadcastClose = () => {
+    playSfx('close');
     setShowRadioBroadcast(false);
     // Continue the story, then auto-select the first choice to skip the extra "Continue"
     const story = storyRef.current;
@@ -696,6 +735,7 @@ function InkStory({ onReturnToMenu }) {
   // ============================================
 
   const handleCrisisClose = () => {
+    playSfx('click');
     setCrisisPhase(null);
     const story = storyRef.current;
     if (!story) return;
@@ -796,13 +836,6 @@ function InkStory({ onReturnToMenu }) {
               </span>
             ))}
           </div>
-          <button
-            className="text-speed-toggle"
-            onClick={toggleTextSpeed}
-            title={textSpeed === 'slow' ? 'Text: Animated' : 'Text: Instant'}
-          >
-            {textSpeed === 'slow' ? '▸' : '▸▸'}
-          </button>
         </div>
       </div>
 
@@ -876,10 +909,11 @@ function InkStory({ onReturnToMenu }) {
                         const handleCardClick = () => {
                           if (isLocked) return;
                           if (meta.gameVar === 'prep_water' && !isDone) {
+                            playSfx('prep_water');
                             setWaterCalcPendingIndex(index);
                             setShowWaterCalc(true);
                           } else {
-                            handleChoiceClick(index);
+                            handleChoiceClick(index, meta.gameVar || 'click');
                           }
                         };
 
@@ -888,6 +922,7 @@ function InkStory({ onReturnToMenu }) {
                           if (isLocked) return;
                           // Mobile: toggle accordion. Wide: trigger action directly.
                           if (window.innerWidth <= 639) {
+                            playSfx(isExpanded ? 'close' : 'open');
                             setExpandedCard(isExpanded ? null : index);
                           } else {
                             handleCardClick();
@@ -970,7 +1005,7 @@ function InkStory({ onReturnToMenu }) {
                     ) : (
                       <button
                         className="prep-action-btn prep-shop-btn"
-                        onClick={() => { setStoreOpenedDirectly(true); setShowStore(true); }}
+                        onClick={() => { playSfx('open'); setStoreOpenedDirectly(true); setShowStore(true); }}
                       >
                         🛒 Go to Shop <span className="prep-action-time">⏱ 20+ min</span>
                       </button>
@@ -1153,6 +1188,41 @@ function InkStory({ onReturnToMenu }) {
       {showFamilySetup && (
         <FamilySetup onClose={handleFamilySetupClose} />
       )}
+
+      {/* Floating Settings Button */}
+      <div className="settings-fab-container">
+        {showSettings && (
+          <div className="settings-panel">
+            <div className="settings-row">
+              <span className="settings-label">Sound</span>
+              <button
+                className={`settings-toggle ${muted ? 'off' : 'on'}`}
+                onClick={() => { playSfx('click'); toggleMute(); }}
+                title={muted ? 'Sound: Off' : 'Sound: On'}
+              >
+                {muted ? '🔇 Off' : '🔊 On'}
+              </button>
+            </div>
+            <div className="settings-row">
+              <span className="settings-label">Text Animation</span>
+              <button
+                className={`settings-toggle ${textSpeed === 'instant' ? 'off' : 'on'}`}
+                onClick={() => { playSfx('click'); toggleTextSpeed(); }}
+                title={textSpeed === 'slow' ? 'Text: Animated' : 'Text: Instant'}
+              >
+                {textSpeed === 'slow' ? '▸ On' : '▸▸ Off'}
+              </button>
+            </div>
+          </div>
+        )}
+        <button
+          className={`settings-fab ${showSettings ? 'active' : ''}`}
+          onClick={() => { playSfx('click'); setShowSettings((s) => !s); }}
+          title="Settings"
+        >
+          ⚙
+        </button>
+      </div>
     </div>
   );
 }

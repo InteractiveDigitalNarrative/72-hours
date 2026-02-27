@@ -1,5 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import './StoreOverlay.css';
+import { useAudioContext } from '../context/AudioContext';
 
 const STORE_ITEMS = [
   // ── ESSENTIALS ──────────────────────────────────────────────
@@ -73,6 +74,8 @@ function StoreOverlay({ shopWater, shopFood, shopBatteries, shopWaterAmount, onC
   const [expandedFeedback, setExpandedFeedback] = useState(null);
   const [shakingItem, setShakingItem] = useState(null);
 
+  const { playSfx } = useAudioContext();
+
   // Shuffle items once per store open — keeps order stable across re-renders
   const shuffledItems = useMemo(() => shuffle(STORE_ITEMS), []);
 
@@ -94,18 +97,21 @@ function StoreOverlay({ shopWater, shopFood, shopBatteries, shopWaterAmount, onC
       setTimeout(() => setShakingItem(null), 500);
       setBadClicks(prev => prev.includes(item.id) ? prev : [...prev, item.id]);
       setExpandedFeedback(item.id);
+      playSfx('fail');
       return;
     }
 
     if (item.quality === 'okay') {
       setBasket(prev => [...prev, item.id]);
       setExpandedFeedback(item.id);
+      playSfx('purchase');
       return;
     }
 
     // good items — just add
     setBasket(prev => [...prev, item.id]);
-  }, [basket, expandedFeedback]);
+    playSfx('purchase');
+  }, [basket, expandedFeedback, playSfx]);
 
   const BASE_VISIT_COST = 20; // minutes to travel to the store and back
   const timeCost = BASE_VISIT_COST + basket.length + badClicks.length; // +1 minute per item (good or bad)
@@ -114,7 +120,7 @@ function StoreOverlay({ shopWater, shopFood, shopBatteries, shopWaterAmount, onC
     onTimeCostChange?.(timeCost);
   }, [timeCost, onTimeCostChange]);
 
-  const handleCheckout = () => onClose(basket, timeCost);
+  const handleCheckout = () => { playSfx('close'); onClose(basket, timeCost); };
 
   // Which items are available based on shop flags + category rules
   const isAvailable = (item) => {
@@ -146,7 +152,7 @@ function StoreOverlay({ shopWater, shopFood, shopBatteries, shopWaterAmount, onC
           <p className="store-warning-rule">
             <strong>The trip to the store and back costs 20 minutes.</strong> Each item you pick up costs 1 more. Choose wisely.
           </p>
-          <button className="store-warning-btn" onClick={() => setShowWarning(false)}>
+          <button className="store-warning-btn" onClick={() => { playSfx('open'); setShowWarning(false); }}>
             Enter the store →
           </button>
         </div>

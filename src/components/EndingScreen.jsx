@@ -1,4 +1,5 @@
 import './EndingScreen.css';
+import { useAudioContext } from '../context/AudioContext';
 
 const CATEGORIES = [
   { key: 'prep_water',      icon: '💧', label: 'Water' },
@@ -19,6 +20,7 @@ function getCorrectNumber(household) {
 }
 
 function EndingScreen({ gameVars, endingType, household, callScore, onPlayAgain }) {
+  const { playSfx } = useAudioContext();
   const elderlyName = household?.elderlyRelation || 'your relative';
   const correctEntry = getCorrectNumber(household);
 
@@ -199,7 +201,7 @@ function EndingScreen({ gameVars, endingType, household, callScore, onPlayAgain 
         </div>
 
         {/* Play Again */}
-        <button className="play-again-btn" onClick={onPlayAgain}>
+        <button className="play-again-btn" onClick={() => { playSfx('open'); onPlayAgain(); }}>
           Play Again
         </button>
       </div>

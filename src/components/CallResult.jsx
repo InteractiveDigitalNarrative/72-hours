@@ -1,6 +1,8 @@
 // CallResult.jsx - Shows the consequence of the emergency call
 
+import { useEffect } from 'react';
 import './PhoneKeypad.css';
+import { useAudioContext } from '../context/AudioContext';
 
 // Define consequences for different numbers in different scenarios
 const CALL_CONSEQUENCES = {
@@ -383,6 +385,15 @@ function CallResult({ dialedNumber, scenario, attempts = 0, onContinue, onRetry 
   const canRetry = consequence.allowRetry && attempts < 2;
   const isLastChance = consequence.allowRetry && attempts === 1; // next wrong = final
 
+  const { playSfx } = useAudioContext();
+  useEffect(() => {
+    if (consequence.type === 'success') {
+      playSfx('success');
+    } else {
+      playSfx('fail');
+    }
+  }, [consequence.type, playSfx]);
+
   return (
     <div className="call-result-overlay">
       <div className={`call-result ${consequence.type}`}>
@@ -399,20 +410,20 @@ function CallResult({ dialedNumber, scenario, attempts = 0, onContinue, onRetry 
 
         {canRetry ? (
           <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
-            <button className="continue-btn" onClick={onRetry}>
+            <button className="continue-btn" onClick={() => { playSfx('click'); onRetry(); }}>
               Try Again
             </button>
-            <button className="continue-btn secondary-btn" onClick={() => onContinue('no_help')}>
+            <button className="continue-btn secondary-btn" onClick={() => { playSfx('close'); onContinue('no_help'); }}>
               Give Up
             </button>
           </div>
         ) : consequence.allowRetry ? (
           // attempts >= 2: third wrong dial — no more retries
-          <button className="continue-btn" onClick={() => onContinue('no_help')}>
+          <button className="continue-btn" onClick={() => { playSfx('click'); onContinue('no_help'); }}>
             Continue
           </button>
         ) : (
-          <button className="continue-btn" onClick={() => onContinue(consequence.outcome)}>
+          <button className="continue-btn" onClick={() => { playSfx('click'); onContinue(consequence.outcome); }}>
             Continue
           </button>
         )}

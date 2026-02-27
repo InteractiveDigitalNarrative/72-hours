@@ -2,26 +2,32 @@
 
 import { useState } from 'react';
 import './PhoneKeypad.css';
+import { useAudioContext } from '../context/AudioContext';
 
 function PhoneKeypad({ onCall, onCancel, scenario }) {
   const [dialedNumber, setDialedNumber] = useState('');
+  const { playSfx } = useAudioContext();
 
   const handleDigitPress = (digit) => {
+    playSfx('dtmf', { digit });
     if (dialedNumber.length < 6) {
       setDialedNumber(prev => prev + digit);
     }
   };
 
   const handleClear = () => {
+    playSfx('click');
     setDialedNumber(prev => prev.slice(0, -1));
   };
 
   const handleClearAll = () => {
+    playSfx('close');
     setDialedNumber('');
   };
 
   const handleCall = () => {
     if (dialedNumber.length > 0) {
+      playSfx('open');
       onCall(dialedNumber, scenario);
     }
   };
@@ -33,7 +39,7 @@ function PhoneKeypad({ onCall, onCancel, scenario }) {
       <div className="phone-keypad">
         <div className="phone-header">
           <span className="phone-title">Emergency Call</span>
-          <button className="phone-cancel" onClick={onCancel}>✕</button>
+          <button className="phone-cancel" onClick={() => { playSfx('close'); onCancel(); }}>✕</button>
         </div>
 
         <div className="phone-display">

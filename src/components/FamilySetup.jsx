@@ -1,24 +1,29 @@
 import { useState } from 'react';
 import './FamilySetup.css';
+import { useAudioContext } from '../context/AudioContext';
 
 function FamilySetup({ onClose }) {
   const [extras, setExtras] = useState([]);
   const [showElderlyForm, setShowElderlyForm] = useState(false);
   const [elderlyName, setElderlyName] = useState('');
+  const { playSfx } = useAudioContext();
 
   const hasElderly = extras.some(m => m.type === 'elderly');
 
   const addAdult = () => {
+    playSfx('purchase');
     setExtras(prev => [...prev, { type: 'adult' }]);
     setShowElderlyForm(false);
   };
 
   const addChild = () => {
+    playSfx('purchase');
     setExtras(prev => [...prev, { type: 'child' }]);
     setShowElderlyForm(false);
   };
 
   const handleElderlyClick = () => {
+    playSfx('open');
     setShowElderlyForm(true);
     setElderlyName('');
   };
@@ -26,12 +31,14 @@ function FamilySetup({ onClose }) {
   const addElderly = () => {
     const relation = elderlyName.trim();
     if (!relation) return;
+    playSfx('purchase');
     setExtras(prev => [...prev, { type: 'elderly', relation }]);
     setShowElderlyForm(false);
     setElderlyName('');
   };
 
   const removeExtra = (index) => {
+    playSfx('close');
     setExtras(prev => prev.filter((_, i) => i !== index));
   };
 
@@ -113,7 +120,7 @@ function FamilySetup({ onClose }) {
           </div>
         )}
 
-        <button className="fs-done-btn" onClick={() => onClose({ extras })}>
+        <button className="fs-done-btn" onClick={() => { playSfx('open'); onClose({ extras }); }}>
           Done — Start Preparing
         </button>
 
