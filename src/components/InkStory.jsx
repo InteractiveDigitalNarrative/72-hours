@@ -46,6 +46,14 @@ const getPrepChoiceMeta = (text) => {
 const stripEmoji = (text) =>
   text.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]+\s*/gu, '').trim();
 
+// Split a leading emoji from the rest of the choice text for separate rendering
+const splitChoiceIcon = (text) => {
+  const match = text.match(/^([\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\u{FE00}-\u{FEFF}]+)\s*/u);
+  return match
+    ? { icon: match[1], label: text.slice(match[0].length) }
+    : { icon: null, label: text };
+};
+
 function InkStory({ onReturnToMenu }) {
   // ============================================
   // AUDIO
@@ -573,6 +581,11 @@ function InkStory({ onReturnToMenu }) {
 
     setCallResult(null);
     setDialedNumber('');
+
+    // Auto-advance past the [Continue] choice in the call knot
+    if (story && story.currentChoices.length > 0) {
+      story.ChooseChoiceIndex(0);
+    }
     continueStory();
   };
 
@@ -1093,15 +1106,19 @@ function InkStory({ onReturnToMenu }) {
               ) : (
                 /* Normal sections: vertical list */
                 <div className="choices">
-                  {choices.map((choice, index) => (
-                    <button
-                      key={index}
-                      className="choice-btn"
-                      onClick={() => handleChoiceClick(index)}
-                    >
-                      {choice.text}
-                    </button>
-                  ))}
+                  {choices.map((choice, index) => {
+                    const { icon, label } = splitChoiceIcon(choice.text);
+                    return (
+                      <button
+                        key={index}
+                        className="choice-btn"
+                        onClick={() => handleChoiceClick(index)}
+                      >
+                        {icon && <span className="choice-icon">{icon}</span>}
+                        <span className="choice-label">{label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               )
             )}

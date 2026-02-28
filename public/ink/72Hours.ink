@@ -84,14 +84,6 @@ VAR ending_type = ""
 
 === tv_start ===
 # AUDIOLOOP: ../Sound/wind.wav
-# CLASS: tv-scene
-# BACKGROUND: https://images.unsplash.com/photo-1552858725-2758b5fb1286?w=800
-* [⚠ BREAKING NEWS]
-    -> tv_news
-
-=== tv_news ===
-
-# CLEAR
 # BREAKING_NEWS
 
 * [Continue]
@@ -341,24 +333,24 @@ You have {water_collected}L at home — the store can cover the rest.
 {water_pots: ✓ Cooking pots (6L)}
 {water_bathtub: ✓ Bathtub (non-drinking)}
 
-+ {not water_bottles} [Fill empty bottles from the tap (4L) — 5 min]
++ {not water_bottles} [🚰 Fill empty bottles from the tap (4L) — 5 min]
     ~ water_bottles = true
     ~ water_collected = water_collected + 4
     ~ current_time = current_time + 5
     -> water_container_result_bottles
 
-+ {not water_pots} [Fill cooking pots with lids (6L) — 8 min]
++ {not water_pots} [🍲 Fill cooking pots with lids (6L) — 8 min]
     ~ water_pots = true
     ~ water_collected = water_collected + 6
     ~ current_time = current_time + 8
     -> water_container_result_pots
 
-+ {not water_bathtub} [Fill the bathtub — 10 min]
++ {not water_bathtub} [🛁 Fill the bathtub — 10 min]
     ~ water_bathtub = true
     ~ current_time = current_time + 10
     -> water_container_result_bathtub
 
-+ {not shop_water} [Add bottled water to shopping list instead]
++ {not shop_water} [🛒 Add bottled water to shopping list]
     ~ shop_water = true
     ~ shop_water_amount = water_target - water_collected
     {shop_water_amount < 0:
@@ -366,7 +358,7 @@ You have {water_collected}L at home — the store can cover the rest.
     }
     -> water_added_to_list
 
-+ [Done collecting water]
++ [✓ Done collecting water]
     -> water_complete
 
 === water_container_result_bottles ===
@@ -475,12 +467,12 @@ You think about food supplies.
         You've got proper emergency food supplies.
 }
 
-+ {prep_food == 0} [Check what's in the kitchen (10 min)]
++ {prep_food == 0} [🔍 Check what's in the kitchen (10 min)]
     ~ prep_food = 1
     ~ current_time = current_time + 10
     -> food_kitchen_result
 
-+ {not shop_food} [Add emergency food to shopping list]
++ {not shop_food} [🛒 Add emergency food to shopping list]
     ~ shop_food = true
     ~ prep_food = 1
     -> food_added_to_list
@@ -497,11 +489,11 @@ There's some bread that will go stale in a day, a few cans of beans, half a pack
 
 Not ideal for an emergency, but it's something. The bread and apples won't last long though...
 
-+ {not shop_food} [Add emergency food to shopping list]
++ {not shop_food} [🛒 Add emergency food to shopping list]
     ~ shop_food = true
     -> food_added_to_list
 
-+ [Done with food — back to preparation]
++ [✓ Done with food — back to preparation]
     -> preparation_hub
 
 === food_added_to_list ===
@@ -625,37 +617,37 @@ Cranking the heating or opening windows won't help when the power's out. The fir
 
 What do you want to do?
 
-+ {not heat_sealed} [Seal windows & ventilation — 3 min]
++ {not heat_sealed} [🪟 Seal windows & ventilation — 3 min]
     ~ heat_sealed = true
     ~ current_time = current_time + 3
     -> heat_result_sealed
 
-+ {not heat_one_room && has_elderly} [Move {elderly_relation} to living room — 3 min]
++ {not heat_one_room && has_elderly} [🚶 Move {elderly_relation} to living room — 3 min]
     ~ heat_one_room = true
     ~ current_time = current_time + 3
     -> heat_result_one_room
 
-+ {not heat_one_room && not has_elderly} [Set up warm room — 3 min]
++ {not heat_one_room && not has_elderly} [🛋️ Set up warm room — 3 min]
     ~ heat_one_room = true
     ~ current_time = current_time + 3
     -> heat_result_one_room
 
-+ {not heat_stove} [Prepare wood stove & bring firewood — 10 min]
++ {not heat_stove} [🪵 Prepare wood stove & bring firewood — 10 min]
     ~ heat_stove = true
     ~ current_time = current_time + 10
     -> heat_result_stove
 
-+ {not heat_pipes} [Insulate water pipes — 3 min]
++ {not heat_pipes} [🔧 Insulate water pipes — 3 min]
     ~ heat_pipes = true
     ~ current_time = current_time + 3
     -> heat_result_pipes
 
-+ {not heat_clothing} [Gather warm clothes & blankets — 3 min]
++ {not heat_clothing} [🧥 Gather warm clothes & blankets — 3 min]
     ~ heat_clothing = true
     ~ current_time = current_time + 3
     -> heat_result_clothing
 
-+ [Done with heat]
++ [✓ Done with heat]
     -> heat_complete
 
 === heat_result_sealed ===
@@ -821,25 +813,25 @@ A flashlight is safe, instant, and doesn't drain your phone. Keep it somewhere e
 {light_batteries: ✓ Fresh batteries}
 {light_candles: ✓ Candles & matches}
 
-+ {not light_flashlight} [Find the flashlight — 3 min]
++ {not light_flashlight} [🔦 Find the flashlight — 3 min]
     ~ light_flashlight = true
     ~ current_time = current_time + 3
     -> light_result_flashlight
 
-+ {light_flashlight && not light_batteries && not shop_batteries} [Search for spare batteries at home — 3 min]
++ {light_flashlight && not light_batteries && not shop_batteries} [🔋 Search for spare batteries at home — 3 min]
     ~ current_time = current_time + 3
     -> light_result_search_batteries
 
-+ {light_flashlight && not light_batteries && not shop_batteries} [Add batteries to shopping list]
++ {light_flashlight && not light_batteries && not shop_batteries} [🛒 Add batteries to shopping list]
     ~ shop_batteries = true
     -> light_result_shop_batteries
 
-+ {not light_candles} [Gather candles & matches — 3 min]
++ {not light_candles} [🕯️ Gather candles & matches — 3 min]
     ~ light_candles = true
     ~ current_time = current_time + 3
     -> light_result_candles
 
-+ [Done with light]
++ [✓ Done with light]
     -> light_complete
 
 === light_result_flashlight ===
@@ -989,25 +981,25 @@ Phone calls drain battery, and your friend probably knows as much as you do. In 
 {info_radio_batteries: ✓ Radio batteries}
 {info_phone_charged: ✓ Phone charged & ready}
 
-+ {not info_radio} [Find the battery radio — 3 min]
++ {not info_radio} [📻 Find the battery radio — 3 min]
     ~ info_radio = true
     ~ current_time = current_time + 3
     -> info_result_radio
 
-+ {info_radio && not info_radio_batteries && not shop_batteries} [Search for spare batteries — 3 min]
++ {info_radio && not info_radio_batteries && not shop_batteries} [🔋 Search for spare batteries — 3 min]
     ~ current_time = current_time + 3
     -> info_result_search_batteries
 
-+ {info_radio && not info_radio_batteries && not shop_batteries} [Add batteries to shopping list]
++ {info_radio && not info_radio_batteries && not shop_batteries} [🛒 Add batteries to shopping list]
     ~ shop_batteries = true
     -> info_result_shop_batteries
 
-+ {not info_phone_charged} [Charge phone & set up power saving — 2 min]
++ {not info_phone_charged} [📱 Charge phone & set up power saving — 2 min]
     ~ info_phone_charged = true
     ~ current_time = current_time + 2
     -> info_result_phone
 
-+ [Done with information]
++ [✓ Done with information]
     -> info_complete
 
 === info_result_radio ===
@@ -1171,27 +1163,27 @@ A first-aid kit is important, but grandmother's daily prescription medication is
 {med_organized: ✓ Medication organized}
 {med_first_aid: ✓ First-aid kit checked}
 
-+ {not med_pills_counted && has_elderly} [Count {elderly_relation}'s pills — 2 min]
++ {not med_pills_counted && has_elderly} [💊 Count {elderly_relation}'s pills — 2 min]
     ~ med_pills_counted = true
     ~ current_time = current_time + 2
     -> med_result_count
 
-+ {not med_pills_counted && not has_elderly} [Count prescription pills — 2 min]
++ {not med_pills_counted && not has_elderly} [💊 Count prescription pills — 2 min]
     ~ med_pills_counted = true
     ~ current_time = current_time + 2
     -> med_result_count
 
-+ {med_pills_counted && not med_organized} [Organize medication by day — 3 min]
++ {med_pills_counted && not med_organized} [🗂️ Organize medication by day — 3 min]
     ~ med_organized = true
     ~ current_time = current_time + 3
     -> med_result_organize
 
-+ {not med_first_aid} [Check first-aid kit — 2 min]
++ {not med_first_aid} [➕ Check first-aid kit — 2 min]
     ~ med_first_aid = true
     ~ current_time = current_time + 2
     -> med_result_firstaid
 
-+ [Done with medication]
++ [✓ Done with medication]
     -> medication_complete
 
 === med_result_count ===
@@ -1409,10 +1401,7 @@ The taps run dry. The fridge is warming. The stove won't light.
     -> morning_medication_check
 
 === morning_medication_check ===
-{has_elderly:
-    -> morning_medication
-}
--> crisis_culmination
+-> morning_medication
 
 === morning_medication ===
 # CLEAR
@@ -1420,11 +1409,23 @@ The taps run dry. The fridge is warming. The stove won't light.
 
 {
     - prep_medication == 0:
-        You search in the dark for {elderly_relation}'s medication. The bottles are jumbled together — labels impossible to read. You guess at the dose and hope it's right.
+        {has_elderly:
+            You search in the dark for {elderly_relation}'s medication. The bottles are jumbled together — labels impossible to read. You guess at the dose and hope it's right.
+        - else:
+            You search for the medication cabinet in the dark. The bottles are jumbled together — labels impossible to read. You guess at the dose and hope it's right.
+        }
     - prep_medication == 1:
-        You find the pills but they're loose in a bag. Hard to read the labels in low light. One pill or two? You do your best.
+        {has_elderly:
+            You find {elderly_relation}'s pills but they're loose in a bag. Hard to read the labels in low light. One pill or two? You do your best.
+        - else:
+            You find the pills but they're loose in a bag. Hard to read the labels in low light. One pill or two? You do your best.
+        }
     - else:
-        {elderly_relation}'s pills are sorted in the bedside box — morning and evening doses clearly separated. They take them without needing help.
+        {has_elderly:
+            {elderly_relation}'s pills are sorted in the bedside box — morning and evening doses clearly separated. They take them without needing help.
+        - else:
+            Your medication is organized by day. You take the right dose without scrambling in the dark.
+        }
 }
 
 * [Continue]
