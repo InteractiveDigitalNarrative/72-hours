@@ -47,7 +47,7 @@ function Menu({ onStartGame, onContinueGame, hasSavedGame }) {
 
           {/* HEADER SECTION */}
           <div className="menu-header">
-            <div className="emergency-badge">EMERGENCY PROTOCOL</div>
+            {/* <div className="emergency-badge">EMERGENCY PROTOCOL</div> */}
             <h1 className="menu-title">STORM ALERT</h1>
             <p className="menu-subtitle">Crisis Management Simulation</p>
           </div>
@@ -58,7 +58,7 @@ function Menu({ onStartGame, onContinueGame, hasSavedGame }) {
             {/* START BUTTON - Always visible */}
             <button onClick={handleStartClick} className="menu-btn primary">
               <span className="btn-icon">▶</span>
-              <span className="btn-text">START MISSION</span>
+              <span className="btn-text">START SIMULATION</span>
             </button>
 
             {/* CONTINUE BUTTON - Only show if hasSavedGame is true */}
@@ -95,13 +95,12 @@ function Menu({ onStartGame, onContinueGame, hasSavedGame }) {
 
             <h2>About Storm Alert</h2>
             <p>
-              In Storm Alert, every decision matters.
-              As an emergency response coordinator, you must manage resources, make tough choices,
-              and save as many lives as possible.
+              A severe winter storm is closing in. Storm Alert is a preparedness simulation that puts
+              you in the middle of a real crisis — at home, facing the disaster firsthand.
             </p>
             <p>
-              Navigate complex scenarios, balance competing needs, and experience the challenges
-              of real disaster management.
+              Gather supplies, make decisions under pressure, and figure out who to call when things
+              go wrong. Your choices determine how you and your household make it through the next 72 hours.
             </p>
 
             {/* Got It button */}

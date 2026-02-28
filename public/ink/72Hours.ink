@@ -74,12 +74,11 @@ VAR ending_type = ""
 -> pen_and_paper
 
 === pen_and_paper ===
-# CLEAR
-# FAMILY_SETUP
+<span></span> # CLEAR # FAMILY_SETUP
 
-<span style="font-size:4rem">🗒️</span>
+<span style="font-size:5rem;display:block;text-align:center;margin-bottom:0.5rem">🗒️</span>
 
-Grab a <b>pen and paper</b> — you'll need to note things down.
+<span class="note-hint">Grab a <b>pen and paper</b> — you'll need to note things down.</span>
 
 * [I'm ready]
     -> tv_start
@@ -246,14 +245,13 @@ You're in the kitchen, looking at the tap.
 
 Before you start filling containers, you need to figure out how much water you'll need.
 
-The rule is: <b>3 liters per person per day</b>
+There are {family_size} {family_size == 1: person | people} in your household. The storm is expected to last up to 3 days.
 
-That's {family_size} people in your household.
-The storm could last up to 3 days.
+Think about how much a person typically needs each day — then work out the total for everyone.
 
-How much water do you need in total?
+How much water should you aim for?
 
-<span class="note-hint">🗒️ Remember the formula — it could help later.</span>
+<span class="note-hint">🗒️ Write down your answer — you may need to refer to it later.</span>
 
 + [9 liters]
     -> water_calc_wrong_low
@@ -270,11 +268,11 @@ How much water do you need in total?
 === water_calc_wrong_low ===
 # CLEAR
 
-<b>Not quite...</b>
+<b>Not quite.</b>
 
-That's not enough for 2 people over 3 days.
+That's not enough to last {family_size} {family_size == 1: person | people} through 3 days.
 
-Remember: 3L × 2 people × 3 days = <b>18 liters minimum</b>
+The recommended amount is 3 liters per person per day — so 3L × {family_size} {family_size == 1: person | people} × 3 days = <b>{water_target} liters minimum.</b>
 
 + [Try again]
     -> water_calculation
@@ -282,11 +280,11 @@ Remember: 3L × 2 people × 3 days = <b>18 liters minimum</b>
 === water_calc_wrong_high ===
 # CLEAR
 
-<b>That's more than the minimum!</b>
+<b>That's more than the minimum — not necessarily a bad thing.</b>
 
-The calculation is: 3L × 2 people × 3 days = <b>18 liters</b>
+The minimum is 3L × {family_size} {family_size == 1: person | people} × 3 days = <b>{water_target} liters.</b>
 
-Having extra water isn't bad, but 18 liters is the minimum you need. Let's aim for at least that.
+Extra water is never a problem, but let's make sure you hit at least that.
 
 + [Continue]
     -> water_containers_intro
@@ -296,9 +294,9 @@ Having extra water isn't bad, but 18 liters is the minimum you need. Let's aim f
 
 <b>Correct!</b>
 
-3L × 2 people × 3 days = <b>18 liters</b>
+3L × {family_size} {family_size == 1: person | people} × 3 days = <b>{water_target} liters.</b>
 
-That's the minimum you need for drinking. More is always better if you have time.
+That's the minimum for drinking. More is always better if you have the time.
 
 + [Continue]
     -> water_containers_intro

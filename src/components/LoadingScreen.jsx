@@ -17,7 +17,7 @@ const AUDIO_ASSETS = [
   'Sound/rustle.flac',
 ];
 
-const IMAGE_ASSETS = ['Images/Room.jpg'];
+const IMAGE_ASSETS = ['Images/winter-storm.jpg'];
 
 const TOTAL = AUDIO_ASSETS.length + IMAGE_ASSETS.length;
 
@@ -78,7 +78,7 @@ export default function LoadingScreen({ onEnter }) {
   return (
     <div
       className="loading-screen"
-      style={{ backgroundImage: `url(${BASE_URL}Images/Room.jpg)` }}
+      style={{ backgroundImage: `url(${BASE_URL}Images/winter-storm.jpg)` }}
     >
       {/* Layered overlays for depth */}
       <div className="loading-overlay" />
@@ -86,13 +86,6 @@ export default function LoadingScreen({ onEnter }) {
       <div className="loading-vignette" />
 
       <div className="loading-card">
-        {/* Top alert band */}
-        <div className="loading-alert-band">
-          <span className="loading-alert-dot" />
-          EMERGENCY PROTOCOL ACTIVE
-          <span className="loading-alert-dot" />
-        </div>
-
         {/* Title */}
         <div className="loading-title-block">
           <h1 className="loading-title">STORM<br />ALERT</h1>

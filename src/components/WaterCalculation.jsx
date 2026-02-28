@@ -72,57 +72,31 @@ function WaterCalculation({ familySize = 2, onClose }) {
     <div className="wc-overlay">
       <div className="wc-panel">
 
-        {/* ── SCREEN 1: Formula ─────────────────────────── */}
+        {/* ── SCREEN 1: Hint ────────────────────────────── */}
         {screen === 1 && (
           <div className="wc-screen">
             <div className="wc-header">
               <span className="wc-icon">💧</span>
               <h2>Water Preparation</h2>
-              <p className="wc-subtitle">Do you know how much you actually need?</p>
+              <p className="wc-subtitle">Before you start filling containers…</p>
             </div>
 
             <div className="wc-info-block">
               <p className="wc-text">
-                Emergency guidelines recommend storing <strong>{L_PER_PERSON_DAY} litres</strong> of water
-                per person per day.
+                There {PEOPLE === 1 ? 'is' : 'are'} <strong>{PEOPLE} {PEOPLE === 1 ? 'person' : 'people'}</strong> in
+                your household. The storm is forecast to last up to <strong>{DAYS} days</strong>.
               </p>
-
-              <div className="wc-formula-box">
-                <div className="wc-formula-row">
-                  <div className="wc-formula-cell">
-                    <span className="wc-formula-value">{L_PER_PERSON_DAY}L</span>
-                    <span className="wc-formula-caption">per person/day</span>
-                  </div>
-                  <span className="wc-formula-op">×</span>
-                  <div className="wc-formula-cell">
-                    <span className="wc-formula-value">{PEOPLE}</span>
-                    <span className="wc-formula-caption">people</span>
-                  </div>
-                  <span className="wc-formula-op">×</span>
-                  <div className="wc-formula-cell">
-                    <span className="wc-formula-value">{DAYS}</span>
-                    <span className="wc-formula-caption">days</span>
-                  </div>
-                  <span className="wc-formula-op">=</span>
-                  <div className="wc-formula-cell wc-formula-unknown">
-                    <span className="wc-formula-value">?</span>
-                    <span className="wc-formula-caption">litres needed</span>
-                  </div>
-                </div>
-              </div>
-
               <p className="wc-text">
-                Your household has <strong>{PEOPLE} {PEOPLE === 1 ? 'person' : 'people'}</strong>. The storm is forecast
-                to last up to <strong>{DAYS} days</strong>. How much water should you store?
+                Think about how much water a person needs each day to stay healthy — then work out the total for everyone.
               </p>
 
               <div className="wc-note-reminder">
-                🗒️ <strong>Write this down</strong> — you may need this formula later in the game.
+                🗒️ <strong>Write down your calculation</strong> — you may need it later.
               </div>
             </div>
 
             <button className="wc-btn-primary" onClick={() => { playSfx('click'); setScreen(2); }}>
-              Test your knowledge →
+              Calculate →
             </button>
           </div>
         )}
@@ -171,9 +145,11 @@ function WaterCalculation({ familySize = 2, onClose }) {
             <div className="wc-header">
               <span className="wc-icon">🧮</span>
               <h2>How much water do you need?</h2>
-              <p className="wc-subtitle">
-                {L_PER_PERSON_DAY}L × {PEOPLE} people × {DAYS} days = ?
-              </p>
+              <p className="wc-subtitle">Choose the amount that covers your household</p>
+            </div>
+
+            <div className="wc-note-reminder">
+              🗒️ <strong>Check your notes</strong> — you wrote this down earlier.
             </div>
 
             <div className="wc-options">
