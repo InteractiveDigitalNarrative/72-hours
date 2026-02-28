@@ -1287,14 +1287,7 @@ Time to rest before the worst of it hits.
 === blackout ===
 # AUDIOLOOP:
 # CLEAR
-# CLASS: blackout-scene
-# BACKGROUND:
-
-<div class="blackout-overlay"></div>
-
-<i>Sound: Silence. Then a click. The hum of electronics stopping.</i>
-
-<i>[Beat of darkness]</i>
+# SLEEP_FADE
 
 * [Wake up]
     -> wake_up

@@ -1,0 +1,145 @@
+/* ── Outcome Screen ───────────────────────────────────────────────────────── */
+
+.outcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #08090c;
+  animation: outcome-fade-in 0.6s ease;
+}
+
+@keyframes outcome-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Radial accent glow behind content */
+.outcome-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 70% 55% at 50% 38%,
+    color-mix(in srgb, var(--outcome-accent) 18%, transparent),
+    transparent 70%
+  );
+}
+
+/* ── Content ──────────────────────────────────────────────────────────────── */
+
+.outcome-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 48px 32px;
+  width: min(560px, 92vw);
+  text-align: center;
+}
+
+/* ── Icon ─────────────────────────────────────────────────────────────────── */
+
+.outcome-icon-wrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid var(--outcome-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--outcome-accent) 12%, transparent);
+  box-shadow:
+    0 0 30px color-mix(in srgb, var(--outcome-accent) 35%, transparent),
+    0 0 80px color-mix(in srgb, var(--outcome-accent) 12%, transparent);
+  animation: icon-pulse 3s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+  0%, 100% { box-shadow: 0 0 30px color-mix(in srgb, var(--outcome-accent) 35%, transparent), 0 0 80px color-mix(in srgb, var(--outcome-accent) 12%, transparent); }
+  50%       { box-shadow: 0 0 45px color-mix(in srgb, var(--outcome-accent) 55%, transparent), 0 0 120px color-mix(in srgb, var(--outcome-accent) 20%, transparent); }
+}
+
+.outcome-icon {
+  font-size: 2rem;
+  color: var(--outcome-accent);
+  font-style: normal;
+}
+
+/* ── Headline ─────────────────────────────────────────────────────────────── */
+
+.outcome-headline {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #e8eaf0;
+  letter-spacing: 0.03em;
+  margin: 0;
+  text-shadow: 0 0 40px color-mix(in srgb, var(--outcome-accent) 40%, transparent);
+  animation: outcome-fade-in 0.8s ease 0.2s both;
+}
+
+/* ── Lines ────────────────────────────────────────────────────────────────── */
+
+.outcome-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.outcome-line {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(200, 210, 230, 0.85);
+  margin: 0;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.outcome-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Quoted lines (dialogue) slightly styled */
+.outcome-line:is([data-quote]) {
+  font-style: italic;
+  color: rgba(200, 215, 240, 0.7);
+}
+
+/* ── Button ───────────────────────────────────────────────────────────────── */
+
+.outcome-btn-wrap {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.outcome-btn-wrap.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.outcome-btn {
+  background: transparent;
+  border: 1px solid var(--outcome-accent);
+  color: color-mix(in srgb, var(--outcome-accent) 80%, white);
+  padding: 12px 32px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.outcome-btn:hover {
+  background: color-mix(in srgb, var(--outcome-accent) 20%, transparent);
+  color: #fff;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--outcome-accent) 30%, transparent);
+}

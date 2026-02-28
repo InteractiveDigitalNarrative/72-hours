@@ -12,6 +12,7 @@ import EndingScreen from './EndingScreen';
 import CrisisScreen from './CrisisScreen';
 import StormArrival from './StormArrival';
 import BreakingNews from './BreakingNews';
+import OutcomeScreen from './OutcomeScreen';
 import FamilySetup from './FamilySetup';
 import { useAudioContext } from '../context/AudioContext';
 
@@ -104,6 +105,13 @@ function InkStory({ onReturnToMenu }) {
 
   // Prep hub: which card is expanded in accordion (mobile)
   const [expandedCard, setExpandedCard] = useState(null);
+
+  // Sleep fade overlay
+  const [showSleepFade, setShowSleepFade] = useState(false);
+  const [sleepFadingOut, setSleepFadingOut] = useState(false);
+
+  // Outcome screen overlay
+  const [showOutcomeScreen, setShowOutcomeScreen] = useState(false);
 
   // Breaking news overlay
   const [showBreakingNews, setShowBreakingNews] = useState(false);
@@ -286,6 +294,19 @@ function InkStory({ onReturnToMenu }) {
     }
   }, [weatherStage, showEndingScreen, setWindVolume, switchWindTrack, WIND_VOLS]);
 
+  // After sleep fade completes, silently advance to wake_up → triggers STORM_ARRIVAL
+  useEffect(() => {
+    if (!showSleepFade) return;
+    const t = setTimeout(() => {
+      const story = storyRef.current;
+      if (story?.currentChoices.length > 0) {
+        story.ChooseChoiceIndex(0);
+        continueStory();
+      }
+    }, 2600);
+    return () => clearTimeout(t);
+  }, [showSleepFade]);
+
   // ============================================
   // STORY FUNCTIONS
   // ============================================
@@ -363,6 +384,14 @@ function InkStory({ onReturnToMenu }) {
         if (tag.startsWith('WEATHER_STAGE:')) {
           const stage = parseInt(tag.replace('WEATHER_STAGE:', '').trim(), 10);
           if (!isNaN(stage)) setWeatherStage(stage);
+        }
+
+        // Check for SLEEP_FADE tag — slow fade to black before storm
+        if (tag === 'SLEEP_FADE') {
+          setShowSleepFade(true);
+          setStoryText([]);
+          setChoices([]);
+          return;
         }
 
         // Check for STORM_ARRIVAL tag — show dramatic overlay
@@ -582,11 +611,23 @@ function InkStory({ onReturnToMenu }) {
     setCallResult(null);
     setDialedNumber('');
 
-    // Auto-advance past the [Continue] choice in the call knot
+    // Auto-advance past the [Continue] choice in the call knot, then advance
+    // ink through the ending knot (sets ending_type) — OutcomeScreen covers the display
     if (story && story.currentChoices.length > 0) {
       story.ChooseChoiceIndex(0);
     }
+    setShowOutcomeScreen(true);
     continueStory();
+  };
+
+  const handleOutcomeScreenClose = () => {
+    setShowOutcomeScreen(false);
+    const story = storyRef.current;
+    // Auto-advance past [See your results] → ending_summary → # ENDING_SCREEN
+    if (story && story.currentChoices.length > 0) {
+      story.ChooseChoiceIndex(0);
+      continueStory();
+    }
   };
 
   const handleCallRetry = () => {
@@ -1256,14 +1297,34 @@ function InkStory({ onReturnToMenu }) {
         />
       )}
 
+      {/* Outcome Screen Overlay */}
+      {showOutcomeScreen && (
+        <OutcomeScreen
+          endingType={gameVars.ending_type}
+          household={household}
+          onContinue={handleOutcomeScreenClose}
+        />
+      )}
+
       {/* Breaking News Overlay */}
       {showBreakingNews && (
         <BreakingNews onContinue={handleBreakingNewsClose} />
       )}
 
+      {/* Sleep Fade Overlay */}
+      {showSleepFade && (
+        <div
+          className={`sleep-fade-overlay${sleepFadingOut ? ' sleep-fade-out' : ''}`}
+          onAnimationEnd={sleepFadingOut ? () => { setShowSleepFade(false); setSleepFadingOut(false); } : undefined}
+        />
+      )}
+
       {/* Storm Arrival Overlay */}
       {showStormArrival && (
-        <StormArrival onDismiss={() => setShowStormArrival(false)} />
+        <StormArrival onDismiss={() => {
+          setShowStormArrival(false);
+          if (showSleepFade) setSleepFadingOut(true);
+        }} />
       )}
 
       {/* Ending Screen Overlay */}
