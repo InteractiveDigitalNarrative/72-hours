@@ -11,6 +11,7 @@ import ConsequenceCard from './ConsequenceCard';
 import EndingScreen from './EndingScreen';
 import CrisisScreen from './CrisisScreen';
 import StormArrival from './StormArrival';
+import BreakingNews from './BreakingNews';
 import FamilySetup from './FamilySetup';
 import { useAudioContext } from '../context/AudioContext';
 
@@ -95,6 +96,9 @@ function InkStory({ onReturnToMenu }) {
 
   // Prep hub: which card is expanded in accordion (mobile)
   const [expandedCard, setExpandedCard] = useState(null);
+
+  // Breaking news overlay
+  const [showBreakingNews, setShowBreakingNews] = useState(false);
 
   // Storm arrival overlay
   const [showStormArrival, setShowStormArrival] = useState(false);
@@ -388,6 +392,14 @@ function InkStory({ onReturnToMenu }) {
           console.log('Showing family setup');
           setShowFamilySetup(true);
           setStoryText(lines);
+          setChoices([]);
+          return;
+        }
+
+        // Check for BREAKING_NEWS tag
+        if (tag === 'BREAKING_NEWS') {
+          setShowBreakingNews(true);
+          setStoryText([]);
           setChoices([]);
           return;
         }
@@ -769,6 +781,16 @@ function InkStory({ onReturnToMenu }) {
   // ============================================
   // CRISIS SCREEN HANDLER
   // ============================================
+
+  const handleBreakingNewsClose = () => {
+    setShowBreakingNews(false);
+    const story = storyRef.current;
+    if (!story) return;
+    if (story.currentChoices.length > 0) {
+      story.ChooseChoiceIndex(0);
+      continueStory();
+    }
+  };
 
   const handleCrisisClose = () => {
     playSfx('click');
@@ -1210,6 +1232,11 @@ function InkStory({ onReturnToMenu }) {
           household={household}
           onContinue={handleCrisisClose}
         />
+      )}
+
+      {/* Breaking News Overlay */}
+      {showBreakingNews && (
+        <BreakingNews onContinue={handleBreakingNewsClose} />
       )}
 
       {/* Storm Arrival Overlay */}

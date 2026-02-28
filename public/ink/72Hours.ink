@@ -92,13 +92,7 @@ VAR ending_type = ""
 === tv_news ===
 
 # CLEAR
-# CLASS: tv-scene
-
-  Severe storm warning for coastal Estonia.
-
-  Wind speeds up to 120 km/h expected tonight.
-
-  Storm arrives at 22:00.
+# BREAKING_NEWS
 
 * [Continue]
      -> emergency_broadcast
