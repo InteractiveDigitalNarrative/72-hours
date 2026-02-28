@@ -10,6 +10,7 @@ import WaterCalculation from './WaterCalculation';
 import ConsequenceCard from './ConsequenceCard';
 import EndingScreen from './EndingScreen';
 import CrisisScreen from './CrisisScreen';
+import StormArrival from './StormArrival';
 import FamilySetup from './FamilySetup';
 import { useAudioContext } from '../context/AudioContext';
 
@@ -94,6 +95,9 @@ function InkStory({ onReturnToMenu }) {
 
   // Prep hub: which card is expanded in accordion (mobile)
   const [expandedCard, setExpandedCard] = useState(null);
+
+  // Storm arrival overlay
+  const [showStormArrival, setShowStormArrival] = useState(false);
 
   // Ending screen state
   const [showEndingScreen, setShowEndingScreen] = useState(false);
@@ -347,6 +351,11 @@ function InkStory({ onReturnToMenu }) {
         if (tag.startsWith('WEATHER_STAGE:')) {
           const stage = parseInt(tag.replace('WEATHER_STAGE:', '').trim(), 10);
           if (!isNaN(stage)) setWeatherStage(stage);
+        }
+
+        // Check for STORM_ARRIVAL tag — show dramatic overlay
+        if (tag === 'STORM_ARRIVAL') {
+          setShowStormArrival(true);
         }
 
         // Check for CONSEQUENCE tag (shows a visual card alongside the narrative)
@@ -1201,6 +1210,11 @@ function InkStory({ onReturnToMenu }) {
           household={household}
           onContinue={handleCrisisClose}
         />
+      )}
+
+      {/* Storm Arrival Overlay */}
+      {showStormArrival && (
+        <StormArrival onDismiss={() => setShowStormArrival(false)} />
       )}
 
       {/* Ending Screen Overlay */}

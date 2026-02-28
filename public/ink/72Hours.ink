@@ -1305,6 +1305,7 @@ Time to rest before the worst of it hits.
 
 # CLEAR
 # WEATHER_STAGE: 2
+# STORM_ARRIVAL
 # CLASS: fade-in-scene
 # CLASS: room-dark
 # BACKGROUND: ../Images/Room.jpg

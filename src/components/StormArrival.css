@@ -1,0 +1,125 @@
+/* ── Storm Arrival Overlay ─────────────────────────────────────────────────── */
+
+.storm-arrival {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+  animation: storm-fade-out 0.8s ease-in 3.4s forwards;
+}
+
+@keyframes storm-fade-out {
+  to { opacity: 0; pointer-events: none; }
+}
+
+/* Background photo */
+.storm-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.35) saturate(0.6);
+}
+
+/* ── Rain ────────────────────────────────────────────────────────────────────── */
+
+.storm-rain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.rain-drop {
+  position: absolute;
+  top: -10%;
+  width: 1.5px;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, rgba(180, 210, 255, 0.7));
+  border-radius: 1px;
+  transform: rotate(15deg);
+  animation: rain-fall linear infinite;
+}
+
+@keyframes rain-fall {
+  from { transform: rotate(15deg) translateY(-10vh); }
+  to   { transform: rotate(15deg) translateY(120vh); }
+}
+
+/* ── Lightning flashes ───────────────────────────────────────────────────────── */
+
+.storm-lightning {
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  animation: lightning 4.2s ease-out forwards;
+}
+
+@keyframes lightning {
+  0%    { opacity: 0; }
+  /* first strike */
+  4%    { opacity: 0.85; }
+  7%    { opacity: 0; }
+  /* second strike */
+  14%   { opacity: 0.6; }
+  16%   { opacity: 0; }
+  /* third flicker */
+  22%   { opacity: 0.45; }
+  24%   { opacity: 0; }
+  100%  { opacity: 0; }
+}
+
+/* ── Screen shake ─────────────────────────────────────────────────────────── */
+
+.storm-shake {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: screen-shake 0.55s ease-out 0.05s;
+}
+
+@keyframes screen-shake {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  10%  { transform: translate(-6px, -4px) rotate(-0.5deg); }
+  20%  { transform: translate(6px, 4px) rotate(0.5deg); }
+  30%  { transform: translate(-5px, 2px) rotate(-0.3deg); }
+  40%  { transform: translate(5px, -3px) rotate(0.3deg); }
+  50%  { transform: translate(-3px, 4px) rotate(-0.2deg); }
+  60%  { transform: translate(3px, -2px) rotate(0.2deg); }
+  80%  { transform: translate(-2px, 1px) rotate(0deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* ── Content ──────────────────────────────────────────────────────────────── */
+
+.storm-content {
+  text-align: center;
+  animation: content-fade-in 1.2s ease-out 0.3s both;
+}
+
+@keyframes content-fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.storm-time {
+  font-size: 5rem;
+  font-weight: 700;
+  color: #c8d8f0;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.4rem;
+  text-shadow: 0 0 40px rgba(100, 160, 255, 0.6), 0 2px 8px rgba(0, 0, 0, 0.8);
+  font-family: 'Courier New', monospace;
+}
+
+.storm-label {
+  font-size: 1.3rem;
+  color: rgba(200, 220, 255, 0.75);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(100, 160, 255, 0.4);
+}
