@@ -1,0 +1,103 @@
+.cq-card {
+  --cq-color: #4caf50;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid var(--cq-color);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin: 16px auto 0;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  animation: cq-fade-in 0.4s ease;
+}
+
+@keyframes cq-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ── */
+.cq-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cq-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.cq-title-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cq-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #eee;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.cq-level-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+.cq-dots {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.cq-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.cq-dot.filled {
+  border-color: transparent;
+}
+
+/* ── Body ── */
+.cq-prepared {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.cq-prepared strong {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.cq-consequence {
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+.cq-check {
+  font-weight: 700;
+}
+
+.cq-tip {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+  line-height: 1.4;
+}

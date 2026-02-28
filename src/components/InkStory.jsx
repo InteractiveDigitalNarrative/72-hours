@@ -7,6 +7,7 @@ import CallResult from './CallResult';
 import TimeBar from './TimeBar';
 import StoreOverlay from './StoreOverlay';
 import WaterCalculation from './WaterCalculation';
+import ConsequenceCard from './ConsequenceCard';
 import EndingScreen from './EndingScreen';
 import CrisisScreen from './CrisisScreen';
 import FamilySetup from './FamilySetup';
@@ -76,6 +77,9 @@ function InkStory({ onReturnToMenu }) {
 
   // SMS overlay state
   const [showSMS, setShowSMS] = useState(false);
+
+  // Consequence card state (shown per crisis knot)
+  const [consequenceCard, setConsequenceCard] = useState(null);
 
   // Water calculation quiz state
   const [showWaterCalc, setShowWaterCalc] = useState(false);
@@ -333,6 +337,11 @@ function InkStory({ onReturnToMenu }) {
           setBackground(url);
         }
 
+        // Check for CONSEQUENCE tag (shows a visual card alongside the narrative)
+        if (tag.startsWith('CONSEQUENCE:')) {
+          setConsequenceCard(tag.replace('CONSEQUENCE:', '').trim());
+        }
+
         // Check for PHONE_KEYPAD tag
         if (tag.startsWith('PHONE_KEYPAD:')) {
           const scenario = tag.replace('PHONE_KEYPAD:', '').trim();
@@ -451,6 +460,8 @@ function InkStory({ onReturnToMenu }) {
 
     playSfx(sfxName);
 
+    setConsequenceCard(null);
+
     // Save current state before making the choice
     historyRef.current.push({
       inkState: story.state.toJson(),
@@ -490,6 +501,7 @@ function InkStory({ onReturnToMenu }) {
     setShowSMS(false);
     setShowStore(false);
     setShowWaterCalc(false);
+    setConsequenceCard(null);
     setShowEndingScreen(false);
     setCrisisPhase(null);
     setShowFamilySetup(false);
@@ -877,6 +889,11 @@ function InkStory({ onReturnToMenu }) {
                   ))}
                 </div>
               </div>
+            )}
+
+            {/* Consequence card — shown per crisis narrative beat */}
+            {consequenceCard && (
+              <ConsequenceCard category={consequenceCard} gameVars={gameVars} />
             )}
 
             {/* Choices — outside the panel */}

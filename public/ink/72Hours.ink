@@ -1325,21 +1325,111 @@ The power is out. The storm must have taken down the lines.
     -> crisis_night
 
 // ============================================
-// CRISIS — NIGHT (Light + Heat)
+// CRISIS — NIGHT
 // ============================================
 === crisis_night ===
 # CLEAR
-# CRISIS_NIGHT
+# CONSEQUENCE: light
+
+{
+    - prep_light == 0:
+        You feel around in the dark for your phone. The screen flicks on — bright enough, but not made for this. By morning, the battery is at 23%.
+    - prep_light == 1:
+        You find the flashlight by memory and click it on. The beam is weak, flickering — the batteries are nearly gone. You use it sparingly.
+    - else:
+        Your hand finds the flashlight exactly where you left it. Steady, bright. Your phone stays in your pocket.
+}
 
 * [Continue]
+    -> night_heat
+
+=== night_heat ===
+# CLEAR
+# CONSEQUENCE: heat
+
+{
+    - prep_heat == 0:
+        The heating dies with the power. Within an hour you can see your breath. By dawn{has_elderly: , {elderly_relation} won't stop shivering — they need warmth you can't give them right now.| , your fingers are numb and the cold is relentless.}
+    - prep_heat == 1:
+        You pull every blanket you own and seal the worst of the drafts. Cold, but survivable. {has_elderly: {elderly_relation} sleeps fitfully.| You drift in and out of sleep.} By dawn you can see your breath.
+    - else:
+        You light the wood stove before the room drops more than a few degrees. {has_elderly: {elderly_relation} sleeps soundly through the night.| The room holds its warmth all night.}
+}
+
+* [Morning comes...]
     -> crisis_morning
 
 // ============================================
-// CRISIS — MORNING (Water + Medication + Food + Info)
+// CRISIS — MORNING
 // ============================================
 === crisis_morning ===
 # CLEAR
-# CRISIS_MORNING
+# CONSEQUENCE: water
+
+The taps run dry. The fridge is warming. The stove won't light.
+
+{
+    - prep_water == 0:
+        You check every cupboard. One half-empty bottle. {has_elderly: {elderly_relation} gets it. You go without.| You ration it carefully — there's not enough.}
+    - prep_water == 1:
+        You have some water stored. Small cups, no waste. It has to last.
+    - else:
+        You pour a full glass. {has_elderly: One for {elderly_relation}, one for you.| Enough for everyone.} The supply will last days.
+}
+
+* [Continue]
+    -> morning_food
+
+=== morning_food ===
+# CLEAR
+# CONSEQUENCE: food
+
+{
+    - prep_food == 0:
+        You open every cupboard. A box of crackers, a tin of sardines. That's it — no power means no cooking.
+    - prep_food == 1:
+        Bread and a few pantry basics. It'll do for today, but the bread won't last and there's nothing you can heat.
+    - else:
+        Canned food, crackers, energy bars. No cooking needed. You eat without worry.
+}
+
+* [Continue]
+    -> morning_info
+
+=== morning_info ===
+# CLEAR
+# CONSEQUENCE: info
+
+{
+    - prep_info == 0:
+        No radio. Your phone battery is nearly gone. You have no idea what's happening outside or when this ends. The silence is pressing in.
+    - prep_info == 1:
+        You switch on the battery radio. Signal drifts in and out — fragments. "...power restored to...static...36 hours..." You catch enough to know help is coming. Eventually.
+    - else:
+        The battery radio comes on clearly. Power restored within 36 hours. You write it down and breathe a little easier.
+}
+
+* [Continue]
+    -> morning_medication_check
+
+=== morning_medication_check ===
+{has_elderly:
+    -> morning_medication
+}
+-> crisis_culmination
+
+=== morning_medication ===
+# CLEAR
+# CONSEQUENCE: medication
+
+{
+    - prep_medication == 0:
+        You search in the dark for {elderly_relation}'s medication. The bottles are jumbled together — labels impossible to read. You guess at the dose and hope it's right.
+    - prep_medication == 1:
+        You find the pills but they're loose in a bag. Hard to read the labels in low light. One pill or two? You do your best.
+    - else:
+        {elderly_relation}'s pills are sorted in the bedside box — morning and evening doses clearly separated. They take them without needing help.
+}
 
 * [Continue]
     -> crisis_culmination

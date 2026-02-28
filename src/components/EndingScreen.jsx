@@ -111,7 +111,11 @@ function EndingScreen({ gameVars, endingType, household, callScore, onPlayAgain 
   const renderDots = (level) => (
     <span className="prep-dots">
       {[0, 1].map((i) => (
-        <span key={i} className={`dot ${i < level ? 'filled' : ''}`} />
+        <span
+          key={i}
+          className={`dot ${i < level ? 'filled' : ''}`}
+          style={i < level ? { background: levelColor(level) } : {}}
+        />
       ))}
     </span>
   );
