@@ -1,13 +1,23 @@
 import { useEffect } from 'react';
 import './StormArrival.css';
+import { useAudioContext } from '../context/AudioContext';
 
 const BASE_URL = import.meta.env.BASE_URL;
 
 function StormArrival({ onDismiss }) {
+  const { muted } = useAudioContext();
+
   useEffect(() => {
     const timer = setTimeout(onDismiss, 4200);
+
+    if (!muted) {
+      const thunder = new Audio(BASE_URL + 'Sound/thunder.mp3');
+      thunder.volume = 0.85;
+      thunder.play().catch(() => {});
+    }
+
     return () => clearTimeout(timer);
-  }, [onDismiss]);
+  }, [onDismiss, muted]);
 
   return (
     <div className="storm-arrival">
