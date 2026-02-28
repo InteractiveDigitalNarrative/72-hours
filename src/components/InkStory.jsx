@@ -634,6 +634,11 @@ function InkStory({ onReturnToMenu }) {
   // WATER CALCULATION QUIZ HANDLER
   // ============================================
 
+  const handleWaterCalcCancel = () => {
+    setShowWaterCalc(false);
+    setWaterCalcPendingIndex(null);
+  };
+
   const handleWaterCalcClose = (wasCorrect, measuredLitres = 0) => {
     setShowWaterCalc(false);
     const pendingIndex = waterCalcPendingIndex;
@@ -1226,7 +1231,7 @@ function InkStory({ onReturnToMenu }) {
 
       {/* Water Calculation Quiz */}
       {showWaterCalc && (
-        <WaterCalculation familySize={household.size} onClose={handleWaterCalcClose} />
+        <WaterCalculation familySize={household.size} onClose={handleWaterCalcClose} onCancel={handleWaterCalcCancel} />
       )}
 
       {/* Store Overlay */}

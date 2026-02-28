@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './WaterCalculation.css';
 import { useAudioContext } from '../context/AudioContext';
 
-function WaterCalculation({ familySize = 2, onClose }) {
+function WaterCalculation({ familySize = 2, onClose, onCancel }) {
   const { playSfx } = useAudioContext();
   const PEOPLE = familySize;
   const DAYS = 3;
@@ -97,6 +97,10 @@ function WaterCalculation({ familySize = 2, onClose }) {
 
             <button className="wc-btn-primary" onClick={() => { playSfx('click'); setScreen(2); }}>
               Calculate →
+            </button>
+
+            <button className="wc-btn-back" onClick={() => { playSfx('close'); onCancel?.(); }}>
+              ← Back to preparation
             </button>
           </div>
         )}

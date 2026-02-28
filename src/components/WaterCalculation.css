@@ -362,3 +362,21 @@
   transform: translateY(0);
 }
 
+.wc-btn-back {
+  background: transparent;
+  border: none;
+  color: rgba(150, 180, 220, 0.55);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 8px 0 0;
+  width: 100%;
+  text-align: center;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+
+.wc-btn-back:hover {
+  color: rgba(150, 180, 220, 0.9);
+}
+

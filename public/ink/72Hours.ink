@@ -578,7 +578,7 @@ VAR heat_clothing = false
 + {prep_heat > 0} [Continue preparing]
     -> heat_hub
 
-+ {prep_heat > 0} [← Back]
++ [← Back]
     -> preparation_hub
 
 === heat_quiz_right ===
@@ -649,6 +649,9 @@ What do you want to do?
 
 + [✓ Done with heat]
     -> heat_complete
+
++ [← Back to preparation]
+    -> preparation_hub
 
 === heat_result_sealed ===
 # CLEAR
@@ -767,7 +770,7 @@ VAR light_candles = false
 + {prep_light > 0} [Continue preparing]
     -> light_hub
 
-+ {prep_light > 0} [← Back]
++ [← Back]
     -> preparation_hub
 
 === light_quiz_phone ===
@@ -833,6 +836,9 @@ A flashlight is safe, instant, and doesn't drain your phone. Keep it somewhere e
 
 + [✓ Done with light]
     -> light_complete
+
++ [← Back to preparation]
+    -> preparation_hub
 
 === light_result_flashlight ===
 # CLEAR
@@ -935,7 +941,7 @@ VAR info_phone_charged = false
 + {prep_info > 0} [Continue preparing]
     -> info_hub
 
-+ {prep_info > 0} [← Back]
++ [← Back]
     -> preparation_hub
 
 === info_quiz_social ===
@@ -1001,6 +1007,9 @@ Phone calls drain battery, and your friend probably knows as much as you do. In 
 
 + [✓ Done with information]
     -> info_complete
+
++ [← Back to preparation]
+    -> preparation_hub
 
 === info_result_radio ===
 # CLEAR
@@ -1117,7 +1126,7 @@ VAR med_first_aid = false
 + {prep_medication > 0} [Continue preparing]
     -> medication_hub
 
-+ {prep_medication > 0} [← Back]
++ [← Back]
     -> preparation_hub
 
 === med_quiz_pain ===
@@ -1185,6 +1194,9 @@ A first-aid kit is important, but grandmother's daily prescription medication is
 
 + [✓ Done with medication]
     -> medication_complete
+
++ [← Back to preparation]
+    -> preparation_hub
 
 === med_result_count ===
 # CLEAR
