@@ -36,7 +36,6 @@ VAR water_bottles = false
 VAR water_pots = false
 VAR water_bathtub = false
 VAR water_jerrycan = false
-VAR water_extra_bottles = false
 
 // Food items picked at grocery store
 VAR food_canned = false
@@ -346,7 +345,6 @@ You have {water_collected}L at home — the store can cover the rest.
 {water_home_measured > 0: ✓ Water found at home ({water_home_measured}L)}
 {water_bottles: ✓ Bottles filled from tap (4L)}
 {water_pots: ✓ Cooking pots (6L)}
-{water_extra_bottles: ✓ Extra bottles from around the house (6L)}
 {water_bathtub: ✓ Bathtub (non-drinking)}
 
 + {not water_bottles} [Fill empty bottles from the tap (4L) — 5 min]
@@ -360,12 +358,6 @@ You have {water_collected}L at home — the store can cover the rest.
     ~ water_collected = water_collected + 6
     ~ current_time = current_time + 8
     -> water_container_result_pots
-
-+ {not water_extra_bottles} [Search house for more bottles & fill them (6L) — 10 min]
-    ~ water_extra_bottles = true
-    ~ water_collected = water_collected + 6
-    ~ current_time = current_time + 10
-    -> water_container_result_extra_bottles
 
 + {not water_bathtub} [Fill the bathtub — 10 min]
     ~ water_bathtub = true
@@ -403,20 +395,6 @@ You fill the large cooking pots and cover them with lids.
 <b>+6 liters</b>
 
 Harder to pour from and takes up counter space, but a reliable way to store extra water in a pinch.
-
-+ [Continue]
-    -> water_containers
-
-=== water_container_result_extra_bottles ===
-# CLEAR
-
-You search the whole house — closets, garage, every room. You find old juice bottles, a thermos, and some glass jars.
-
-You rinse them out and fill them from the tap.
-
-<b>+6 liters</b>
-
-It took a while, but every container counts. Label them so you know it's drinking water.
 
 + [Continue]
     -> water_containers
