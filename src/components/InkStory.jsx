@@ -48,7 +48,7 @@ function InkStory({ onReturnToMenu }) {
   // ============================================
   // AUDIO
   // ============================================
-  const { muted, toggleMute, playAmbient, playSfx, setWindVolume, WIND_VOLS } = useAudioContext();
+  const { muted, toggleMute, playAmbient, playSfx, setWindVolume, switchWindTrack, WIND_VOLS } = useAudioContext();
 
   // ============================================
   // STATE MANAGEMENT
@@ -259,10 +259,16 @@ function InkStory({ onReturnToMenu }) {
     }
   }, [weatherStage, gameVars.in_preparation, showEndingScreen, showRadioBroadcast, playAmbient]);
 
-  // Wind volume tracks weather stage — fades to 0 at the ending screen
+  // Wind volume/track tracks weather stage — switches to wind.wav at storm (stage 2)
   useEffect(() => {
-    setWindVolume(showEndingScreen ? 0 : (WIND_VOLS[weatherStage] ?? WIND_VOLS[0]));
-  }, [weatherStage, showEndingScreen, setWindVolume, WIND_VOLS]);
+    if (showEndingScreen) {
+      setWindVolume(0);
+    } else if (weatherStage === 2) {
+      switchWindTrack('Sound/wind.wav', WIND_VOLS[2]);
+    } else {
+      setWindVolume(WIND_VOLS[weatherStage] ?? WIND_VOLS[0]);
+    }
+  }, [weatherStage, showEndingScreen, setWindVolume, switchWindTrack, WIND_VOLS]);
 
   // ============================================
   // STORY FUNCTIONS
@@ -335,6 +341,12 @@ function InkStory({ onReturnToMenu }) {
 
           console.log('Setting background:', url);  // Debug log
           setBackground(url);
+        }
+
+        // Check for WEATHER_STAGE tag
+        if (tag.startsWith('WEATHER_STAGE:')) {
+          const stage = parseInt(tag.replace('WEATHER_STAGE:', '').trim(), 10);
+          if (!isNaN(stage)) setWeatherStage(stage);
         }
 
         // Check for CONSEQUENCE tag (shows a visual card alongside the narrative)
@@ -810,17 +822,15 @@ function InkStory({ onReturnToMenu }) {
   );
 
   // Weather values keyed to narrative stages:
-  //   0 = preparation phase  →  cold but calm
-  //   1 = done preparation   →  storm arriving
-  //   2 = 3:47 AM / crisis   →  power out, worst conditions
+  //   0 = normal / preparation   →  cold but calm
+  //   1 = pre-storm              →  dropping fast, wind picking up
+  //   2 = during storm / crisis  →  power out, worst conditions
   const WEATHER_STAGES = [
-    { temp: -8,  wind: 15 },
-    { temp: -15, wind: 48 },
-    { temp: -22, wind: 85 },
+    { temp: -8,  wind: 15,  tempClass: 'temp-normal',   windClass: 'wind-calm' },
+    { temp: -15, wind: 48,  tempClass: 'temp-prestorm',  windClass: 'wind-prestorm' },
+    { temp: -22, wind: 85,  tempClass: 'temp-storm',     windClass: 'wind-storm' },
   ];
-  const { temp: displayTemp, wind: windSpeed } = WEATHER_STAGES[weatherStage];
-  const tempClass = displayTemp >= -12 ? 'temp-mild' : displayTemp >= -18 ? 'temp-cold' : 'temp-freezing';
-  const windClass = windSpeed < 30 ? 'wind-calm' : windSpeed < 60 ? 'wind-strong' : 'wind-severe';
+  const { temp: displayTemp, wind: windSpeed, tempClass, windClass } = WEATHER_STAGES[weatherStage] ?? WEATHER_STAGES[0];
 
   return (
     <div className={`ink-story-container${atPrepHub ? ' prep-hub-container' : ''}`} style={containerStyle}>

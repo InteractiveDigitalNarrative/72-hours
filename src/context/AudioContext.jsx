@@ -19,6 +19,7 @@ export function useAudioContext() {
       playAmbient: () => {},
       playSfx: () => {},
       setWindVolume: () => {},
+      switchWindTrack: () => {},
       WIND_VOLS: [0.07, 0.28, 0.52],
     }
   );

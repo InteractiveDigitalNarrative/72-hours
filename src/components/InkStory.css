@@ -672,9 +672,9 @@
   transition: color 0.8s ease;
 }
 
-.temperature.temp-mild    { color: #5cb8ff; }
-.temperature.temp-cold    { color: #2d8cff; }
-.temperature.temp-freezing { color: #b3d9ff; text-shadow: 0 0 6px rgba(179, 217, 255, 0.6); }
+.temperature.temp-normal   { color: #5cb8ff; }
+.temperature.temp-prestorm { color: #2d8cff; }
+.temperature.temp-storm    { color: #b3d9ff; text-shadow: 0 0 6px rgba(179, 217, 255, 0.6); }
 
 .wind-speed {
   font-size: 18px;
@@ -682,9 +682,9 @@
   transition: color 0.8s ease;
 }
 
-.wind-speed.wind-calm   { color: #aaaaaa; }
-.wind-speed.wind-strong { color: #ffbb44; }
-.wind-speed.wind-severe { color: #ff5533; text-shadow: 0 0 6px rgba(255, 85, 51, 0.5); }
+.wind-speed.wind-calm     { color: #aaaaaa; }
+.wind-speed.wind-prestorm { color: #ffbb44; }
+.wind-speed.wind-storm    { color: #ff5533; text-shadow: 0 0 6px rgba(255, 85, 51, 0.5); }
 
 .resource-bar-right {
   display: flex;

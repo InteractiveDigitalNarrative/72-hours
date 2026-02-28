@@ -108,6 +108,52 @@ export function useAudio() {
 
   // ── Wind volume control ──────────────────────────────────────────────────────
 
+  // Fade out wind, swap src to a new file, fade back in.
+  const switchWindTrack = useCallback((relPath, targetVol) => {
+    windTargetVolRef.current = targetVol;
+    const wind = windAudioRef.current;
+    if (!wind) return;
+
+    if (windFadeTimerRef.current) {
+      clearInterval(windFadeTimerRef.current);
+      windFadeTimerRef.current = null;
+    }
+
+    const FADE_OUT_STEPS = 20;
+    const FADE_OUT_STEP_MS = 700 / FADE_OUT_STEPS;
+    const fromVol = wind.volume;
+    let step = 0;
+
+    windFadeTimerRef.current = setInterval(() => {
+      step++;
+      wind.volume = Math.max(0, fromVol * (1 - step / FADE_OUT_STEPS));
+      if (step >= FADE_OUT_STEPS) {
+        clearInterval(windFadeTimerRef.current);
+        windFadeTimerRef.current = null;
+        wind.pause();
+        wind.src = BASE_URL + relPath;
+        wind.load();
+        wind.play().catch((e) => console.warn('[Wind] switch play blocked:', e));
+
+        const effectiveVol = mutedRef.current ? 0 : targetVol;
+        const FADE_IN_STEPS = 30;
+        const FADE_IN_STEP_MS = 1800 / FADE_IN_STEPS;
+        let inStep = 0;
+        wind.volume = 0;
+
+        windFadeTimerRef.current = setInterval(() => {
+          inStep++;
+          wind.volume = Math.max(0, Math.min(1, effectiveVol * (inStep / FADE_IN_STEPS)));
+          if (inStep >= FADE_IN_STEPS) {
+            clearInterval(windFadeTimerRef.current);
+            windFadeTimerRef.current = null;
+            wind.volume = effectiveVol;
+          }
+        }, FADE_IN_STEP_MS);
+      }
+    }, FADE_OUT_STEP_MS);
+  }, []);
+
   // Smoothly transition wind to a new volume level (0–1).
   // Stores the target so mute/unmute can restore it correctly.
   const setWindVolume = useCallback((targetVol) => {
@@ -230,7 +276,7 @@ export function useAudio() {
     [getAudioCtx]
   );
 
-  return { muted, toggleMute, playAmbient, playSfx, setWindVolume, WIND_VOLS };
+  return { muted, toggleMute, playAmbient, playSfx, setWindVolume, switchWindTrack, WIND_VOLS };
 }
 
 // ─── Web Audio SFX Synthesis ─────────────────────────────────────────────────

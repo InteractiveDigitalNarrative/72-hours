@@ -572,7 +572,7 @@ VAR heat_clothing = false
 
 {
     - prep_heat == 0:
-        You think ahead — when the power goes out, the central heating stops. It's -18°C outside.
+        You think ahead — when the power goes out, the central heating stops. It's {temperature}°C outside.
 
         What's the most important thing to do FIRST?
 
@@ -1304,12 +1304,13 @@ Time to rest before the worst of it hits.
 === wake_up ===
 
 # CLEAR
+# WEATHER_STAGE: 2
 # CLASS: fade-in-scene
 # CLASS: room-dark
 # BACKGROUND: ../Images/Room.jpg
 # AUDIOLOOP: ../Sound/wind.wav
 
-You wake up. Something is wrong — the usual hum of the house is gone. Total silence.
+You wake up. The storm has arrived — wind hammering the walls, rattling the windows. The house hum is gone. No heating. No electricity.
 
 * [Look at the time]
     -> check_time_again
