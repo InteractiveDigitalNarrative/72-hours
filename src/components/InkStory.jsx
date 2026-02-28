@@ -455,6 +455,7 @@ function InkStory({ onReturnToMenu }) {
     historyRef.current.push({
       inkState: story.state.toJson(),
       background,
+      storyText,
     });
     setHistoryLength(historyRef.current.length);
 
@@ -488,12 +489,14 @@ function InkStory({ onReturnToMenu }) {
     setShowRadioBroadcast(false);
     setShowSMS(false);
     setShowStore(false);
+    setShowWaterCalc(false);
     setShowEndingScreen(false);
     setCrisisPhase(null);
     setShowFamilySetup(false);
 
-    // Re-continue from restored state
+    // Re-continue to sync choices and game vars, then restore saved text
     continueStory();
+    setStoryText(prev.storyText);
   };
 
   // ============================================
