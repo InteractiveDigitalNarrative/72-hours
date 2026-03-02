@@ -331,6 +331,23 @@
     text-align: left;
 }
 
+.modal-eu-logo {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.modal-content .menu-btn {
+    display: block;
+    margin: 0 auto;
+    width: fit-content;
+}
+
+.modal-eu-logo img {
+    height: 80px;
+    width: auto;
+    border-radius: 4px;
+}
+
 /* Close button (X) */
 .close-modal {
     position: absolute;

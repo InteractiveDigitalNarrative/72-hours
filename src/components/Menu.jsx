@@ -110,6 +110,11 @@ function Menu({ onStartGame, onContinueGame, hasSavedGame }) {
               go wrong. Your choices determine how you and your household make it through the next 72 hours.
             </p>
 
+            {/* EU Logo */}
+            <div className="modal-eu-logo">
+              <img src={`${BASE_URL}Images/EULogo.jpg`} alt="Co-funded by the European Union" />
+            </div>
+
             {/* Got It button */}
             <button className="menu-btn primary" onClick={handleCloseAbout}>
               GOT IT
