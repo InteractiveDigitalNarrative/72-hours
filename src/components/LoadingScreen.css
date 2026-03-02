@@ -212,3 +212,26 @@
   0%, 100% { box-shadow: 0 0 8px rgba(255,153,51,0.2); }
   50%       { box-shadow: 0 0 22px rgba(255,153,51,0.5); }
 }
+
+/* ── EU logo ──────────────────────────────────────────────────────────── */
+
+.loading-eu-logo {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+.loading-eu-logo:hover {
+  opacity: 1;
+}
+
+.loading-eu-logo img {
+  height: 110px;
+  width: auto;
+  display: block;
+  border-radius: 4px;
+}

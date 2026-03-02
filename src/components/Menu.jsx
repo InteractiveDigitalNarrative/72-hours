@@ -6,6 +6,8 @@ import React, { useState } from 'react';
 import './Menu.css';
 import { useAudioContext } from '../context/AudioContext';
 
+const BASE_URL = import.meta.env.BASE_URL;
+
 // STEP 2: COMPONENT FUNCTION
 // This component receives 3 props from its parent:
 // - onStartGame: function to call when user clicks "Start"
@@ -84,6 +86,11 @@ function Menu({ onStartGame, onContinueGame, hasSavedGame }) {
 
         {/* Background overlay */}
         <div className="menu-overlay"></div>
+      </div>
+
+      {/* EU funding logo - fixed at bottom of viewport */}
+      <div className="menu-eu-logo">
+        <img src={`${BASE_URL}Images/EULogo.jpg`} alt="Co-funded by the European Union" />
       </div>
 
       {/* ABOUT MODAL - Only shows when showAbout is true */}

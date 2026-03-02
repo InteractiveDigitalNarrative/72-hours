@@ -113,6 +113,12 @@ export default function LoadingScreen({ onEnter }) {
         >
           {ready ? 'ENTER' : `${progress}%`}
         </button>
+
+      </div>
+
+      {/* EU funding logo */}
+      <div className="loading-eu-logo">
+        <img src={`${BASE_URL}Images/EULogo.jpg`} alt="Co-funded by the European Union" />
       </div>
     </div>
   );

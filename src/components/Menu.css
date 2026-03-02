@@ -249,6 +249,27 @@
     font-weight: 300;
 }
 
+.menu-eu-logo {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1100;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+
+.menu-eu-logo:hover {
+    opacity: 1;
+}
+
+.menu-eu-logo img {
+    height: 110px;
+    width: auto;
+    display: block;
+    border-radius: 4px;
+}
+
 /* ============================================
    MODAL - About dialog
    ============================================ */
