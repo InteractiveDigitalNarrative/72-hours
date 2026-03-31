@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
 import './StormArrival.css';
 import { useAudioContext } from '../context/AudioContext';
+import { useTranslation } from '../hooks/useTranslation';
 
 const BASE_URL = import.meta.env.BASE_URL;
 
 function StormArrival({ onDismiss }) {
   const { muted } = useAudioContext();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const timer = setTimeout(onDismiss, 4200);
@@ -44,8 +46,8 @@ function StormArrival({ onDismiss }) {
       {/* Shake wrapper + content */}
       <div className="storm-shake">
         <div className="storm-content">
-          <p className="storm-time">3:47 AM</p>
-          <p className="storm-label">The storm has arrived.</p>
+          <p className="storm-time">{t('stormArrival.time')}</p>
+          <p className="storm-label">{t('stormArrival.label')}</p>
         </div>
       </div>
     </div>

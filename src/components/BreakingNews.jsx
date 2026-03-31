@@ -1,16 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from '../hooks/useTranslation';
 import './BreakingNews.css';
 
-const LINES = [
-  'Severe storm warning for coastal Estonia.',
-  'Wind speeds up to 120 km/h expected tonight.',
-  'Storm arrives at 22:00.',
-];
-
-const TICKER_TEXT =
-  '⚠  STORM WARNING ISSUED FOR ALL COASTAL REGIONS  •  RESIDENTS ADVISED TO PREPARE  •  STAY INDOORS AFTER 21:00  •  POWER OUTAGES EXPECTED  •  EMERGENCY SERVICES ON STANDBY  •  ';
-
 function BreakingNews({ onContinue }) {
+  const { t } = useTranslation();
+  const LINES = t('breakingNews.lines');
+  const TICKER_TEXT = t('breakingNews.ticker');
+
   const [visibleLines, setVisibleLines] = useState(0);
   const [showButton, setShowButton] = useState(false);
 
@@ -21,28 +17,24 @@ function BreakingNews({ onContinue }) {
     });
     timers.push(setTimeout(() => setShowButton(true), 900 + LINES.length * 900 + 200));
     return () => timers.forEach(clearTimeout);
-  }, []);
+  }, [LINES.length]);
 
   return (
     <div className="bn-overlay">
       <div className="bn-screen">
 
-        {/* CRT scan lines */}
         <div className="bn-scanlines" aria-hidden="true" />
 
-        {/* Top bar */}
         <div className="bn-topbar">
-          <span className="bn-channel">ETV 1</span>
-          <span className="bn-live">● LIVE</span>
+          <span className="bn-channel">{t('breakingNews.channel')}</span>
+          <span className="bn-live">{t('breakingNews.live')}</span>
         </div>
 
-        {/* Breaking news banner */}
         <div className="bn-banner">
           <span className="bn-banner-icon">⚠</span>
-          <span className="bn-banner-text">BREAKING NEWS</span>
+          <span className="bn-banner-text">{t('breakingNews.banner')}</span>
         </div>
 
-        {/* News content */}
         <div className="bn-content">
           {LINES.map((line, i) => (
             <p
@@ -54,16 +46,14 @@ function BreakingNews({ onContinue }) {
           ))}
         </div>
 
-        {/* Continue button */}
         <div className={`bn-continue-wrap ${showButton ? 'visible' : ''}`}>
           <button className="bn-continue-btn" onClick={onContinue}>
-            Continue
+            {t('breakingNews.continue')}
           </button>
         </div>
 
-        {/* Ticker */}
         <div className="bn-ticker">
-          <span className="bn-ticker-label">ALERT</span>
+          <span className="bn-ticker-label">{t('breakingNews.tickerLabel')}</span>
           <div className="bn-ticker-track">
             <span>{TICKER_TEXT}{TICKER_TEXT}</span>
           </div>

@@ -15,32 +15,31 @@ import BreakingNews from './BreakingNews';
 import OutcomeScreen from './OutcomeScreen';
 import FamilySetup from './FamilySetup';
 import { useAudioContext } from '../context/AudioContext';
+import { useTranslation } from '../hooks/useTranslation';
 
-// Prep hub choice metadata — icon, description, and the Ink variable to check for completion
-const PREP_CHOICE_META = {
-  water:      { icon: '💧', description: 'The taps are still running — but if the power goes out, the electric pump stops. Fill containers now before you lose access.', timeRange: '5–33 min', gameVar: 'prep_water' },
-  food:       { icon: '🍞', description: 'The fridge will stop working when the power cuts. Stock up on canned goods and dry food that doesn\'t need cooking or refrigeration.', timeRange: '~10 min', gameVar: 'prep_food' },
-  heat:       { icon: '🔥', description: 'Central heating runs on electricity. If the grid fails, temperatures will drop fast — especially at night. Have a backup heat source ready.', timeRange: '3–22 min', gameVar: 'prep_heat' },
-  light:      { icon: '🔦', description: 'When the lights go out, your phone becomes your only torch — and it drains fast. A flashlight with spare batteries keeps you safe without burning your battery.', timeRange: '3–9 min', gameVar: 'prep_light' },
-  info:       { icon: '📻', description: 'The internet and mobile networks may go down. A battery-powered radio is the only reliable way to receive emergency broadcasts and official updates.', timeRange: '2–8 min', gameVar: 'prep_info' },
-  radio:      { icon: '📻', description: 'The internet and mobile networks may go down. A battery-powered radio is the only reliable way to receive emergency broadcasts and official updates.', timeRange: '2–8 min', gameVar: 'prep_info' },
-  medication: { icon: '💊', description: 'Pharmacies may close and roads may be impassable. If anyone in your household depends on regular medication, make sure you have enough to last the storm.', timeRange: '2–7 min', gameVar: 'prep_medication' },
-  meds:       { icon: '💊', description: 'Pharmacies may close and roads may be impassable. If anyone in your household depends on regular medication, make sure you have enough to last the storm.', timeRange: '2–7 min', gameVar: 'prep_medication' },
-  shop:       { icon: '🛒', description: 'Buy water, food, and batteries at the grocery store.' },
-  store:      { icon: '🛒', description: 'Buy water, food, and batteries at the grocery store.' },
-  done:       { icon: '✅', description: 'Stop preparing and face the oncoming storm.' },
-  finish:     { icon: '✅', description: 'Stop preparing and face the oncoming storm.' },
-  ready:      { icon: '✅', description: 'Stop preparing and face the oncoming storm.' },
+// Structural prep-choice data — translatable text comes from t() at render time
+const PREP_CHOICE_ICONS = {
+  water: '💧', food: '🍞', heat: '🔥', light: '🔦', info: '📻', radio: '📻',
+  medication: '💊', meds: '💊', shop: '🛒', store: '🛒', done: '✅', finish: '✅', ready: '✅',
+};
+const PREP_CHOICE_VARS = {
+  water: 'prep_water', food: 'prep_food', heat: 'prep_heat', light: 'prep_light',
+  info: 'prep_info', radio: 'prep_info', medication: 'prep_medication', meds: 'prep_medication',
+};
+// Alias map for t() keys (radio→info, meds→medication, store→shop, finish/ready→done)
+const PREP_T_KEY = {
+  water: 'water', food: 'food', heat: 'heat', light: 'light', info: 'info', radio: 'info',
+  medication: 'medication', meds: 'medication', shop: 'shop', store: 'shop', done: 'done', finish: 'done', ready: 'done',
 };
 
-const HUB_KEYWORDS = Object.keys(PREP_CHOICE_META);
+const HUB_KEYWORDS = Object.keys(PREP_CHOICE_ICONS);
 
-const getPrepChoiceMeta = (text) => {
+const getPrepChoiceKey = (text) => {
   const lower = text.toLowerCase();
-  for (const [key, meta] of Object.entries(PREP_CHOICE_META)) {
-    if (lower.includes(key)) return meta;
+  for (const key of Object.keys(PREP_CHOICE_ICONS)) {
+    if (lower.includes(key)) return key;
   }
-  return { icon: '▶', description: '' };
+  return null;
 };
 
 // Strip emoji characters from a string (so the Ink choice text label stays clean)
@@ -57,9 +56,24 @@ const splitChoiceIcon = (text) => {
 
 function InkStory({ onReturnToMenu }) {
   // ============================================
-  // AUDIO
+  // AUDIO & TRANSLATION
   // ============================================
   const { muted, toggleMute, playAmbient, playSfx, setWindVolume, switchWindTrack, WIND_VOLS } = useAudioContext();
+  const { t, language } = useTranslation();
+
+  // Build prep choice metadata from translations
+  const getPrepChoiceMeta = (text) => {
+    const key = getPrepChoiceKey(text);
+    if (!key) return { icon: '▶', description: '' };
+    const tKey = PREP_T_KEY[key];
+    const data = t(`inkStory.prepCategories.${tKey}`);
+    return {
+      icon: PREP_CHOICE_ICONS[key],
+      description: data?.description ?? '',
+      timeRange: data?.timeRange,
+      gameVar: PREP_CHOICE_VARS[key],
+    };
+  };
 
   // ============================================
   // STATE MANAGEMENT
@@ -192,37 +206,37 @@ function InkStory({ onReturnToMenu }) {
   useEffect(() => {
     // This runs once when component mounts
 
-    console.log('Loading Ink.js story...');
+    // Pick story file and global variable based on language
+    const storyFile = language === 'et' ? 'ink/72Hours_et.js' : 'ink/72Hours.js';
+    const storyVar  = language === 'et' ? 'storyContentET'    : 'storyContent';
+
+    console.log('Loading Ink.js story...', storyFile);
 
     // STEP 1: Load the ink.js library
     const inkScript = document.createElement('script');
-    inkScript.src = import.meta.env.BASE_URL + 'ink/ink.js';  // Path to ink.js in public folder
+    inkScript.src = import.meta.env.BASE_URL + 'ink/ink.js';
     inkScript.async = true;
 
     inkScript.onload = () => {
       console.log('Ink.js loaded!');
 
-      // STEP 2: Load your compiled story (72Hours.js)
+      // STEP 2: Load the compiled story
       const storyScript = document.createElement('script');
-      storyScript.src = import.meta.env.BASE_URL + 'ink/72Hours.js';  // Path to your story in public folder
+      storyScript.src = import.meta.env.BASE_URL + storyFile;
       storyScript.async = true;
 
       storyScript.onload = () => {
         console.log('Story file loaded!');
 
         // STEP 3: Initialize the story
-        // After 72Hours.js loads, it creates a global variable called storyContent
-        if (window.storyContent) {
-          // Create new Ink story instance
-          const story = new window.inkjs.Story(window.storyContent);
+        if (window[storyVar]) {
+          const story = new window.inkjs.Story(window[storyVar]);
 
-          // Store it in our ref
           storyRef.current = story;
 
           // STEP 4: Get first chunk of story
           continueStory();
 
-          // Mark as loaded
           setStoryLoaded(true);
         } else {
           console.error('Story content not found!');
@@ -233,7 +247,6 @@ function InkStory({ onReturnToMenu }) {
         console.error('Failed to load story file!');
       };
 
-      // Add story script to page
       document.body.appendChild(storyScript);
     };
 
@@ -241,12 +254,9 @@ function InkStory({ onReturnToMenu }) {
       console.error('Failed to load Ink.js!');
     };
 
-    // Add ink.js script to page
     document.body.appendChild(inkScript);
 
-    // Cleanup function - runs when component unmounts
     return () => {
-      // Remove scripts when component is destroyed
       if (inkScript.parentNode) {
         inkScript.parentNode.removeChild(inkScript);
       }
@@ -875,13 +885,13 @@ function InkStory({ onReturnToMenu }) {
 
   // List of preparation categories with their icons and labels
   const categories = [
-    { key: 'prep_water', icon: '💧', label: 'Water' },
-    { key: 'prep_food', icon: '🍞', label: 'Food' },
-    { key: 'prep_heat', icon: '🔥', label: 'Heat' },
-    { key: 'prep_light', icon: '🔦', label: 'Light' },
-    { key: 'prep_info', icon: '📻', label: 'Info' },
-    { key: 'prep_medication', icon: '💊', label: 'Meds' },
-  ];
+    { key: 'prep_water', icon: '💧', tKey: 'water' },
+    { key: 'prep_food', icon: '🍞', tKey: 'food' },
+    { key: 'prep_heat', icon: '🔥', tKey: 'heat' },
+    { key: 'prep_light', icon: '🔦', tKey: 'light' },
+    { key: 'prep_info', icon: '📻', tKey: 'info' },
+    { key: 'prep_medication', icon: '💊', tKey: 'medication' },
+  ].map(c => ({ ...c, label: t(`inkStory.prepCategories.${c.tKey}.label`) }));
 
   // Helper to get preparation level class
   const getPrepClass = (level) => {
@@ -945,7 +955,7 @@ function InkStory({ onReturnToMenu }) {
               <span
                 key={cat.key}
                 className={`resource-item ${getPrepClass(gameVars[cat.key])}`}
-                title={`${cat.label}: ${gameVars[cat.key] === 0 ? 'Not prepared' : gameVars[cat.key] === 1 ? 'Basic' : 'Thorough'}`}
+                title={`${cat.label}: ${t(`inkStory.prepStatus.${gameVars[cat.key] || 0}`)}`}
               >
                 {cat.icon}
               </span>
@@ -1199,23 +1209,23 @@ function InkStory({ onReturnToMenu }) {
             <div className="sms-header">
               <div className="sms-avatar sms-avatar-govt">🛡</div>
               <div className="sms-contact-info">
-                <div className="sms-contact">GovtInfo</div>
-                <div className="sms-contact-sub">National Crisis Management Centre</div>
+                <div className="sms-contact">{t('sms.contact')}</div>
+                <div className="sms-contact-sub">{t('sms.contactSub')}</div>
               </div>
-              <div className="sms-time">now</div>
+              <div className="sms-time">{t('sms.time')}</div>
             </div>
             <div className="sms-body">
               <div className="sms-bubble sms-bubble-govt">
-                <span className="sms-alert-tag">⚠ STORM ALERT</span>
-                A severe storm warning has been issued for your region. Significant power outages, disrupted water supply, and road closures are anticipated in the coming hours.
+                <span className="sms-alert-tag">{t('sms.alertTag')}</span>
+                {t('sms.body')}
                 <br /><br />
-                Secure adequate supplies of drinking water, non-perishable food, medications, emergency lighting, and a heat source. Stay indoors and monitor official broadcast channels for further instructions.
+                {t('sms.body2')}
                 <br /><br />
-                <span className="sms-ref">Ref: NCM-{new Date().getFullYear()}-STORM · Do not reply</span>
+                <span className="sms-ref">Ref: NCM-{new Date().getFullYear()}-STORM</span>
               </div>
             </div>
             <button className="sms-close-btn" onClick={handleSMSClose}>
-              Acknowledge
+              {t('sms.acknowledge')}
             </button>
           </div>
         </div>
@@ -1229,41 +1239,41 @@ function InkStory({ onReturnToMenu }) {
             {/* ── Left: broadcast narrative ── */}
             <div className="radio-broadcast-left">
               <div className="radio-icon">📻</div>
-              <h3>Emergency Broadcast</h3>
+              <h3>{t('radioBroadcast.title')}</h3>
               <div className="broadcast-content">
-                <p className="broadcast-static">[STATIC CRACKLE]</p>
-                <p>This is an emergency broadcast from the National Crisis Center.</p>
-                <p>A severe storm is affecting coastal regions. Power outages have been reported across multiple districts.</p>
-                <p>Stay indoors. Conserve phone battery. Check on elderly neighbors if safe to do so.</p>
-                <p className="broadcast-static">[STATIC CRACKLE]</p>
+                <p className="broadcast-static">{t('radioBroadcast.static')}</p>
+                <p>{t('radioBroadcast.line1')}</p>
+                <p>{t('radioBroadcast.line2')}</p>
+                <p>{t('radioBroadcast.line3')}</p>
+                <p className="broadcast-static">{t('radioBroadcast.static')}</p>
               </div>
             </div>
 
             {/* ── Right: emergency numbers reference ── */}
             <div className="radio-broadcast-right">
-              <h4 className="broadcast-numbers-title">Emergency Numbers</h4>
+              <h4 className="broadcast-numbers-title">{t('radioBroadcast.numbersTitle')}</h4>
               <div className="broadcast-number-item">
                 <span className="broadcast-number">112</span>
-                <span className="broadcast-number-desc">Life-threatening emergency</span>
+                <span className="broadcast-number-desc">{t('radioBroadcast.number112')}</span>
               </div>
               <div className="broadcast-number-item">
                 <span className="broadcast-number">1220</span>
-                <span className="broadcast-number-desc">Family doctor / health advice</span>
+                <span className="broadcast-number-desc">{t('radioBroadcast.number1220')}</span>
               </div>
               <div className="broadcast-number-item">
                 <span className="broadcast-number">1247</span>
-                <span className="broadcast-number-desc">Rescue coordination</span>
+                <span className="broadcast-number-desc">{t('radioBroadcast.number1247')}</span>
               </div>
               <div className="broadcast-number-item">
                 <span className="broadcast-number">1343</span>
-                <span className="broadcast-number-desc">Power outage reporting</span>
+                <span className="broadcast-number-desc">{t('radioBroadcast.number1343')}</span>
               </div>
-              <p className="broadcast-hint">🗒️ Write these numbers down — you may need them later.</p>
+              <p className="broadcast-hint">{t('radioBroadcast.hint')}</p>
             </div>
 
             {/* ── Button spans full width ── */}
             <button className="broadcast-close-btn" onClick={handleRadioBroadcastClose}>
-              Continue
+              {t('radioBroadcast.continue')}
             </button>
 
           </div>
@@ -1348,23 +1358,23 @@ function InkStory({ onReturnToMenu }) {
         {showSettings && (
           <div className="settings-panel">
             <div className="settings-row">
-              <span className="settings-label">Sound</span>
+              <span className="settings-label">{t('inkStory.settings.sound')}</span>
               <button
                 className={`settings-toggle ${muted ? 'off' : 'on'}`}
                 onClick={() => { playSfx('click'); toggleMute(); }}
-                title={muted ? 'Sound: Off' : 'Sound: On'}
+                title={muted ? t('inkStory.settings.soundOff') : t('inkStory.settings.soundOn')}
               >
-                {muted ? '🔇 Off' : '🔊 On'}
+                {muted ? t('inkStory.settings.soundOff') : t('inkStory.settings.soundOn')}
               </button>
             </div>
             <div className="settings-row">
-              <span className="settings-label">Text Animation</span>
+              <span className="settings-label">{t('inkStory.settings.textAnimation')}</span>
               <button
                 className={`settings-toggle ${textSpeed === 'instant' ? 'off' : 'on'}`}
                 onClick={() => { playSfx('click'); toggleTextSpeed(); }}
-                title={textSpeed === 'slow' ? 'Text: Animated' : 'Text: Instant'}
+                title={textSpeed === 'slow' ? t('inkStory.settings.textOn') : t('inkStory.settings.textOff')}
               >
-                {textSpeed === 'slow' ? '▸ On' : '▸▸ Off'}
+                {textSpeed === 'slow' ? t('inkStory.settings.textOn') : t('inkStory.settings.textOff')}
               </button>
             </div>
           </div>

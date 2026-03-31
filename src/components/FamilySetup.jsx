@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import './FamilySetup.css';
 import { useAudioContext } from '../context/AudioContext';
+import { useTranslation } from '../hooks/useTranslation';
 
 function FamilySetup({ onClose }) {
   const [extras, setExtras] = useState([]);
   const [showElderlyForm, setShowElderlyForm] = useState(false);
   const [elderlyName, setElderlyName] = useState('');
   const { playSfx } = useAudioContext();
+  const { t } = useTranslation();
 
   const hasElderly = extras.some(m => m.type === 'elderly');
 
@@ -45,15 +47,15 @@ function FamilySetup({ onClose }) {
   const householdSize = 1 + extras.length;
 
   const getMemberLabel = (m) => {
-    if (m.type === 'adult') return 'Partner / Adult';
-    if (m.type === 'elderly') return m.relation || 'Elderly relative';
-    return 'Child';
+    if (m.type === 'adult') return t('familySetup.adultLabel');
+    if (m.type === 'elderly') return m.relation || t('familySetup.elderlyLabel');
+    return t('familySetup.childLabel');
   };
 
   const getMemberTypeTag = (m) => {
-    if (m.type === 'adult') return 'adult';
-    if (m.type === 'elderly') return 'elderly';
-    return 'child';
+    if (m.type === 'adult') return t('familySetup.adultTag');
+    if (m.type === 'elderly') return t('familySetup.elderlyTag');
+    return t('familySetup.childTag');
   };
 
   return (
@@ -62,15 +64,15 @@ function FamilySetup({ onClose }) {
 
         <div className="fs-header">
           <span className="fs-icon">👥</span>
-          <h2>Who's in your household?</h2>
-          <p className="fs-subtitle">This shapes your preparation plan and the crisis you'll face.</p>
+          <h2>{t('familySetup.heading')}</h2>
+          <p className="fs-subtitle">{t('familySetup.subtitle')}</p>
         </div>
 
         {/* Household member list */}
         <div className="fs-member-list">
           <div className="fs-member-row fs-member-you">
-            <span className="fs-member-name">You</span>
-            <span className="fs-member-tag fs-tag-you">always present</span>
+            <span className="fs-member-name">{t('familySetup.you')}</span>
+            <span className="fs-member-tag fs-tag-you">{t('familySetup.alwaysPresent')}</span>
           </div>
           {extras.map((m, i) => (
             <div key={i} className={`fs-member-row fs-member-type-${m.type}`}>
@@ -84,44 +86,44 @@ function FamilySetup({ onClose }) {
         {/* Add member buttons */}
         <div className="fs-add-buttons">
           <button className="fs-add-btn" onClick={addAdult}>
-            + Adult / Partner
+            {t('familySetup.addAdult')}
           </button>
           {!hasElderly && (
             <button className="fs-add-btn fs-add-elderly" onClick={handleElderlyClick}>
-              + Elderly or Dependent
+              {t('familySetup.addElderly')}
             </button>
           )}
           <button className="fs-add-btn fs-add-child" onClick={addChild}>
-            + Child
+            {t('familySetup.addChild')}
           </button>
         </div>
 
         {/* Elderly name form */}
         {showElderlyForm && (
           <div className="fs-elderly-form">
-            <label className="fs-elderly-label">What should we call them?</label>
+            <label className="fs-elderly-label">{t('familySetup.elderlyQuestion')}</label>
             <input
               className="fs-elderly-input"
               type="text"
               value={elderlyName}
               onChange={e => setElderlyName(e.target.value)}
-              placeholder="e.g. Grandmother, Mom, Uncle"
+              placeholder={t('familySetup.elderlyPlaceholder')}
               onKeyDown={e => { if (e.key === 'Enter') addElderly(); }}
               autoFocus
             />
-            <p className="fs-elderly-hint">Hint: e.g. Grandmother, Mom, Partner</p>
+            <p className="fs-elderly-hint">{t('familySetup.elderlyHint')}</p>
             <button
               className="fs-elderly-add-btn"
               onClick={addElderly}
               disabled={!elderlyName.trim()}
             >
-              Add to household
+              {t('familySetup.addToHousehold')}
             </button>
           </div>
         )}
 
         <button className="fs-done-btn" onClick={() => { playSfx('open'); onClose({ extras }); }}>
-          Done — Start Preparing
+          {t('familySetup.done')}
         </button>
 
       </div>

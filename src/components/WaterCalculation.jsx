@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import './WaterCalculation.css';
 import { useAudioContext } from '../context/AudioContext';
+import { useTranslation } from '../hooks/useTranslation';
 
 function WaterCalculation({ familySize = 2, onClose, onCancel }) {
   const { playSfx } = useAudioContext();
+  const { t } = useTranslation();
   const PEOPLE = familySize;
   const DAYS = 3;
   const L_PER_PERSON_DAY = 3;
@@ -12,28 +14,28 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
   const OPTIONS = [
     {
       value: PEOPLE * L_PER_PERSON_DAY,
-      label: `${PEOPLE * L_PER_PERSON_DAY} litres`,
+      label: `${PEOPLE * L_PER_PERSON_DAY} ${t('waterCalc.screen3Unit')}`,
       correct: false,
-      feedback: `That's only 1 day of water. You need ${DAYS} days' worth.`,
+      feedback: t('waterCalc.feedbackOneDay', { days: DAYS }),
     },
     {
       value: CORRECT,
-      label: `${CORRECT} litres`,
+      label: `${CORRECT} ${t('waterCalc.screen3Unit')}`,
       correct: true,
-      feedback: `Exactly right. ${L_PER_PERSON_DAY}L × ${PEOPLE} people × ${DAYS} days = ${CORRECT} litres.`,
+      feedback: t('waterCalc.feedbackCorrect', { lPerDay: L_PER_PERSON_DAY, people: PEOPLE, days: DAYS, total: CORRECT }),
     },
     {
       value: PEOPLE * 2 * DAYS,
-      label: `${PEOPLE * 2 * DAYS} litres`,
+      label: `${PEOPLE * 2 * DAYS} ${t('waterCalc.screen3Unit')}`,
       correct: false,
-      feedback: `That uses only 2L per person per day. The guideline is ${L_PER_PERSON_DAY}L.`,
+      feedback: t('waterCalc.feedbackTwoL', { lPerDay: L_PER_PERSON_DAY }),
     },
     {
       value: 100,
-      label: '100 litres',
+      label: `100 ${t('waterCalc.screen3Unit')}`,
       correct: false,
       ridiculous: true,
-      feedback: `That's more than most households use in a normal week.`,
+      feedback: t('waterCalc.feedbackRidiculous'),
     },
   ].filter((opt, i, arr) =>
     arr.findIndex(o => o.value === opt.value) === i
@@ -68,6 +70,9 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
     return true;
   };
 
+  const isAre = PEOPLE === 1 ? t('waterCalc.is') : t('waterCalc.are');
+  const personPeople = PEOPLE === 1 ? t('waterCalc.person') : t('waterCalc.people');
+
   return (
     <div className="wc-overlay">
       <div className="wc-panel">
@@ -77,30 +82,27 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
           <div className="wc-screen">
             <div className="wc-header">
               <span className="wc-icon">💧</span>
-              <h2>Water Preparation</h2>
-              <p className="wc-subtitle">Before you start filling containers…</p>
+              <h2>{t('waterCalc.screen1Title')}</h2>
+              <p className="wc-subtitle">{t('waterCalc.screen1Subtitle')}</p>
             </div>
 
             <div className="wc-info-block">
-              <p className="wc-text">
-                There {PEOPLE === 1 ? 'is' : 'are'} <strong>{PEOPLE} {PEOPLE === 1 ? 'person' : 'people'}</strong> in
-                your household. The storm is forecast to last up to <strong>{DAYS} days</strong>.
-              </p>
-              <p className="wc-text">
-                Think about how much water a person needs each day to stay healthy — then work out the total for everyone.
-              </p>
+              <p className="wc-text" dangerouslySetInnerHTML={{
+                __html: t('waterCalc.screen1Text', { isAre, people: PEOPLE, personPeople, days: DAYS })
+              }} />
+              <p className="wc-text">{t('waterCalc.screen1Text2')}</p>
 
-              <div className="wc-note-reminder">
-                🗒️ <strong>Write down your calculation</strong> — you may need it later.
-              </div>
+              <div className="wc-note-reminder" dangerouslySetInnerHTML={{
+                __html: t('waterCalc.screen1Note')
+              }} />
             </div>
 
             <button className="wc-btn-primary" onClick={() => { playSfx('click'); setScreen(2); }}>
-              Calculate →
+              {t('waterCalc.screen1Btn')}
             </button>
 
             <button className="wc-btn-back" onClick={() => { playSfx('close'); onCancel?.(); }}>
-              ← Back to preparation
+              {t('waterCalc.screen1Back')}
             </button>
           </div>
         )}
@@ -110,17 +112,13 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
           <div className="wc-screen">
             <div className="wc-header">
               <span className="wc-icon">🚰</span>
-              <h2>Check Your Water Supply</h2>
-              <p className="wc-subtitle">Go to your kitchen right now</p>
+              <h2>{t('waterCalc.screen3Title')}</h2>
+              <p className="wc-subtitle">{t('waterCalc.screen3Subtitle')}</p>
             </div>
 
             <div className="wc-info-block">
-              <p className="wc-text">
-                Look around your kitchen. Count any water you already have stored — bottles, jugs, pitchers, kettles, or any other containers.
-              </p>
-              <p className="wc-text">
-                How many litres do you currently have at home?
-              </p>
+              <p className="wc-text">{t('waterCalc.screen3Text')}</p>
+              <p className="wc-text">{t('waterCalc.screen3Text2')}</p>
               <div className="wc-input-group">
                 <input
                   type="number"
@@ -130,15 +128,13 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
                   onChange={handleMeasuredChange}
                   className="wc-number-input"
                 />
-                <span className="wc-input-unit">litres</span>
+                <span className="wc-input-unit">{t('waterCalc.screen3Unit')}</span>
               </div>
-              <p className="wc-text wc-text-hint">
-                Enter 0 if you have nothing stored — that's okay, we'll work with what we have.
-              </p>
+              <p className="wc-text wc-text-hint">{t('waterCalc.screen3Hint')}</p>
             </div>
 
             <button className="wc-btn-primary" onClick={() => { playSfx('click'); onClose(selected?.correct ?? false, measuredLitres === '' ? 0 : Number(measuredLitres)); }}>
-              Continue →
+              {t('waterCalc.screen3Btn')}
             </button>
           </div>
         )}
@@ -148,13 +144,13 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
           <div className="wc-screen">
             <div className="wc-header">
               <span className="wc-icon">🧮</span>
-              <h2>How much water do you need?</h2>
-              <p className="wc-subtitle">Choose the amount that covers your household</p>
+              <h2>{t('waterCalc.screen2Title')}</h2>
+              <p className="wc-subtitle">{t('waterCalc.screen2Subtitle')}</p>
             </div>
 
-            <div className="wc-note-reminder">
-              🗒️ <strong>Check your notes</strong> — you wrote this down earlier.
-            </div>
+            <div className="wc-note-reminder" dangerouslySetInnerHTML={{
+              __html: t('waterCalc.screen2Note')
+            }} />
 
             <div className="wc-options">
               {OPTIONS.map((opt) => {
@@ -185,7 +181,7 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
 
             {selected && (
               <button className="wc-btn-primary" onClick={() => { playSfx('click'); setScreen(3); }}>
-                {selected.correct ? 'Check your water supply →' : 'Continue anyway →'}
+                {selected.correct ? t('waterCalc.screen2BtnCorrect') : t('waterCalc.screen2BtnWrong')}
               </button>
             )}
           </div>

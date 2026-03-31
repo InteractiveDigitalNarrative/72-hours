@@ -1,5 +1,6 @@
 // LoadingScreen.jsx — preloads all audio + images, then lets the user enter
 import { useState, useEffect } from 'react';
+import { useTranslation } from '../hooks/useTranslation';
 import './LoadingScreen.css';
 
 const BASE_URL = import.meta.env.BASE_URL;
@@ -21,17 +22,9 @@ const IMAGE_ASSETS = ['Images/winter-storm.jpg'];
 
 const TOTAL = AUDIO_ASSETS.length + IMAGE_ASSETS.length;
 
-// Rotating status lines shown while loading
-const STATUS_LINES = [
-  'Checking emergency frequencies…',
-  'Verifying supply routes…',
-  'Calibrating weather sensors…',
-  'Establishing communication links…',
-  'Assessing storm trajectory…',
-  'Loading mission parameters…',
-];
-
 export default function LoadingScreen({ onEnter }) {
+  const { t } = useTranslation();
+  const STATUS_LINES = t('loadingScreen.statusLines');
   const [loaded, setLoaded]       = useState(0);
   const [statusIdx, setStatusIdx] = useState(0);
 
@@ -41,7 +34,7 @@ export default function LoadingScreen({ onEnter }) {
       setStatusIdx((i) => (i + 1) % STATUS_LINES.length);
     }, 1600);
     return () => clearInterval(id);
-  }, []);
+  }, [STATUS_LINES.length]);
 
   useEffect(() => {
     const done = () => setLoaded((n) => n + 1);
@@ -88,8 +81,10 @@ export default function LoadingScreen({ onEnter }) {
       <div className="loading-card">
         {/* Title */}
         <div className="loading-title-block">
-          <h1 className="loading-title">STORM<br />ALERT</h1>
-          <p className="loading-tagline">Every decision counts. Time is running out.</p>
+          <h1 className="loading-title">{t('loadingScreen.title').split('\n').map((line, i, arr) => (
+            <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+          ))}</h1>
+          <p className="loading-tagline">{t('loadingScreen.tagline')}</p>
         </div>
 
         {/* Divider */}
@@ -101,7 +96,7 @@ export default function LoadingScreen({ onEnter }) {
             <div className="loading-bar-fill" style={{ width: `${progress}%` }} />
           </div>
           <p className="loading-status">
-            {ready ? 'All systems ready.' : STATUS_LINES[statusIdx]}
+            {ready ? t('loadingScreen.ready') : STATUS_LINES[statusIdx]}
           </p>
         </div>
 
@@ -111,7 +106,7 @@ export default function LoadingScreen({ onEnter }) {
           onClick={ready ? onEnter : undefined}
           disabled={!ready}
         >
-          {ready ? 'ENTER' : `${progress}%`}
+          {ready ? t('loadingScreen.enter') : `${progress}%`}
         </button>
 
       </div>

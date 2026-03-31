@@ -1,0 +1,693 @@
+{
+  "loadingScreen": {
+    "title": "STORM\nALERT",
+    "tagline": "Every decision counts. Time is running out.",
+    "statusLines": [
+      "Checking emergency frequencies…",
+      "Verifying supply routes…",
+      "Calibrating weather sensors…",
+      "Establishing communication links…",
+      "Assessing storm trajectory…",
+      "Loading mission parameters…"
+    ],
+    "ready": "All systems ready.",
+    "enter": "ENTER"
+  },
+
+  "menu": {
+    "title": "STORM ALERT",
+    "subtitle": "Crisis Management Simulation",
+    "start": "START SIMULATION",
+    "continue": "CONTINUE",
+    "about": "ABOUT",
+    "tagline": "Every decision counts. Time is running out.",
+    "aboutTitle": "About Storm Alert",
+    "aboutP1": "A severe winter storm is closing in. Storm Alert is a preparedness simulation that puts you in the middle of a real crisis — at home, facing the disaster firsthand.",
+    "aboutP2": "Gather supplies, make decisions under pressure, and figure out who to call when things go wrong. Your choices determine how you and your household make it through the next 72 hours.",
+    "gotIt": "GOT IT"
+  },
+
+  "familySetup": {
+    "heading": "Who's in your household?",
+    "subtitle": "This shapes your preparation plan and the crisis you'll face.",
+    "you": "You",
+    "alwaysPresent": "always present",
+    "adultLabel": "Partner / Adult",
+    "elderlyLabel": "Elderly relative",
+    "childLabel": "Child",
+    "adultTag": "adult",
+    "elderlyTag": "elderly",
+    "childTag": "child",
+    "addAdult": "+ Adult / Partner",
+    "addElderly": "+ Elderly or Dependent",
+    "addChild": "+ Child",
+    "elderlyQuestion": "What should we call them?",
+    "elderlyPlaceholder": "e.g. Grandmother, Mom, Uncle",
+    "elderlyHint": "Hint: e.g. Grandmother, Mom, Partner",
+    "addToHousehold": "Add to household",
+    "done": "Done — Start Preparing"
+  },
+
+  "phoneKeypad": {
+    "title": "Emergency Call",
+    "placeholder": "Enter number",
+    "call": "Call"
+  },
+
+  "callResult": {
+    "attemptCounter": "Attempt {{current}} / 3",
+    "lastChance": "— last chance",
+    "tryAgain": "Try Again",
+    "giveUp": "Give Up",
+    "continue": "Continue",
+    "scenarios": {
+      "grandmother_emergency": {
+        "112": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Emergency Line",
+          "message": "\"112, what is your emergency?\"\n\nYou explain grandmother's condition.\n\n\"Sir, this line is for life-threatening emergencies. Your grandmother's situation, while concerning, is not immediately life-threatening. You're tying up resources needed for critical cases.\"\n\nThey transfer you, but it takes extra time. Help will arrive, but delayed.",
+          "outcome": "help_delayed"
+        },
+        "1220": {
+          "type": "success",
+          "icon": "✓",
+          "title": "Family Doctor Advice Line",
+          "message": "\"Health advice line, how can I help?\"\n\nYou explain grandmother's condition - weak, dehydrated, needs medical attention but stable.\n\n\"You did the right thing calling. Based on what you're describing, she needs fluids and monitoring. I'm connecting you with crisis medical support who can send someone to check on her.\"\n\nWithin the hour, a medical team arrives. They stabilize grandmother and praise your quick thinking.\n\nYou called the right number for the right situation.",
+          "outcome": "help_success"
+        },
+        "1247": {
+          "type": "partial",
+          "icon": "◐",
+          "title": "Rescue Coordination",
+          "message": "\"Rescue coordination, how can we help?\"\n\nYou explain grandmother's condition.\n\n\"We can dispatch assistance, but for medical advice you should call 1220 - the family doctor line. They can better assess her condition. We'll still send someone, but it may take longer as we're prioritizing rescue operations.\"\n\nHelp arrives, but a direct call to 1220 would have been faster and more appropriate.",
+          "outcome": "help_partial"
+        },
+        "1343": {
+          "type": "wrong",
+          "icon": "📞",
+          "title": "Power Outage Line",
+          "message": "\"Power outage reporting line. Please hold...\"\n\n[Automated menu plays]\n\n\"Press 1 to report an outage. Press 2 to check restoration status...\"\n\nThis isn't what you need. You hang up and lose precious time.\n\nWhat was the health advice number again?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "default": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Number Not Recognized",
+          "message": "Beep... beep... beep...\n\n\"The number you have dialed is not in service.\"\n\nThat number doesn't exist. You need one of the real emergency lines.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        }
+      },
+      "elderly_medical": {
+        "1220": {
+          "type": "success",
+          "icon": "✓",
+          "title": "Family Doctor Advice Line",
+          "message": "\"Health advice line, how can I help?\"\n\nYou explain the situation — your relative is weak, dizzy, blood pressure feels wrong. Not life-threatening, but they need help and the roads are blocked.\n\n\"You did the right thing calling. Based on what you're describing, they need fluids and monitoring. I'm connecting you with crisis medical support who can send someone directly to you.\"\n\nWithin the hour, a medical team arrives. They stabilize your relative and check on you both.\n\nYou called the right number for the right situation.",
+          "outcome": "help_success"
+        },
+        "112": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Emergency Line",
+          "message": "\"112, what is your emergency?\"\n\nYou explain the situation.\n\n\"This line is for life-threatening emergencies. Your relative's condition, while concerning, is not immediately life-threatening. You're tying up resources needed for critical cases.\"\n\nThey transfer you, but it takes time. Help will arrive, but delayed.",
+          "outcome": "help_delayed"
+        },
+        "1247": {
+          "type": "partial",
+          "icon": "◐",
+          "title": "Rescue Coordination",
+          "message": "\"Rescue coordination, how can we help?\"\n\nYou explain the situation.\n\n\"We can dispatch assistance, but for medical advice you should call 1220 — the family doctor line. They can better assess your relative's condition. We'll still send someone, but it may take longer.\"\n\nHelp arrives eventually. A direct call to 1220 would have been faster.",
+          "outcome": "help_partial"
+        },
+        "1343": {
+          "type": "wrong",
+          "icon": "📞",
+          "title": "Power Outage Line",
+          "message": "\"Power outage reporting line. Please hold...\"\n\n[Automated menu plays]\n\n\"Press 1 to report an outage. Press 2 to check restoration status...\"\n\nThis isn't what you need. You hang up and lose precious time.\n\nWhat was the health advice number again?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "default": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Number Not Recognized",
+          "message": "Beep... beep... beep...\n\n\"The number you have dialed is not in service.\"\n\nThat number doesn't exist. Try one of the real emergency lines.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        }
+      },
+      "rescue_coordination": {
+        "1247": {
+          "type": "success",
+          "icon": "✓",
+          "title": "Rescue Coordination",
+          "message": "\"Rescue coordination, how can we help?\"\n\nYou explain the situation — your relative is in distress, the children need you there, the roads are blocked. You need someone to come to you.\n\n\"Understood. We handle exactly this — coordinating rescue when people can't leave. We're dispatching a team to your address now.\"\n\nA rescue team arrives within the hour. They help stabilize your relative on site and confirm your address is safe.\n\nYou called the right number.",
+          "outcome": "help_success"
+        },
+        "112": {
+          "type": "partial",
+          "icon": "◐",
+          "title": "Emergency Line",
+          "message": "\"112, what is your emergency?\"\n\nYou explain the situation.\n\n\"We can try to help. For coordinating a rescue team to come to you, 1247 is actually the right number — but we'll pass this along.\"\n\nIt takes longer than it should. Help eventually arrives, but the coordination wasn't ideal.",
+          "outcome": "help_partial"
+        },
+        "1220": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Family Doctor Advice Line",
+          "message": "\"Health advice line, how can I help?\"\n\nYou explain the situation — your relative is in serious distress, you can't leave because of the children, you need someone to come.\n\n\"I can give medical advice, but coordinating a physical rescue is outside what we do. You need to call 1247 — rescue coordination. They can send a team directly to you.\"\n\nYou lose precious time. What was the rescue number again?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "1343": {
+          "type": "wrong",
+          "icon": "📞",
+          "title": "Power Outage Line",
+          "message": "\"Power outage reporting line. Please hold...\"\n\n[Automated menu plays]\n\n\"Press 1 to report an outage. Press 2 to check restoration status...\"\n\nThis isn't what you need at all. You hang up, frustrated.\n\nWhat was the rescue coordination number again?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "default": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Number Not Recognized",
+          "message": "Beep... beep... beep...\n\n\"The number you have dialed is not in service.\"\n\nThat number doesn't exist. You need the line that sends help directly to you.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        }
+      },
+      "child_emergency": {
+        "112": {
+          "type": "success",
+          "icon": "✓",
+          "title": "Emergency Services",
+          "message": "\"112, what is your emergency?\"\n\nYou describe the situation — your child has broken out in hives, throat is swelling, can't breathe properly.\n\n\"This is anaphylaxis. Keep them calm and upright. Do you have an EpiPen? An ambulance is on the way — keep this line open.\"\n\nThe paramedics arrive and administer epinephrine immediately. Your child stabilizes.\n\n112 was exactly the right call for a life-threatening emergency.",
+          "outcome": "help_success"
+        },
+        "1220": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Family Doctor Advice Line",
+          "message": "\"Health advice line, how can I help?\"\n\nYou describe the swelling throat, the hives.\n\n\"This sounds like anaphylaxis — this is a life-threatening emergency. You need to call 112 immediately. Every second counts. Hang up and call 112 now.\"\n\nYou lose precious seconds. What was the emergency number again?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "1247": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Rescue Coordination",
+          "message": "\"Rescue coordination, how can we help?\"\n\nYou describe your child's condition.\n\n\"This is a medical emergency — you need 112 immediately. We coordinate logistics, not medical emergencies. Call 112 now.\"\n\nYou lose precious time. What was the emergency number again?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "1343": {
+          "type": "wrong",
+          "icon": "📞",
+          "title": "Power Outage Line",
+          "message": "\"Power outage reporting line. Please hold...\"\n\n[Automated menu plays]\n\nYou hang up immediately. Wrong number entirely.\n\nYour child needs emergency help. What was that number?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "default": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Number Not Recognized",
+          "message": "Beep... beep... beep...\n\n\"The number you have dialed is not in service.\"\n\nYour child needs help right now. That number doesn't exist — try the right emergency line.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        }
+      },
+      "power_outage": {
+        "1343": {
+          "type": "success",
+          "icon": "✓",
+          "title": "Power Outage Reporting",
+          "message": "\"Power outage reporting. What's your address?\"\n\nYou report the outage and mention you've been without power for over 12 hours. You're starting to feel the cold — lightheaded and numb.\n\n\"Thank you. We're logging this area as a priority — there's been widespread outage. We also have a welfare check team. I'm noting your address.\"\n\nWithin hours, a welfare check arrives. The power comes back on by evening.\n\n1343 was exactly the right number.",
+          "outcome": "help_success"
+        },
+        "112": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Emergency Line",
+          "message": "\"112, what is your emergency?\"\n\nYou explain you've had no power for 12 hours, feeling lightheaded and cold.\n\n\"For power outages, please call 1343 — that's the dedicated line. If your condition worsens to a medical emergency, call back here. For now, keep warm and call 1343.\"\n\nThey log the call but it adds to their load. You need to try 1343.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "1220": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Family Doctor Advice Line",
+          "message": "\"Health advice line, how can I help?\"\n\nYou explain the situation — power out, feeling lightheaded.\n\n\"For power outages, you need to call 1343. If you're feeling faint, that could be from cold — keep warm, drink water. But the outage itself should be reported to 1343.\"\n\nNot the right number for this. Try 1343.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "1247": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Rescue Coordination",
+          "message": "\"Rescue coordination, how can we help?\"\n\nYou explain the situation.\n\n\"For power outages, please call 1343 — the power company's emergency line. If you need physical rescue, call back. For now, contact 1343.\"\n\nNot the right number. Try 1343.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "default": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Number Not Recognized",
+          "message": "Beep... beep... beep...\n\n\"The number you have dialed is not in service.\"\n\nThat number doesn't exist. Try one of the real emergency lines.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        }
+      }
+    }
+  },
+
+  "breakingNews": {
+    "channel": "ETV 1",
+    "live": "● LIVE",
+    "banner": "BREAKING NEWS",
+    "lines": [
+      "Severe storm warning for coastal Estonia.",
+      "Wind speeds up to 120 km/h expected tonight.",
+      "Storm arrives at 22:00."
+    ],
+    "ticker": "⚠  STORM WARNING ISSUED FOR ALL COASTAL REGIONS  •  RESIDENTS ADVISED TO PREPARE  •  STAY INDOORS AFTER 21:00  •  POWER OUTAGES EXPECTED  •  EMERGENCY SERVICES ON STANDBY  •  ",
+    "tickerLabel": "ALERT",
+    "continue": "Continue"
+  },
+
+  "stormArrival": {
+    "time": "3:47 AM",
+    "label": "The storm has arrived."
+  },
+
+  "sms": {
+    "contact": "GovtInfo",
+    "contactSub": "National Crisis Management Centre",
+    "time": "now",
+    "alertTag": "⚠ STORM ALERT",
+    "body": "A severe storm warning has been issued for your region. Significant power outages, disrupted water supply, and road closures are anticipated in the coming hours.",
+    "body2": "Secure adequate supplies of drinking water, non-perishable food, medications, emergency lighting, and a heat source. Stay indoors and monitor official broadcast channels for further instructions.",
+    "acknowledge": "Acknowledge"
+  },
+
+  "radioBroadcast": {
+    "title": "Emergency Broadcast",
+    "static": "[STATIC CRACKLE]",
+    "line1": "This is an emergency broadcast from the National Crisis Center.",
+    "line2": "A severe storm is affecting coastal regions. Power outages have been reported across multiple districts.",
+    "line3": "Stay indoors. Conserve phone battery. Check on elderly neighbors if safe to do so.",
+    "numbersTitle": "Emergency Numbers",
+    "number112": "Life-threatening emergency",
+    "number1220": "Family doctor / health advice",
+    "number1247": "Rescue coordination",
+    "number1343": "Power outage reporting",
+    "hint": "🗒️ Write these numbers down — you may need them later.",
+    "continue": "Continue"
+  },
+
+  "store": {
+    "warningTitle": "Every second counts",
+    "warningBody": "The storm is closing in. You don't have time to browse — grab only what you genuinely need and get out.",
+    "warningRule": "The trip to the store and back costs 20 minutes. Each item you pick up costs 1 more. Choose wisely.",
+    "warningBtn": "Enter the store →",
+    "headerTitle": "Emergency Shopping",
+    "headerSubtitle": "Grab what you need before the storm hits",
+    "basketLabel": "🛒 Basket",
+    "basketEmpty": "Click items to add them",
+    "checkout": "Checkout",
+    "categories": {
+      "essentials": { "label": "Essentials", "description": "Some are must-haves — others depend on what you already have" },
+      "food": { "label": "Food & Drink", "description": "Choose non-perishables that don't need refrigeration" },
+      "luxury": { "label": "Luxury", "description": "Is this really the time?" }
+    },
+    "items": {
+      "water":          { "name": "Bottled Water",       "description": "Several litres" },
+      "batteries":      { "name": "AA Batteries",        "description": "Pack of 8 — powers everything" },
+      "candles":        { "name": "Emergency Candles",    "description": "Burns 8 hrs each" },
+      "first_aid":      { "name": "First Aid Kit",        "description": "Bandages, antiseptic" },
+      "blanket":        { "name": "Emergency Blanket",    "description": "Retains 90% body heat" },
+      "matches":        { "name": "Waterproof Matches",   "description": "Strike anywhere", "feedback": "Handy backup, but a lighter does the same job for less. Worth having if you have no lighter." },
+      "power_bank":     { "name": "Power Bank",           "description": "20,000 mAh", "feedback": "Gives your phone a few extra charges, but AA batteries last far longer for radios and torches." },
+      "hand_sanitizer": { "name": "Hand Sanitizer",       "description": "No running water needed", "feedback": "Useful when the tap is dry, but stored water and soap does the same job and costs less." },
+      "radio_manual":   { "name": "Hand-crank Radio",     "description": "No batteries needed", "feedback": "Works without batteries — a genuine backup. But if you already have AA batteries, a standard battery radio is lighter and easier." },
+      "whistle":        { "name": "Emergency Whistle",    "description": "Signal for help", "feedback": "Vital if you might need outdoor rescue, but low priority if you're sheltering at home." },
+      "scented_candle": { "name": "Scented Candle",       "description": "Decorative candle", "feedback": "It gives some light, but melts faster than proper emergency candles and won't last the night." },
+      "canned":         { "name": "Canned Food",          "description": "Meat, fish, veg" },
+      "crackers":       { "name": "Crackers & Biscuits",  "description": "Long shelf life" },
+      "nuts":           { "name": "Nuts & Dried Fruit",   "description": "High energy" },
+      "energy_bars":    { "name": "Energy Bars",          "description": "Ready to eat" },
+      "chocolate":      { "name": "Chocolate",            "description": "Quick energy boost" },
+      "bread":          { "name": "Long-life Bread",      "description": "Won't go stale" },
+      "honey_jam":      { "name": "Honey & Jam",          "description": "Lasts indefinitely" },
+      "peanut_butter":  { "name": "Peanut Butter",        "description": "High protein & calories" },
+      "dried":          { "name": "Dried Foods",          "description": "Pasta, rice, oats", "feedback": "Pasta and rice need cooking — oats are fine as-is." },
+      "instant_noodles":{ "name": "Instant Noodles",      "description": "Just add water", "feedback": "You'll need a heat source and water to prepare these." },
+      "frozen":         { "name": "Frozen Meals",         "description": "Microwave meals", "feedback": "No power = no freezer. These will spoil within hours." },
+      "milk":           { "name": "Fresh Milk",           "description": "1 litre carton", "feedback": "Spoils fast without a fridge. Buy UHT milk instead." },
+      "fresh":          { "name": "Fresh Vegetables",     "description": "Salad, tomatoes", "feedback": "Will wilt and rot without refrigeration." },
+      "yogurt":         { "name": "Yogurt",               "description": "Dairy cups", "feedback": "Needs to stay cold — it won't last." },
+      "sushi":          { "name": "Fresh Sushi",          "description": "Ready-made rolls", "feedback": "Raw fish spoils dangerously fast without refrigeration." },
+      "deli":           { "name": "Deli Meats",           "description": "Sliced ham & turkey", "feedback": "Spoils in hours without refrigeration." },
+      "birthday_cake":  { "name": "Birthday Cake",        "description": "Cream frosted cake", "feedback": "Perishable, heavy, and not exactly survival food." },
+      "playing_cards":  { "name": "Playing Cards",        "description": "No power needed!" },
+      "board_game":     { "name": "Board Game",           "description": "Pass the time", "feedback": "Fair enough — at least it doesn't need electricity." },
+      "book":           { "name": "Paperback Book",       "description": "Something to read", "feedback": "Not a bad choice — books work in the dark with a candle." },
+      "cigarettes":     { "name": "Cigarettes",           "description": "Pack of 20", "feedback": "A fire hazard and health risk — the last thing you need right now." },
+      "alcohol":        { "name": "Beer & Wine",          "description": "Mixed selection", "feedback": "Alcohol impairs judgment exactly when you need it most. And it dehydrates you." },
+      "energy_drink":   { "name": "Energy Drinks",        "description": "Crate of cans", "feedback": "Loaded with sugar and caffeine — will spike and crash your energy." },
+      "video_games":    { "name": "Video Games",          "description": "Console + games", "feedback": "No power, no gaming. This stays on the shelf." },
+      "tv":             { "name": "New Television",       "description": "55-inch smart TV", "feedback": "You can't carry this, and there's no power anyway." },
+      "fashion":        { "name": "Fashion Clothes",      "description": "Seasonal collection", "feedback": "Style won't keep you warm when the heating dies." },
+      "perfume":        { "name": "Luxury Perfume",       "description": "Designer fragrance", "feedback": "Smelling great won't help you survive the storm." },
+      "espresso":       { "name": "Espresso Machine",     "description": "Premium coffee maker", "feedback": "Needs electricity and running water. Leave it." },
+      "flowers":        { "name": "Fresh Flowers",        "description": "Bouquet of roses", "feedback": "These will wilt before the storm even hits." },
+      "sunglasses":     { "name": "Designer Sunglasses",  "description": "Limited edition", "feedback": "Hard to see the appeal when there's a storm coming." },
+      "gym_weights":    { "name": "Dumbbells",            "description": "Heavy iron set", "feedback": "Great in normal life — completely useless right now." }
+    }
+  },
+
+  "waterCalc": {
+    "screen1Title": "Water Preparation",
+    "screen1Subtitle": "Before you start filling containers…",
+    "screen1Text": "There {{isAre}} <strong>{{people}} {{personPeople}}</strong> in your household. The storm is forecast to last up to <strong>{{days}} days</strong>.",
+    "screen1Text2": "Think about how much water a person needs each day to stay healthy — then work out the total for everyone.",
+    "screen1Note": "🗒️ <strong>Write down your calculation</strong> — you may need it later.",
+    "screen1Btn": "Calculate →",
+    "screen1Back": "← Back to preparation",
+    "screen2Title": "How much water do you need?",
+    "screen2Subtitle": "Choose the amount that covers your household",
+    "screen2Note": "🗒️ <strong>Check your notes</strong> — you wrote this down earlier.",
+    "screen2BtnCorrect": "Check your water supply →",
+    "screen2BtnWrong": "Continue anyway →",
+    "feedbackOneDay": "That's only 1 day of water. You need {{days}} days' worth.",
+    "feedbackCorrect": "Exactly right. {{lPerDay}}L × {{people}} people × {{days}} days = {{total}} litres.",
+    "feedbackTwoL": "That uses only 2L per person per day. The guideline is {{lPerDay}}L.",
+    "feedbackRidiculous": "That's more than most households use in a normal week.",
+    "screen3Title": "Check Your Water Supply",
+    "screen3Subtitle": "Go to your kitchen right now",
+    "screen3Text": "Look around your kitchen. Count any water you already have stored — bottles, jugs, pitchers, kettles, or any other containers.",
+    "screen3Text2": "How many litres do you currently have at home?",
+    "screen3Unit": "litres",
+    "screen3Hint": "Enter 0 if you have nothing stored — that's okay, we'll work with what we have.",
+    "screen3Btn": "Continue →",
+    "is": "is",
+    "are": "are",
+    "person": "person",
+    "people": "people"
+  },
+
+  "crisisScreen": {
+    "nightTitle": "3:47 AM — The Night",
+    "nightSubtitle": "The power is out. The storm has taken down the lines.",
+    "morningTitle": "Morning — No Power",
+    "morningSubtitle": "The taps are dead. The fridge is warming. The stove won't turn on.",
+    "nightBtn": "Morning comes...",
+    "morningBtn": "Continue",
+    "youPrepared": "You prepared:",
+    "pipeWarning": "⚠️ You hear a creak from the pipes — they could freeze and burst.",
+    "pipeTip": "A slow drip helps: moving water freezes slower.",
+    "categories": {
+      "light": {
+        "label": "Light",
+        "results": {
+          "0": { "prepared": "Nothing", "consequence": "Phone flashlight drains battery to 47%", "tip": "Keep a flashlight in a spot everyone knows — save your phone for calls." },
+          "1": { "prepared": "Flashlight (weak batteries)", "consequence": "Dim beam, fading fast", "tip": "Always keep spare batteries next to your flashlight." },
+          "2": { "prepared": "Flashlight + fresh batteries", "consequence": "Bright beam cuts through the dark. Phone battery saved.", "tip": null }
+        }
+      },
+      "heat": {
+        "label": "Heat",
+        "results": {
+          "0": { "prepared": "Nothing", "consequence": "Breath visible indoors. Fingers go numb.", "tip": "Seal windows, prepare a stove, layer clothing before a storm." },
+          "1": { "prepared": "Blankets + some sealing", "consequence": "Cold but bearable. By dawn, you see your breath.", "tip": "A wood stove is your best backup when central heating fails." },
+          "2": { "prepared": "Wood stove + sealed windows", "consequence_elderly": "Room stays warm all night. {{elderlyName}} sleeps comfortably.", "consequence": "Room stays warm all night. Everyone sleeps comfortably.", "tip": null }
+        }
+      },
+      "water": {
+        "label": "Water",
+        "results": {
+          "0": { "prepared": "Nothing", "consequence_elderly": "One half-empty bottle. {{elderlyName}} gets it. You go thirsty.", "consequence": "One half-empty bottle. Rationed carefully — not enough.", "tip": "3L per person per day. Fill every container before the power goes." },
+          "1": { "prepared": "Some water stored", "consequence": "Rationing carefully. Small sips only.", "tip": "Fill all containers: bottles, pots, even the bathtub for washing." },
+          "2": { "prepared": "Plenty of water stored", "consequence": "A glass for everyone. Supply lasts days.", "tip": null }
+        }
+      },
+      "medication": {
+        "label": "Medication",
+        "results": {
+          "0": { "prepared": "Nothing", "consequence": "Scrambling in the dark. Can't read the label. Unsure of dosage.", "tip": "Prescription meds first. Keep a 7-day supply organized by day." },
+          "1": { "prepared": "Pills found, not organized", "consequence": "Labels hard to read in the dark. One pill or two?", "tip": "Organize by day so anyone can give them — even in the dark." },
+          "2": { "prepared": "Pills organized by day, at bedside", "consequence_elderly": "{{elderlyName}} takes their dose independently. No help needed.", "consequence": "Medication organized and within reach. No scrambling in the dark.", "tip": null }
+        }
+      },
+      "food": {
+        "label": "Food",
+        "results": {
+          "0": { "prepared": "Nothing", "consequence": "Stale crackers and a bruised apple for two.", "tip": "No power = no fridge, no stove. Stock cans, nuts, energy bars." },
+          "1": { "prepared": "Bread + pantry basics", "consequence": "Enough for today. Bread goes stale tomorrow.", "tip": "Stock food that needs no fridge or stove — think shelf-stable." },
+          "2": { "prepared": "Canned food, crackers, energy bars", "consequence": "No cooking needed. Enough for days.", "tip": null }
+        }
+      },
+      "info": {
+        "label": "Information",
+        "results": {
+          "0": { "prepared": "Nothing", "consequence": "No radio. Phone dying. No news.", "tip": "A battery radio is your lifeline. Did you note the emergency numbers?" },
+          "1": { "prepared": "Radio (weak batteries)", "consequence": "Signal fades in and out. Fragments only.", "tip": "Fresh batteries = clear signal. A working radio keeps you informed." },
+          "2": { "prepared": "Battery radio + phone charged", "consequence": "Clear broadcast: power back in 36 hours. You stay calm.", "tip": null }
+        }
+      }
+    }
+  },
+
+  "consequenceCard": {
+    "youPrepared": "You prepared:",
+    "levelLabels": { "0": "Unprepared", "1": "Partially prepared", "2": "Well prepared" },
+    "categories": {
+      "light": {
+        "label": "Light",
+        "results": {
+          "0": { "prepared": "Nothing", "consequence": "Phone used as a torch — battery dropped to 23% by morning.", "tip": "Keep a flashlight somewhere everyone knows — save your phone for calls." },
+          "1": { "prepared": "Flashlight (weak batteries)", "consequence": "Dim beam, fading fast. You used it sparingly and hoped it held.", "tip": "Always keep spare batteries next to your flashlight." },
+          "2": { "prepared": "Flashlight + fresh batteries", "consequence": "Bright and steady all night. Phone battery fully saved.", "tip": null }
+        }
+      },
+      "heat": {
+        "label": "Heat",
+        "results": {
+          "0": { "prepared": "Nothing", "consequence": "Breath visible indoors within an hour. Fingers numb by dawn.", "tip": "Seal windows, prepare a stove, and layer clothing before a storm." },
+          "1": { "prepared": "Blankets + sealed drafts", "consequence": "Cold but survivable. You could see your breath by dawn.", "tip": "A wood stove is your best backup when central heating fails." },
+          "2": { "prepared": "Wood stove + sealed windows", "consequence": "Room stayed warm all night. Everyone rested.", "tip": null }
+        }
+      },
+      "water": {
+        "label": "Water",
+        "results": {
+          "0": { "prepared": "Nothing", "consequence": "One half-empty bottle. Not enough for the day.", "tip": "3L per person per day. Fill every container before the power goes." },
+          "1": { "prepared": "Some water stored", "consequence": "Rationing carefully — small sips, no waste.", "tip": "Fill all containers: bottles, pots, even the bathtub for washing." },
+          "2": { "prepared": "Plenty stored", "consequence": "A full glass for everyone. Supply will last days.", "tip": null }
+        }
+      },
+      "food": {
+        "label": "Food",
+        "results": {
+          "0": { "prepared": "Nothing shelf-stable", "consequence": "Crackers and a tin of sardines. No power means no cooking.", "tip": "Stock cans, nuts, and energy bars — no fridge or stove needed." },
+          "1": { "prepared": "Bread + pantry basics", "consequence": "Enough for today. The bread won't last, and nothing can be heated.", "tip": "Stock food that needs no fridge or stove — think shelf-stable." },
+          "2": { "prepared": "Canned food, crackers, energy bars", "consequence": "No cooking needed. Enough to last days without worry.", "tip": null }
+        }
+      },
+      "info": {
+        "label": "Information",
+        "results": {
+          "0": { "prepared": "Nothing", "consequence": "No radio. Phone nearly dead. No idea what's happening outside.", "tip": "A battery radio is your lifeline when internet and power are down." },
+          "1": { "prepared": "Radio (weak batteries)", "consequence": "Signal drifts in and out. You caught fragments — enough to know help is coming.", "tip": "Fresh batteries = clear signal." },
+          "2": { "prepared": "Battery radio + fresh batteries", "consequence": "Clear broadcast: power restored within 36 hours. You knew what to expect.", "tip": null }
+        }
+      },
+      "medication": {
+        "label": "Medication",
+        "results": {
+          "0": { "prepared": "Nothing organized", "consequence": "Scrambling in the dark — labels unreadable, dose uncertain.", "tip": "Keep a 7-day supply of prescription meds organized and within reach." },
+          "1": { "prepared": "Pills found, not organized", "consequence": "Hard to read labels by flashlight. You did your best.", "tip": "Organize by day so anyone can give them — even in the dark." },
+          "2": { "prepared": "Pills sorted at bedside", "consequence": "Morning dose taken without help. No scrambling, no guessing.", "tip": null }
+        }
+      }
+    }
+  },
+
+  "endingScreen": {
+    "sectionPrep": "Preparation Report",
+    "sectionNumbers": "Emergency Numbers",
+    "sectionTakeaways": "Key Takeaways",
+    "youCalledThis": "✓ You called this",
+    "youCalledThisWrong": "✗ You called this",
+    "bestChoice": "Best choice",
+    "numbersHint": "Did you write these down during the broadcast?",
+    "preparation": "preparation",
+    "emergencyCall": "emergency call",
+    "playAgain": "Play Again",
+    "wellPrepared": "WELL PREPARED",
+    "partiallyPrepared": "PARTIALLY PREPARED",
+    "underprepared": "UNDERPREPARED",
+    "unprepared": "UNPREPARED",
+    "wellPreparedTakeaway": "You were well prepared — share this knowledge with family and neighbors.",
+    "visitOlevalmis": "Visit olevalmis.ee for Estonia's official preparedness guide.",
+    "callFeedback": {
+      "good": "You called {{number}} — the right number for this situation. Help arrived quickly.",
+      "partial": "You called a related number — they helped, but there was a faster option.",
+      "delayed": "You called 112 for a non-emergency — this tied up critical resources and delayed help.",
+      "bad_elderly": "Without the right number, help came too late. A neighbor eventually drove {{elderlyName}} in.",
+      "bad": "Without the right number, help arrived too late."
+    },
+    "emergencyNumbers": {
+      "112": "Life-threatening emergencies",
+      "1220": "Family doctor / health advice",
+      "1247": "Rescue coordination",
+      "1343": "Power outage reporting"
+    },
+    "categoryLabels": {
+      "prep_water": "Water",
+      "prep_food": "Food",
+      "prep_heat": "Heat",
+      "prep_light": "Light",
+      "prep_info": "Info",
+      "prep_medication": "Medication"
+    },
+    "categoryResults": {
+      "prep_water": {
+        "0": { "consequence": "Taps were dead — barely any water left", "feedback": "Store 3L per person per day before the power goes out" },
+        "1": { "consequence": "Limited water — had to ration carefully", "feedback": "Fill all available containers: bottles, pots, bathtub" },
+        "2": { "consequence": "Plenty of water stored and ready", "feedback": null }
+      },
+      "prep_food": {
+        "0": { "consequence": "Fridge warming, almost nothing to eat", "feedback": "Stock canned goods, nuts, and energy bars — no fridge or stove needed" },
+        "1": { "consequence": "Some pantry food, but not much variety", "feedback": "Add shelf-stable items: cans, crackers, dried fruit, energy bars" },
+        "2": { "consequence": "Emergency food supplies ready to eat", "feedback": null }
+      },
+      "prep_heat": {
+        "0": { "consequence": "House temperature dropped dangerously", "feedback": "Seal windows, prepare a wood stove, layer clothing before a storm" },
+        "1": { "consequence": "Blankets helped, but still cold by dawn", "feedback": "A wood stove is your best backup when central heating fails" },
+        "2": { "consequence": "Wood stove kept the house warm all night", "feedback": null }
+      },
+      "prep_light": {
+        "0": { "consequence": "Phone drained fast as your only light", "feedback": "Keep a flashlight in a known spot — save your phone for calls" },
+        "1": { "consequence": "Flashlight worked but batteries were weak", "feedback": "Always keep fresh batteries next to your flashlight" },
+        "2": { "consequence": "Bright flashlight ready, candles as backup", "feedback": null }
+      },
+      "prep_info": {
+        "0": { "consequence": "No radio — phone died with no updates", "feedback": "A battery radio is your lifeline when internet and power are down" },
+        "1": { "consequence": "Radio signal weak, caught only fragments", "feedback": "Fresh batteries make the difference between static and a clear signal" },
+        "2": { "consequence": "Clear radio signal — knew help was coming", "feedback": null }
+      },
+      "prep_medication": {
+        "0": { "consequence": "Scrambled to find pills, unsure of dosage", "feedback": "Keep a 7-day supply of prescription meds counted and organized" },
+        "1": { "consequence": "Found pills but hard to read labels in dark", "feedback": "Organize pills by day so anyone can administer them — even in the dark" },
+        "2": { "consequence_elderly": "Pills organized by day, {{elderlyName}} self-served", "consequence": "Medication organized and ready for the night", "feedback": null }
+      }
+    }
+  },
+
+  "outcomeScreen": {
+    "seeResults": "See your results →",
+    "good": {
+      "headline": "Help is on the way.",
+      "elderlyAndChildren": [
+        "Within the hour, a rescue team arrives.",
+        "They stabilize {{elderlyName}} on site and check on the children.",
+        "\"You did the right thing — calling 1247 brought a team directly to you.\"",
+        "You were prepared. You paid attention. And when it mattered, you knew exactly what to do."
+      ],
+      "elderly": [
+        "Within the hour, a medical team arrives.",
+        "They check on {{elderlyName}} thoroughly. \"Dehydrated but stable.\"",
+        "\"You did exactly the right thing calling the health advice line.\"",
+        "You were prepared. You paid attention. And when it mattered, you knew exactly what to do."
+      ],
+      "children": [
+        "The ambulance arrives in minutes.",
+        "The paramedics administer epinephrine immediately.",
+        "\"You called the right number. A few more minutes and this could have been much worse.\"",
+        "Your child stabilizes. You breathe again."
+      ],
+      "solo": [
+        "The power company logs your report as a priority area.",
+        "By afternoon, a welfare check team arrives.",
+        "\"Good call using 1343 — that's exactly what it's for.\"",
+        "The power comes back on by evening."
+      ]
+    },
+    "partial": {
+      "headline": "Help arrived.",
+      "elderly": [
+        "Help arrives, though it took a bit longer than necessary.",
+        "\"They'll be fine,\" they say. \"Though you could have called a more specific number — it would have been faster.\"",
+        "{{elderlyName}} is stabilized. You made a reasonable choice, even if not the perfect one."
+      ],
+      "default": [
+        "Help arrives, though it took a bit longer than necessary.",
+        "You made a reasonable choice — it got there, just not as fast as it could have been."
+      ]
+    },
+    "delayed": {
+      "headline": "You tied up the lines.",
+      "elderly": [
+        "Help arrives, but it took longer than it should have.",
+        "\"We need to take {{elderlyName}} in,\" they say.",
+        "\"Calling 112 for a non-emergency tied up critical resources and delayed your call.\""
+      ],
+      "default": [
+        "Help arrives, but it took longer than it should have.",
+        "Calling 112 for a non-emergency tied up critical resources and delayed your situation being handled."
+      ]
+    },
+    "bad": {
+      "headline": "No one came in time.",
+      "elderly": [
+        "You wait. Hours pass.",
+        "Eventually, a neighbor with a working car checks on you and takes {{elderlyName}} to the hospital.",
+        "They recover — but it was close.",
+        "If only you had known the right number to call..."
+      ],
+      "children": [
+        "You wait. Hours pass.",
+        "Eventually, a neighbor drives you and your child to the nearest clinic.",
+        "It was close.",
+        "If only you had known the right number to call..."
+      ],
+      "solo": [
+        "You wait. Hours pass.",
+        "Eventually, a welfare worker doing rounds finds you.",
+        "You recover — but it took far too long.",
+        "If only you had known the right number to call..."
+      ]
+    }
+  },
+
+  "inkStory": {
+    "prepCategories": {
+      "water":      { "label": "Water",  "description": "The taps are still running — but if the power goes out, the electric pump stops. Fill containers now before you lose access.", "timeRange": "5–33 min" },
+      "food":       { "label": "Food",   "description": "The fridge will stop working when the power cuts. Stock up on canned goods and dry food that doesn't need cooking or refrigeration.", "timeRange": "~10 min" },
+      "heat":       { "label": "Heat",   "description": "Central heating runs on electricity. If the grid fails, temperatures will drop fast — especially at night. Have a backup heat source ready.", "timeRange": "3–22 min" },
+      "light":      { "label": "Light",  "description": "When the lights go out, your phone becomes your only torch — and it drains fast. A flashlight with spare batteries keeps you safe without burning your battery.", "timeRange": "3–9 min" },
+      "info":       { "label": "Info",   "description": "The internet and mobile networks may go down. A battery-powered radio is the only reliable way to receive emergency broadcasts and official updates.", "timeRange": "2–8 min" },
+      "medication": { "label": "Meds",   "description": "Pharmacies may close and roads may be impassable. If anyone in your household depends on regular medication, make sure you have enough to last the storm.", "timeRange": "2–7 min" },
+      "shop":       { "label": "Shop",   "description": "Buy water, food, and batteries at the grocery store." },
+      "done":       { "label": "Done",   "description": "Stop preparing and face the oncoming storm." }
+    },
+    "prepStatus": { "0": "Not prepared", "1": "Basic", "2": "Thorough" },
+    "settings": {
+      "sound": "Sound",
+      "soundOn": "🔊 On",
+      "soundOff": "🔇 Off",
+      "textAnimation": "Text Animation",
+      "textOn": "▸ On",
+      "textOff": "▸▸ Off"
+    }
+  },
+
+  "languageSelect": {
+    "title": "Choose your language",
+    "subtitle": "Valige keel"
+  }
+}

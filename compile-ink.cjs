@@ -3,32 +3,41 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const inkFile = path.join(__dirname, 'public/ink/72Hours.ink');
-const jsonOutputFile = path.join(__dirname, 'public/ink/72Hours.json');
-const jsOutputFile = path.join(__dirname, 'public/ink/72Hours.js');
 const inklecateBin = path.join(__dirname, 'node_modules/inklecate/bin/inklecate');
 
-try {
-  // Run inklecate directly to compile to JSON
-  execSync(`"${inklecateBin}" -o "${jsonOutputFile}" "${inkFile}"`, {
-    encoding: 'utf8',
-    cwd: __dirname
-  });
+const stories = [
+  { ink: 'public/ink/72Hours.ink',    js: 'public/ink/72Hours.js',    varName: 'storyContent' },
+  { ink: 'public/ink/72Hours_et.ink', js: 'public/ink/72Hours_et.js', varName: 'storyContentET' },
+];
 
-  // Read the JSON and wrap it as JavaScript
-  let jsonContent = fs.readFileSync(jsonOutputFile, 'utf8');
-  // Remove BOM if present
-  if (jsonContent.charCodeAt(0) === 0xFEFF) {
-    jsonContent = jsonContent.slice(1);
+for (const { ink, js, varName } of stories) {
+  const inkFile = path.join(__dirname, ink);
+  const jsonOutputFile = inkFile.replace(/\.ink$/, '.json');
+  const jsOutputFile = path.join(__dirname, js);
+
+  if (!fs.existsSync(inkFile)) {
+    console.log(`Skipping ${ink} (file not found)`);
+    continue;
   }
-  const jsContent = 'var storyContent = ' + jsonContent + ';';
-  fs.writeFileSync(jsOutputFile, jsContent);
 
-  // Clean up JSON file (optional, keep if you want)
-  fs.unlinkSync(jsonOutputFile);
+  try {
+    execSync(`"${inklecateBin}" -o "${jsonOutputFile}" "${inkFile}"`, {
+      encoding: 'utf8',
+      cwd: __dirname
+    });
 
-  console.log('Successfully compiled 72Hours.ink to 72Hours.js');
-} catch (error) {
-  console.error('Error compiling Ink file:', error.message);
-  process.exit(1);
+    let jsonContent = fs.readFileSync(jsonOutputFile, 'utf8');
+    if (jsonContent.charCodeAt(0) === 0xFEFF) {
+      jsonContent = jsonContent.slice(1);
+    }
+    const jsContent = 'var ' + varName + ' = ' + jsonContent + ';';
+    fs.writeFileSync(jsOutputFile, jsContent);
+
+    fs.unlinkSync(jsonOutputFile);
+
+    console.log(`Successfully compiled ${ink} to ${js}`);
+  } catch (error) {
+    console.error(`Error compiling ${ink}:`, error.message);
+    process.exit(1);
+  }
 }

@@ -1,10 +1,9 @@
 // Menu.jsx - Main menu component for Storm Alert game
 
-// STEP 1: IMPORTS
-// Import React and the useState hook (for managing state)
 import React, { useState } from 'react';
 import './Menu.css';
 import { useAudioContext } from '../context/AudioContext';
+import { useTranslation } from '../hooks/useTranslation';
 
 const BASE_URL = import.meta.env.BASE_URL;
 
@@ -17,6 +16,7 @@ function Menu({ onStartGame, onContinueGame, hasSavedGame }) {
 
   const [showAbout, setShowAbout] = useState(false);
   const { playSfx } = useAudioContext();
+  const { t } = useTranslation();
 
   const handleStartClick = () => {
     playSfx('open');
@@ -49,38 +49,35 @@ function Menu({ onStartGame, onContinueGame, hasSavedGame }) {
 
           {/* HEADER SECTION */}
           <div className="menu-header">
-            {/* <div className="emergency-badge">EMERGENCY PROTOCOL</div> */}
-            <h1 className="menu-title">STORM ALERT</h1>
-            <p className="menu-subtitle">Crisis Management Simulation</p>
+            <h1 className="menu-title">{t('menu.title').split('\n').map((line, i, arr) => (
+              <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+            ))}</h1>
+            <p className="menu-subtitle">{t('menu.subtitle')}</p>
           </div>
 
           {/* BUTTONS SECTION */}
           <div className="menu-buttons">
 
-            {/* START BUTTON - Always visible */}
             <button onClick={handleStartClick} className="menu-btn primary">
               <span className="btn-icon">▶</span>
-              <span className="btn-text">START SIMULATION</span>
+              <span className="btn-text">{t('menu.start')}</span>
             </button>
 
-            {/* CONTINUE BUTTON - Only show if hasSavedGame is true */}
             {hasSavedGame && (
               <button onClick={handleContinueClick} className="menu-btn secondary">
                 <span className="btn-icon">↻</span>
-                <span className="btn-text">CONTINUE</span>
+                <span className="btn-text">{t('menu.continue')}</span>
               </button>
             )}
 
-            {/* ABOUT BUTTON - Always visible */}
             <button onClick={handleAboutClick} className="menu-btn secondary">
               <span className="btn-icon">ℹ</span>
-              <span className="btn-text">ABOUT</span>
+              <span className="btn-text">{t('menu.about')}</span>
             </button>
           </div>
 
-          {/* FOOTER SECTION */}
           <div className="menu-footer">
-            <p className="tagline">Every decision counts. Time is running out.</p>
+            <p className="tagline">{t('menu.tagline')}</p>
           </div>
         </div>
 
@@ -100,15 +97,9 @@ function Menu({ onStartGame, onContinueGame, hasSavedGame }) {
             {/* Close button (X) */}
             <span className="close-modal" onClick={handleCloseAbout}>&times;</span>
 
-            <h2>About Storm Alert</h2>
-            <p>
-              A severe winter storm is closing in. Storm Alert is a preparedness simulation that puts
-              you in the middle of a real crisis — at home, facing the disaster firsthand.
-            </p>
-            <p>
-              Gather supplies, make decisions under pressure, and figure out who to call when things
-              go wrong. Your choices determine how you and your household make it through the next 72 hours.
-            </p>
+            <h2>{t('menu.aboutTitle')}</h2>
+            <p>{t('menu.aboutP1')}</p>
+            <p>{t('menu.aboutP2')}</p>
 
             {/* EU Logo */}
             <div className="modal-eu-logo">
@@ -117,7 +108,7 @@ function Menu({ onStartGame, onContinueGame, hasSavedGame }) {
 
             {/* Got It button */}
             <button className="menu-btn primary" onClick={handleCloseAbout}>
-              GOT IT
+              {t('menu.gotIt')}
             </button>
           </div>
         </div>

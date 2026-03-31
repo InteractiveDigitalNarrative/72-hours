@@ -1,0 +1,693 @@
+{
+  "loadingScreen": {
+    "title": "TORMI\nHOIATUS",
+    "tagline": "Iga otsus loeb. Aeg hakkab otsa saama.",
+    "statusLines": [
+      "Hädaolukorra sageduste kontrollimine…",
+      "Varustusradade kontrollimine…",
+      "Ilmasensorite kalibreerimine…",
+      "Sideühenduste loomine…",
+      "Tormi trajektoori hindamine…",
+      "Missiooni parameetrite laadimine…"
+    ],
+    "ready": "Kõik süsteemid valmis.",
+    "enter": "SISENE"
+  },
+
+  "menu": {
+    "title": "TORMI\nHOIATUS",
+    "subtitle": "Kriisijuhtimise simulatsioon",
+    "start": "ALUSTA SIMULATSIOONI",
+    "continue": "JÄTKA",
+    "about": "TEAVE",
+    "tagline": "Iga otsus loeb. Aeg hakkab otsa saama.",
+    "aboutTitle": "Tormihoiatusest",
+    "aboutP1": "Raske talvetorm on lähenemas. Tormihoiatus on valmisoleku simulatsioon, mis asetab sind tõelise kriisi keskele — kodus, silmitsi katastroofiga.",
+    "aboutP2": "Kogu varusid, tee otsuseid surve all ja mõtle välja, kellele helistada, kui asjad lähevad halvasti. Sinu valikud määravad, kuidas sina ja su leibkond järgmised 72 tundi üle elate.",
+    "gotIt": "SELGE"
+  },
+
+  "familySetup": {
+    "heading": "Kes kuulub sinu leibkonda?",
+    "subtitle": "See mõjutab sinu ettevalmistusplaani ja kriisi, millega silmitsi seisad.",
+    "you": "Sina",
+    "alwaysPresent": "alati kohal",
+    "adultLabel": "Partner / Täiskasvanu",
+    "elderlyLabel": "Eakas sugulane",
+    "childLabel": "Laps",
+    "adultTag": "täiskasvanu",
+    "elderlyTag": "eakas",
+    "childTag": "laps",
+    "addAdult": "+ Täiskasvanu / Partner",
+    "addElderly": "+ Eakas või hooldatav",
+    "addChild": "+ Laps",
+    "elderlyQuestion": "Kuidas me teda kutsume?",
+    "elderlyPlaceholder": "nt Vanaema, Ema, Onu",
+    "elderlyHint": "Vihje: nt Vanaema, Ema, Partner",
+    "addToHousehold": "Lisa leibkonda",
+    "done": "Valmis — Alusta ettevalmistust"
+  },
+
+  "phoneKeypad": {
+    "title": "Hädakõne",
+    "placeholder": "Sisesta number",
+    "call": "Helista"
+  },
+
+  "callResult": {
+    "attemptCounter": "Katse {{current}} / 3",
+    "lastChance": "— viimane võimalus",
+    "tryAgain": "Proovi uuesti",
+    "giveUp": "Loobu",
+    "continue": "Jätka",
+    "scenarios": {
+      "grandmother_emergency": {
+        "112": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Hädaabinumber",
+          "message": "\"112, mis on teie hädaolukord?\"\n\nSa selgitad vanaema seisundit.\n\n\"See liin on eluohtlike hädaolukordade jaoks. Teie vanaema olukord on küll murettekitav, kuid ei ole vahetult eluohtlik. Te koormad kriitiliste juhtumite jaoks vajalikke ressursse.\"\n\nSind suunatakse ümber, kuid see võtab lisaaega. Abi saabub, aga hilinemisega.",
+          "outcome": "help_delayed"
+        },
+        "1220": {
+          "type": "success",
+          "icon": "✓",
+          "title": "Perearsti nõuandeliin",
+          "message": "\"Tervisenõuande liin, kuidas saan aidata?\"\n\nSa selgitad vanaema seisundit — nõrk, dehüdreeritud, vajab arstiabi, kuid on stabiilne.\n\n\"Tegite õigesti, et helistasite. Teie kirjelduse põhjal vajab ta vedelikke ja jälgimist. Ühendan teid kriisiabi meditsiiniteenistusega, kes saadab kellegi teda kontrollima.\"\n\nTunni aja jooksul saabub meditsiinimeeskond. Nad stabiliseerivad vanaema ja kiidavad sinu kiiret tegutsemist.\n\nSa helistasid õigele numbrile õiges olukorras.",
+          "outcome": "help_success"
+        },
+        "1247": {
+          "type": "partial",
+          "icon": "◐",
+          "title": "Päästetööde koordineerimine",
+          "message": "\"Päästetööde koordineerimine, kuidas saame aidata?\"\n\nSa selgitad vanaema seisundit.\n\n\"Me saame saata abi, kuid meditsiinilise nõuande saamiseks peaksite helistama 1220 — perearsti liinile. Nemad saavad tema seisundit paremini hinnata. Saadame siiski kellegi, aga see võib kauem aega võtta, kuna eelistame päästetegevust.\"\n\nAbi saabub, kuid otse 1220-le helistamine oleks olnud kiirem ja asjakohasem.",
+          "outcome": "help_partial"
+        },
+        "1343": {
+          "type": "wrong",
+          "icon": "📞",
+          "title": "Elektrikatkestuse liin",
+          "message": "\"Elektrikatkestuse teateliin. Palun oodake...\"\n\n[Automaatne menüü mängib]\n\n\"Vajutage 1, et teatada katkestusest. Vajutage 2, et kontrollida taastamise olekut...\"\n\nSee ei ole see, mida sa vajad. Paned toru ära ja kaotad väärtuslikku aega.\n\nMis see tervisenõuande number oli?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "default": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Numbrit ei tunta",
+          "message": "Piip... piip... piip...\n\n\"Valitud number ei ole kasutusel.\"\n\nSeda numbrit ei eksisteeri. Kasuta mõnda päris hädaabinumbrit.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        }
+      },
+      "elderly_medical": {
+        "1220": {
+          "type": "success",
+          "icon": "✓",
+          "title": "Perearsti nõuandeliin",
+          "message": "\"Tervisenõuande liin, kuidas saan aidata?\"\n\nSa selgitad olukorda — su sugulane on nõrk, pearinglus, vererõhk tundub vale. Ei ole eluohtlik, kuid ta vajab abi ja teed on suletud.\n\n\"Tegite õigesti, et helistasite. Teie kirjelduse põhjal vajab ta vedelikke ja jälgimist. Ühendan teid kriisiabi meditsiiniteenistusega, kes saadab kellegi otse teie juurde.\"\n\nTunni aja jooksul saabub meditsiinimeeskond. Nad stabiliseerivad su sugulase ja kontrollivad teid mõlemaid.\n\nSa helistasid õigele numbrile õiges olukorras.",
+          "outcome": "help_success"
+        },
+        "112": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Hädaabinumber",
+          "message": "\"112, mis on teie hädaolukord?\"\n\nSa selgitad olukorda.\n\n\"See liin on eluohtlike hädaolukordade jaoks. Teie sugulase seisund on küll murettekitav, kuid ei ole vahetult eluohtlik. Te koormad kriitiliste juhtumite jaoks vajalikke ressursse.\"\n\nSind suunatakse ümber, kuid see võtab aega. Abi saabub, aga hilinemisega.",
+          "outcome": "help_delayed"
+        },
+        "1247": {
+          "type": "partial",
+          "icon": "◐",
+          "title": "Päästetööde koordineerimine",
+          "message": "\"Päästetööde koordineerimine, kuidas saame aidata?\"\n\nSa selgitad olukorda.\n\n\"Me saame saata abi, kuid meditsiinilise nõuande saamiseks peaksite helistama 1220 — perearsti liinile. Nemad saavad su sugulase seisundit paremini hinnata. Saadame siiski kellegi, aga see võib kauem aega võtta.\"\n\nAbi saabub lõpuks. Otse 1220-le helistamine oleks olnud kiirem.",
+          "outcome": "help_partial"
+        },
+        "1343": {
+          "type": "wrong",
+          "icon": "📞",
+          "title": "Elektrikatkestuse liin",
+          "message": "\"Elektrikatkestuse teateliin. Palun oodake...\"\n\n[Automaatne menüü mängib]\n\n\"Vajutage 1, et teatada katkestusest. Vajutage 2, et kontrollida taastamise olekut...\"\n\nSee ei ole see, mida sa vajad. Paned toru ära ja kaotad väärtuslikku aega.\n\nMis see tervisenõuande number oli?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "default": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Numbrit ei tunta",
+          "message": "Piip... piip... piip...\n\n\"Valitud number ei ole kasutusel.\"\n\nSeda numbrit ei eksisteeri. Proovi mõnda päris hädaabinumbrit.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        }
+      },
+      "rescue_coordination": {
+        "1247": {
+          "type": "success",
+          "icon": "✓",
+          "title": "Päästetööde koordineerimine",
+          "message": "\"Päästetööde koordineerimine, kuidas saame aidata?\"\n\nSa selgitad olukorda — su sugulane on hädas, lapsed vajavad sind kohale, teed on suletud. Sa vajad, et keegi tuleks sinu juurde.\n\n\"Arusaadav. Me tegeleme just sellega — koordineerime päästmist, kui inimesed ei saa lahkuda. Saadame meeskonna kohe teie aadressile.\"\n\nPäästemeeskond saabub tunni jooksul. Nad aitavad su sugulase kohapeal stabiliseerida ja kinnitavad, et teie aadress on turvaline.\n\nSa helistasid õigele numbrile.",
+          "outcome": "help_success"
+        },
+        "112": {
+          "type": "partial",
+          "icon": "◐",
+          "title": "Hädaabinumber",
+          "message": "\"112, mis on teie hädaolukord?\"\n\nSa selgitad olukorda.\n\n\"Proovime aidata. Päästemeeskonna koordineerimiseks, et keegi tuleks teie juurde, on õige number tegelikult 1247 — aga edastame selle.\"\n\nSee võtab kauem aega kui peaks. Abi saabub lõpuks, kuid koordineerimine polnud ideaalne.",
+          "outcome": "help_partial"
+        },
+        "1220": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Perearsti nõuandeliin",
+          "message": "\"Tervisenõuande liin, kuidas saan aidata?\"\n\nSa selgitad olukorda — su sugulane on tõsises hädas, sa ei saa laste pärast lahkuda, vajad kedagi, kes tuleks kohale.\n\n\"Ma saan anda meditsiinilist nõu, kuid füüsilise päästmise koordineerimine ei kuulu meie tegevusvaldkonda. Peate helistama 1247 — päästetööde koordineerimine. Nemad saavad saata meeskonna otse teie juurde.\"\n\nSa kaotad väärtuslikku aega. Mis see päästenumber oli?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "1343": {
+          "type": "wrong",
+          "icon": "📞",
+          "title": "Elektrikatkestuse liin",
+          "message": "\"Elektrikatkestuse teateliin. Palun oodake...\"\n\n[Automaatne menüü mängib]\n\n\"Vajutage 1, et teatada katkestusest. Vajutage 2, et kontrollida taastamise olekut...\"\n\nSee ei ole üldse see, mida sa vajad. Paned toru ära, pettunult.\n\nMis see päästetööde koordineerimise number oli?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "default": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Numbrit ei tunta",
+          "message": "Piip... piip... piip...\n\n\"Valitud number ei ole kasutusel.\"\n\nSeda numbrit ei eksisteeri. Sa vajad liini, mis saadab abi otse sinu juurde.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        }
+      },
+      "child_emergency": {
+        "112": {
+          "type": "success",
+          "icon": "✓",
+          "title": "Hädaabiteenistus",
+          "message": "\"112, mis on teie hädaolukord?\"\n\nSa kirjeldad olukorda — su lapsel on tekkinud lööve, kõri on paistetanud, ei saa korralikult hingata.\n\n\"See on anafülaksia. Hoidke teda rahulikult ja püstises asendis. Kas teil on EpiPen? Kiirabi on teel — hoidke liin avatuna.\"\n\nParamedikud saabuvad ja manustava kohe epinefriini. Su laps stabiliseerub.\n\n112 oli täpselt õige kõne eluohtliku hädaolukorra jaoks.",
+          "outcome": "help_success"
+        },
+        "1220": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Perearsti nõuandeliin",
+          "message": "\"Tervisenõuande liin, kuidas saan aidata?\"\n\nSa kirjeldad paistetanud kõri, löövet.\n\n\"See kõlab nagu anafülaksia — see on eluohtlik hädaolukord. Peate kohe helistama 112. Iga sekund loeb. Pange toru ära ja helistage 112.\"\n\nSa kaotad väärtuslikke sekundeid. Mis see hädaabinumber oli?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "1247": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Päästetööde koordineerimine",
+          "message": "\"Päästetööde koordineerimine, kuidas saame aidata?\"\n\nSa kirjeldad oma lapse seisundit.\n\n\"See on meditsiiniline hädaolukord — vajate kohe 112. Me koordineerime logistikat, mitte meditsiinilisi hädaolukordi. Helistage kohe 112.\"\n\nSa kaotad väärtuslikku aega. Mis see hädaabinumber oli?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "1343": {
+          "type": "wrong",
+          "icon": "📞",
+          "title": "Elektrikatkestuse liin",
+          "message": "\"Elektrikatkestuse teateliin. Palun oodake...\"\n\n[Automaatne menüü mängib]\n\nPaned kohe toru ära. Täiesti vale number.\n\nSu laps vajab kiirabi. Mis see number oli?",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "default": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Numbrit ei tunta",
+          "message": "Piip... piip... piip...\n\n\"Valitud number ei ole kasutusel.\"\n\nSu laps vajab kohe abi. Seda numbrit ei eksisteeri — proovi õiget hädaabinumbrit.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        }
+      },
+      "power_outage": {
+        "1343": {
+          "type": "success",
+          "icon": "✓",
+          "title": "Elektrikatkestuse teateliin",
+          "message": "\"Elektrikatkestuse teateliin. Mis on teie aadress?\"\n\nSa teatad katkestusest ja mainid, et oled olnud üle 12 tunni ilma vooluta. Hakkad tundma külma — pearinglus ja tuimus.\n\n\"Täname. Registreerime selle piirkonna prioriteetsena — katkestus on laialdane. Meil on ka heaolukontrolli meeskond. Märgin teie aadressi üles.\"\n\nMõne tunni jooksul saabub heaolukontroll. Vool taastub õhtuks.\n\n1343 oli täpselt õige number.",
+          "outcome": "help_success"
+        },
+        "112": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Hädaabinumber",
+          "message": "\"112, mis on teie hädaolukord?\"\n\nSa selgitad, et oled olnud 12 tundi ilma vooluta, tunned pearinglust ja külma.\n\n\"Elektrikatkestuste puhul helistage palun 1343 — see on selleks mõeldud liin. Kui teie seisund halveneb meditsiinilise hädaolukorraks, helistage meile tagasi. Praegu hoidke end soojana ja helistage 1343.\"\n\nNad registreerivad kõne, kuid see koormab nende liini. Pead proovima 1343.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "1220": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Perearsti nõuandeliin",
+          "message": "\"Tervisenõuande liin, kuidas saan aidata?\"\n\nSa selgitad olukorda — vool on ära, tunned pearinglust.\n\n\"Elektrikatkestuste puhul peate helistama 1343. Kui tunnete nõrkust, võib see olla külmast — hoidke end soojana, jooge vett. Kuid katkestusest tuleks teatada numbrile 1343.\"\n\nVale number selle jaoks. Proovi 1343.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "1247": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Päästetööde koordineerimine",
+          "message": "\"Päästetööde koordineerimine, kuidas saame aidata?\"\n\nSa selgitad olukorda.\n\n\"Elektrikatkestuste puhul helistage palun 1343 — elektriettevõtte hädaabiliin. Kui vajate füüsilist päästmist, helistage tagasi. Praegu võtke ühendust 1343.\"\n\nVale number. Proovi 1343.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        },
+        "default": {
+          "type": "wrong",
+          "icon": "⚠️",
+          "title": "Numbrit ei tunta",
+          "message": "Piip... piip... piip...\n\n\"Valitud number ei ole kasutusel.\"\n\nSeda numbrit ei eksisteeri. Proovi mõnda päris hädaabinumbrit.",
+          "outcome": "wrong_number",
+          "allowRetry": true
+        }
+      }
+    }
+  },
+
+  "breakingNews": {
+    "channel": "ETV 1",
+    "live": "● OTSE",
+    "banner": "KIIRTEADE",
+    "lines": [
+      "Raske tormihoiatus Eesti rannikualadele.",
+      "Tuule kiirus kuni 120 km/h oodatav täna öösel.",
+      "Torm saabub kell 22:00."
+    ],
+    "ticker": "⚠  TORMIHOIATUS VÄLJASTATUD KÕIGILE RANNIKUALADELE  •  ELANIKEL SOOVITATAKSE VALMISTUDA  •  JÄÄGE PÄRAST 21:00 SISERUUMIDESSE  •  ELEKTRIKATKESTUSED OODATAVAD  •  PÄÄSTETEENISTUSED VALMISOLEKUS  •  ",
+    "tickerLabel": "HOIATUS",
+    "continue": "Jätka"
+  },
+
+  "stormArrival": {
+    "time": "3:47",
+    "label": "Torm on saabunud."
+  },
+
+  "sms": {
+    "contact": "RiigiInfo",
+    "contactSub": "Riigi Kriisijuhtimiskeskus",
+    "time": "praegu",
+    "alertTag": "⚠ TORMIHOIATUS",
+    "body": "Teie piirkonnale on väljastatud raske tormihoiatus. Lähitundidel on oodata olulisi elektrikatkestusi, veevarustuse häireid ja teede sulgemisi.",
+    "body2": "Varuge piisavalt joogivett, mittetirisedavaid toiduaineid, ravimeid, hädavalgustust ja soojusallikat. Jääge siseruumidesse ja jälgige ametlikke ringhäälingu kanaleid edasiste juhiste saamiseks.",
+    "acknowledge": "Kinnita"
+  },
+
+  "radioBroadcast": {
+    "title": "Hädaolukorra teade",
+    "static": "[STAATILINE PRAGIN]",
+    "line1": "See on hädaolukorra teade Riigi Kriisikeskuselt.",
+    "line2": "Raske torm mõjutab rannikupiirkondi. Elektrikatkestustest on teatatud mitmes maakonnas.",
+    "line3": "Jääge siseruumidesse. Säästke telefoni akut. Kontrollige eakaid naabreid, kui see on ohutu.",
+    "numbersTitle": "Hädaabinumbrid",
+    "number112": "Eluohtlik hädaolukord",
+    "number1220": "Perearst / tervisenõuanne",
+    "number1247": "Päästetööde koordineerimine",
+    "number1343": "Elektrikatkestuse teade",
+    "hint": "🗒️ Kirjuta need numbrid üles — sul võib neid hiljem vaja minna.",
+    "continue": "Jätka"
+  },
+
+  "store": {
+    "warningTitle": "Iga sekund loeb",
+    "warningBody": "Torm läheneb. Sul ei ole aega ringi vaadata — võta ainult seda, mida tõesti vajad, ja mine välja.",
+    "warningRule": "Poeskäik edasi-tagasi võtab 20 minutit. Iga ese, mille võtad, maksab 1 minuti lisaks. Vali targalt.",
+    "warningBtn": "Sisene poodi →",
+    "headerTitle": "Hädaostud",
+    "headerSubtitle": "Haara vajalik enne tormi saabumist",
+    "basketLabel": "🛒 Korv",
+    "basketEmpty": "Kliki esemetele, et neid lisada",
+    "checkout": "Maksa",
+    "categories": {
+      "essentials": { "label": "Hädavajalik", "description": "Mõned on kohustuslikud — teised sõltuvad sellest, mis sul juba olemas on" },
+      "food": { "label": "Toit ja jook", "description": "Vali mittetirisedavaid toiduaineid, mis ei vaja külmutamist" },
+      "luxury": { "label": "Luksus", "description": "Kas see on tõesti õige aeg?" }
+    },
+    "items": {
+      "water":          { "name": "Pudelivesi",          "description": "Mitu liitrit" },
+      "batteries":      { "name": "AA patareid",          "description": "8 tk pakk — toidab kõike" },
+      "candles":        { "name": "Hädaküünlad",          "description": "Põleb 8 tundi" },
+      "first_aid":      { "name": "Esmaabikomplekt",      "description": "Sidemed, antiseptik" },
+      "blanket":        { "name": "Hädatekk",             "description": "Hoiab 90% kehast soojust" },
+      "matches":        { "name": "Veekindlad tikud",     "description": "Süttivad igal pool", "feedback": "Hea varuvahend, aga välgumihkel teeb sama asja odavamalt. Kasulik, kui sul välgumihklit pole." },
+      "power_bank":     { "name": "Akupank",              "description": "20 000 mAh", "feedback": "Annab telefonile paar lisalaadimist, aga AA patareid kestavad raadiote ja taskuLampide jaoks palju kauem." },
+      "hand_sanitizer": { "name": "Käte desinfitseerimisvahend", "description": "Vett pole vaja", "feedback": "Kasulik, kui kraan on kuiv, aga vesi ja seep teevad sama töö odavamalt." },
+      "radio_manual":   { "name": "Käsivändaga raadio",   "description": "Patareisid pole vaja", "feedback": "Töötab ilma patareideta — tõeline varuvahend. Aga kui sul on juba AA patareid, on tavaline patareiraadio kergem ja lihtsam." },
+      "whistle":        { "name": "Hädalevile",           "description": "Signaali andmiseks", "feedback": "Oluline, kui vajad väljas päästmist, kuid madala prioriteediga, kui varjud kodus." },
+      "scented_candle": { "name": "Lõhnaküünal",          "description": "Dekoratiivküünal", "feedback": "Annab veidi valgust, kuid sulab kiiremini kui päris hädaküünlad ega kesta tervet ööd." },
+      "canned":         { "name": "Konservid",            "description": "Liha, kala, köögivili" },
+      "crackers":       { "name": "Kreekerid ja küpsised", "description": "Pikk säilivusaeg" },
+      "nuts":           { "name": "Pähklid ja kuivatatud puuviljad", "description": "Palju energiat" },
+      "energy_bars":    { "name": "Energiabatoonid",      "description": "Kohe söödav" },
+      "chocolate":      { "name": "Šokolaad",             "description": "Kiire energiasüst" },
+      "bread":          { "name": "Kauasäiliv leib",      "description": "Ei lähe hallitama" },
+      "honey_jam":      { "name": "Mesi ja moos",         "description": "Säilib lõputult" },
+      "peanut_butter":  { "name": "Maapähklivõi",         "description": "Palju valku ja kaloreid" },
+      "dried":          { "name": "Kuivtoidud",           "description": "Pasta, riis, kaer", "feedback": "Pasta ja riis vajavad keetmist — kaer sobib niisama." },
+      "instant_noodles":{ "name": "Kiirsupp",             "description": "Lisa vaid vett", "feedback": "Vajad soojusallikat ja vett nende valmistamiseks." },
+      "frozen":         { "name": "Külmutatud toidud",    "description": "Mikrolainetoidud", "feedback": "Voolu pole = sügavkülmikut pole. Need riknevad mõne tunniga." },
+      "milk":           { "name": "Värske piim",          "description": "1-liitrine pakk", "feedback": "Rikneb kiiresti ilma külmikuta. Osta hoopis UHT piim." },
+      "fresh":          { "name": "Värsked köögiviljad",  "description": "Salat, tomatid", "feedback": "Närbuvad ja mädanevad ilma jahutuseta." },
+      "yogurt":         { "name": "Jogurt",               "description": "Piimatopsid", "feedback": "Peab püsima külmana — ei kesta." },
+      "sushi":          { "name": "Värske sushi",         "description": "Valmisrullid", "feedback": "Toores kala rikneb ohtlikult kiiresti ilma jahutuseta." },
+      "deli":           { "name": "Viilutatud liha",      "description": "Sink ja kalkuniliha", "feedback": "Rikneb mõne tunniga ilma jahutuseta." },
+      "birthday_cake":  { "name": "Sünnipäevatort",       "description": "Koorekattega tort", "feedback": "Riknev, raske ja mitte just ellujäämistoit." },
+      "playing_cards":  { "name": "Mängukaardid",         "description": "Voolu pole vaja!" },
+      "board_game":     { "name": "Lauamäng",             "description": "Ajaviide", "feedback": "Piisav — vähemalt ei vaja elektrit." },
+      "book":           { "name": "Taskuraamat",          "description": "Midagi lugeda", "feedback": "Pole halb valik — raamatuid saab pimedas küünla valgel lugeda." },
+      "cigarettes":     { "name": "Sigaretid",            "description": "20 tk pakk", "feedback": "Tuleoht ja tervisrisk — viimane asi, mida praegu vajad." },
+      "alcohol":        { "name": "Õlu ja vein",          "description": "Erinevad valikud", "feedback": "Alkohol kahjustab otsustusvõimet just siis, kui seda kõige rohkem vajad. Ja see dehüdreerib sind." },
+      "energy_drink":   { "name": "Energiajoogid",        "description": "Kast purke", "feedback": "Täis suhkrut ja kofeiini — annab energiapuhke ja seejärel languse." },
+      "video_games":    { "name": "Videomängud",          "description": "Konsool + mängud", "feedback": "Voolu pole, mängimist pole. See jääb riiulile." },
+      "tv":             { "name": "Uus teler",            "description": "55-tolline nutiteler", "feedback": "Sa ei saa seda kanda ja voolu pole nagunii." },
+      "fashion":        { "name": "Moeriided",            "description": "Hooajakollektsioon", "feedback": "Stiil ei hoia sind soojana, kui küte lakkab." },
+      "perfume":        { "name": "Luksusparfüüm",        "description": "Disainerparfüüm", "feedback": "Hea lõhn ei aita sul tormi üle elada." },
+      "espresso":       { "name": "Espressomasin",        "description": "Kvaliteetkohvimasin", "feedback": "Vajab elektrit ja vett. Jäta maha." },
+      "flowers":        { "name": "Värsked lilled",       "description": "Roosikimp", "feedback": "Need närbuvad enne, kui torm jõuabki kohale." },
+      "sunglasses":     { "name": "Disainerpäikeseprillid", "description": "Piiratud väljalase", "feedback": "Raske näha mõtet, kui torm on tulemas." },
+      "gym_weights":    { "name": "Hantlid",              "description": "Raske rauast komplekt", "feedback": "Suurepärane tavalisel ajal — praegu täiesti kasutu." }
+    }
+  },
+
+  "waterCalc": {
+    "screen1Title": "Vee ettevalmistus",
+    "screen1Subtitle": "Enne kui hakkad anumaid täitma…",
+    "screen1Text": "Sinu leibkonnas {{isAre}} <strong>{{people}} {{personPeople}}</strong>. Tormi kestuseks prognoositakse kuni <strong>{{days}} päeva</strong>.",
+    "screen1Text2": "Mõtle, kui palju vett vajab üks inimene päevas tervena püsimiseks — siis arvuta kogus kõigi jaoks.",
+    "screen1Note": "🗒️ <strong>Kirjuta oma arvutus üles</strong> — sul võib seda hiljem vaja minna.",
+    "screen1Btn": "Arvuta →",
+    "screen1Back": "← Tagasi ettevalmistuse juurde",
+    "screen2Title": "Kui palju vett vajad?",
+    "screen2Subtitle": "Vali kogus, mis katab su leibkonna vajaduse",
+    "screen2Note": "🗒️ <strong>Kontrolli oma märkmeid</strong> — sa kirjutasid selle varem üles.",
+    "screen2BtnCorrect": "Kontrolli oma veevarusid →",
+    "screen2BtnWrong": "Jätka niikuinii →",
+    "feedbackOneDay": "See on ainult 1 päeva vesi. Sul on vaja {{days}} päeva jaoks.",
+    "feedbackCorrect": "Täpselt õige. {{lPerDay}}L × {{people}} inimest × {{days}} päeva = {{total}} liitrit.",
+    "feedbackTwoL": "See kasutab ainult 2L inimese kohta päevas. Soovitus on {{lPerDay}}L.",
+    "feedbackRidiculous": "See on rohkem, kui enamik leibkondi kasutab tavalisel nädalal.",
+    "screen3Title": "Kontrolli oma veevarusid",
+    "screen3Subtitle": "Mine praegu oma kööki",
+    "screen3Text": "Vaata oma köögis ringi. Loe kokku kogu vesi, mis sul juba salvestatud on — pudelid, kannud, katlad või muud anumad.",
+    "screen3Text2": "Mitu liitrit on sul praegu kodus?",
+    "screen3Unit": "liitrit",
+    "screen3Hint": "Sisesta 0, kui sul pole midagi salvestatud — see on okei, töötame sellega, mis meil on.",
+    "screen3Btn": "Jätka →",
+    "is": "on",
+    "are": "on",
+    "person": "inimene",
+    "people": "inimest"
+  },
+
+  "crisisScreen": {
+    "nightTitle": "3:47 — Öö",
+    "nightSubtitle": "Vool on ära. Torm on liinid maha võtnud.",
+    "morningTitle": "Hommik — Voolu pole",
+    "morningSubtitle": "Kraanid on surnud. Külmik soojeneb. Pliit ei tööta.",
+    "nightBtn": "Hommik saabub...",
+    "morningBtn": "Jätka",
+    "youPrepared": "Sa valmistasid:",
+    "pipeWarning": "⚠️ Kuuled torude kriiksumist — need võivad külmuda ja lõhkeda.",
+    "pipeTip": "Aeglane tilkumine aitab: liikuv vesi külmub aeglasemalt.",
+    "categories": {
+      "light": {
+        "label": "Valgus",
+        "results": {
+          "0": { "prepared": "Mitte midagi", "consequence": "Telefoni taskulamp tühjendab aku 47%-ni", "tip": "Hoia taskulampi kohas, mida kõik teavad — säästke telefoni kõnede jaoks." },
+          "1": { "prepared": "Taskulamp (nõrgad patareid)", "consequence": "Nõrk kiir, hääbumas kiiresti", "tip": "Hoia alati varupatareisid taskulambi kõrval." },
+          "2": { "prepared": "Taskulamp + värksed patareid", "consequence": "Ere kiir lõikab läbi pimeduse. Telefoni aku säästetud.", "tip": null }
+        }
+      },
+      "heat": {
+        "label": "Soojus",
+        "results": {
+          "0": { "prepared": "Mitte midagi", "consequence": "Hingeaur nähtav toas. Sõrmed muutuvad tuimaks.", "tip": "Tihendate aknad, valmistage ahi ette, riietuge kihtidesse enne tormi." },
+          "1": { "prepared": "Tekid + mõned tihendused", "consequence": "Külm, aga talutav. Koidu ajaks näed oma hingeauru.", "tip": "Puuküttega ahi on parim varuvahend, kui keskküte lakkab." },
+          "2": { "prepared": "Puuahi + tihendatud aknad", "consequence_elderly": "Tuba püsib kogu öö soojana. {{elderlyName}} magab mugavalt.", "consequence": "Tuba püsib kogu öö soojana. Kõik magavad mugavalt.", "tip": null }
+        }
+      },
+      "water": {
+        "label": "Vesi",
+        "results": {
+          "0": { "prepared": "Mitte midagi", "consequence_elderly": "Üks pooltühi pudel. {{elderlyName}} saab selle. Sina jääd janusse.", "consequence": "Üks pooltühi pudel. Jaotatud hoolikalt — ei piisa.", "tip": "3L inimese kohta päevas. Täida iga anum enne, kui vool läheb." },
+          "1": { "prepared": "Veidi vett salvestatud", "consequence": "Jaotamine hoolikalt. Ainult väikesed lonksud.", "tip": "Täida kõik anumad: pudelid, potid, isegi vann pesemiseks." },
+          "2": { "prepared": "Piisavalt vett salvestatud", "consequence": "Klaas kõigile. Varud kestavad päevi.", "tip": null }
+        }
+      },
+      "medication": {
+        "label": "Ravimid",
+        "results": {
+          "0": { "prepared": "Mitte midagi", "consequence": "Songimine pimedas. Silti ei näe. Annus ebakindel.", "tip": "Esmalt retseptiravimid. Hoia 7-päevane varu päevade kaupa sorteerituna." },
+          "1": { "prepared": "Tablettid leitud, sorteerimata", "consequence": "Silte raske pimedas lugeda. Üks tablett või kaks?", "tip": "Sorteeri päevade kaupa, et igaüks saaks neid anda — isegi pimedas." },
+          "2": { "prepared": "Tabletid sorteeritud päevade kaupa, voodi kõrval", "consequence_elderly": "{{elderlyName}} võtab oma annuse iseseisvalt. Abi pole vaja.", "consequence": "Ravimid sorteeritud ja käeulatuses. Sonkimist pimedas pole.", "tip": null }
+        }
+      },
+      "food": {
+        "label": "Toit",
+        "results": {
+          "0": { "prepared": "Mitte midagi", "consequence": "Läinud kreekerid ja üks pruntsis õun kahele.", "tip": "Voolu pole = külmikut pole, pliiti pole. Varu konserve, pähkleid, energiabatoone." },
+          "1": { "prepared": "Leib + sahvripõhitoit", "consequence": "Tänaseks piisab. Leib läheb homseks hallitama.", "tip": "Varu toitu, mis ei vaja külmikut ega pliiti — mõtle kauasäilivale." },
+          "2": { "prepared": "Konservid, kreekerid, energiabatoonid", "consequence": "Keetmist pole vaja. Piisab päevadeks.", "tip": null }
+        }
+      },
+      "info": {
+        "label": "Info",
+        "results": {
+          "0": { "prepared": "Mitte midagi", "consequence": "Raadiot pole. Telefon sureb. Uudiseid pole.", "tip": "Patareiraadio on su päästeliin. Kas panid hädaabinumbrid kirja?" },
+          "1": { "prepared": "Raadio (nõrgad patareid)", "consequence": "Signaal katkeb ja tuleb. Ainult katkendid.", "tip": "Värksed patareid = selge signaal. Töötav raadio hoiab sind kursis." },
+          "2": { "prepared": "Patareiraadio + telefon laetud", "consequence": "Selge saade: vool taastub 36 tunniga. Sa jääd rahulikuks.", "tip": null }
+        }
+      }
+    }
+  },
+
+  "consequenceCard": {
+    "youPrepared": "Sa valmistasid:",
+    "levelLabels": { "0": "Ettevalmistamata", "1": "Osaliselt valmis", "2": "Hästi valmis" },
+    "categories": {
+      "light": {
+        "label": "Valgus",
+        "results": {
+          "0": { "prepared": "Mitte midagi", "consequence": "Telefon kasutatud taskulambina — aku langes hommikuks 23%-ni.", "tip": "Hoia taskulampi kohas, mida kõik teavad — säästke telefoni kõnede jaoks." },
+          "1": { "prepared": "Taskulamp (nõrgad patareid)", "consequence": "Nõrk kiir, hääbumas kiiresti. Kasutasid säästlikult ja lootsid, et peab vastu.", "tip": "Hoia alati varupatareisid taskulambi kõrval." },
+          "2": { "prepared": "Taskulamp + värksed patareid", "consequence": "Ere ja stabiilne kogu öö. Telefoni aku täielikult säästetud.", "tip": null }
+        }
+      },
+      "heat": {
+        "label": "Soojus",
+        "results": {
+          "0": { "prepared": "Mitte midagi", "consequence": "Hingeaur nähtav toas tunni jooksul. Sõrmed tuimad koiduks.", "tip": "Tihendate aknad, valmistage ahi ette ja riietuge kihtidesse enne tormi." },
+          "1": { "prepared": "Tekid + tihendatud praod", "consequence": "Külm, aga ellujäädav. Koidu ajaks nägid oma hingeauru.", "tip": "Puuküttega ahi on parim varuvahend, kui keskküte lakkab." },
+          "2": { "prepared": "Puuahi + tihendatud aknad", "consequence": "Tuba püsis kogu öö soojana. Kõik puhkasid.", "tip": null }
+        }
+      },
+      "water": {
+        "label": "Vesi",
+        "results": {
+          "0": { "prepared": "Mitte midagi", "consequence": "Üks pooltühi pudel. Päevaks ei piisa.", "tip": "3L inimese kohta päevas. Täida iga anum enne, kui vool läheb." },
+          "1": { "prepared": "Veidi vett salvestatud", "consequence": "Jaotamine hoolikalt — väikesed lonksud, raiskamist pole.", "tip": "Täida kõik anumad: pudelid, potid, isegi vann pesemiseks." },
+          "2": { "prepared": "Piisavalt salvestatud", "consequence": "Täis klaas kõigile. Varud kestavad päevi.", "tip": null }
+        }
+      },
+      "food": {
+        "label": "Toit",
+        "results": {
+          "0": { "prepared": "Kauasäilivat pole", "consequence": "Kreekerid ja purk sardiine. Voolu pole tähendab keetmist pole.", "tip": "Varu konserve, pähkleid ja energiabatoone — külmikut ega pliiti pole vaja." },
+          "1": { "prepared": "Leib + sahvripõhitoit", "consequence": "Tänaseks piisab. Leib ei kesta ja midagi ei saa soojendada.", "tip": "Varu toitu, mis ei vaja külmikut ega pliiti — mõtle kauasäilivale." },
+          "2": { "prepared": "Konservid, kreekerid, energiabatoonid", "consequence": "Keetmist pole vaja. Piisab päevadeks ilma muretsemata.", "tip": null }
+        }
+      },
+      "info": {
+        "label": "Info",
+        "results": {
+          "0": { "prepared": "Mitte midagi", "consequence": "Raadiot pole. Telefon peaaegu surnud. Aimugi pole, mis väljal toimub.", "tip": "Patareiraadio on su päästeliin, kui internet ja vool on maas." },
+          "1": { "prepared": "Raadio (nõrgad patareid)", "consequence": "Signaal kõigub. Püüdsid katkendeid — piisavalt teadmaks, et abi on teel.", "tip": "Värksed patareid = selge signaal." },
+          "2": { "prepared": "Patareiraadio + värksed patareid", "consequence": "Selge saade: vool taastub 36 tunniga. Teadsid, mida oodata.", "tip": null }
+        }
+      },
+      "medication": {
+        "label": "Ravimid",
+        "results": {
+          "0": { "prepared": "Sorteerimata", "consequence": "Songimine pimedas — silte ei näe, annus ebakindel.", "tip": "Hoia 7-päevane varu retseptiravimeid sorteerituna ja käeulatuses." },
+          "1": { "prepared": "Tabletid leitud, sorteerimata", "consequence": "Silte raske taskulambi valgel lugeda. Tegid oma parima.", "tip": "Sorteeri päevade kaupa, et igaüks saaks neid anda — isegi pimedas." },
+          "2": { "prepared": "Tabletid sorteeritud voodi kõrval", "consequence": "Hommikune annus võetud ilma abita. Sonkimist ega arvamist pole.", "tip": null }
+        }
+      }
+    }
+  },
+
+  "endingScreen": {
+    "sectionPrep": "Ettevalmistuse aruanne",
+    "sectionNumbers": "Hädaabinumbrid",
+    "sectionTakeaways": "Peamised õppetunnid",
+    "youCalledThis": "✓ Sa helistasid siia",
+    "youCalledThisWrong": "✗ Sa helistasid siia",
+    "bestChoice": "Parim valik",
+    "numbersHint": "Kas kirjutasid need saate ajal üles?",
+    "preparation": "ettevalmistus",
+    "emergencyCall": "hädakõne",
+    "playAgain": "Mängi uuesti",
+    "wellPrepared": "HÄSTI VALMISTUNUD",
+    "partiallyPrepared": "OSALISELT VALMISTUNUD",
+    "underprepared": "ALAVALMISTUNUD",
+    "unprepared": "ETTEVALMISTAMATA",
+    "wellPreparedTakeaway": "Sa olid hästi valmistunud — jaga neid teadmisi pere ja naabritega.",
+    "visitOlevalmis": "Külasta olevalmis.ee, et tutvuda Eesti ametliku valmisoleku juhendiga.",
+    "callFeedback": {
+      "good": "Sa helistasid numbrile {{number}} — õige number selle olukorra jaoks. Abi saabus kiiresti.",
+      "partial": "Sa helistasid seotud numbrile — nad aitasid, kuid oli kiirem variant.",
+      "delayed": "Sa helistasid 112-le mitte-eluohtliku olukorra puhul — see sidus kriitilisi ressursse ja viivitas abi.",
+      "bad_elderly": "Ilma õige numbrita saabus abi liiga hilja. Naaber viis lõpuks {{elderlyName}} autoga haiglasse.",
+      "bad": "Ilma õige numbrita saabus abi liiga hilja."
+    },
+    "emergencyNumbers": {
+      "112": "Eluohtlikud hädaolukorrad",
+      "1220": "Perearst / tervisenõuanne",
+      "1247": "Päästetööde koordineerimine",
+      "1343": "Elektrikatkestuse teade"
+    },
+    "categoryLabels": {
+      "prep_water": "Vesi",
+      "prep_food": "Toit",
+      "prep_heat": "Soojus",
+      "prep_light": "Valgus",
+      "prep_info": "Info",
+      "prep_medication": "Ravimid"
+    },
+    "categoryResults": {
+      "prep_water": {
+        "0": { "consequence": "Kraanid olid surnud — vett peaaegu polnud", "feedback": "Salvesta 3L inimese kohta päevas enne, kui vool läheb" },
+        "1": { "consequence": "Piiratud vesi — tuli hoolikalt jaotada", "feedback": "Täida kõik saadaolevad anumad: pudelid, potid, vann" },
+        "2": { "consequence": "Piisavalt vett salvestatud ja valmis", "feedback": null }
+      },
+      "prep_food": {
+        "0": { "consequence": "Külmik soojeneb, peaaegu midagi pole süüa", "feedback": "Varu konserve, pähkleid ja energiabatoone — külmikut ega pliiti pole vaja" },
+        "1": { "consequence": "Veidi sahvritoitu, aga mitte palju valikut", "feedback": "Lisa kauasäilivaid tooteid: konserve, kreekerid, kuivatatud puuvilju, energiabatoone" },
+        "2": { "consequence": "Hädatoiduvarud kohe söödavad", "feedback": null }
+      },
+      "prep_heat": {
+        "0": { "consequence": "Maja temperatuur langes ohtlikult", "feedback": "Tihendate aknad, valmistage puuahi ette, riietuge kihtidesse enne tormi" },
+        "1": { "consequence": "Tekid aitasid, aga koiduks ikka külm", "feedback": "Puuküttega ahi on parim varuvahend, kui keskküte lakkab" },
+        "2": { "consequence": "Puuahi hoidis maja kogu öö soojana", "feedback": null }
+      },
+      "prep_light": {
+        "0": { "consequence": "Telefon tühjenes kiiresti kui ainus valgusallikas", "feedback": "Hoia taskulampi teadaolevas kohas — säästke telefoni kõnede jaoks" },
+        "1": { "consequence": "Taskulamp töötas, aga patareid olid nõrgad", "feedback": "Hoia alati värskeid patareisid taskulambi kõrval" },
+        "2": { "consequence": "Ere taskulamp valmis, küünlad varuks", "feedback": null }
+      },
+      "prep_info": {
+        "0": { "consequence": "Raadiot polnud — telefon suri ilma uuendusteta", "feedback": "Patareiraadio on su päästeliin, kui internet ja vool on maas" },
+        "1": { "consequence": "Raadiosignaal nõrk, ainult katkendid", "feedback": "Värksed patareid teevad vahe staatilise müra ja selge signaali vahel" },
+        "2": { "consequence": "Selge raadiosignaal — teadsid, et abi on teel", "feedback": null }
+      },
+      "prep_medication": {
+        "0": { "consequence": "Sonkisid tablette otsides, annus ebakindel", "feedback": "Hoia 7-päevane varu retseptiravimeid sorteerituna" },
+        "1": { "consequence": "Tabletid leitud, aga pimedas raske silte lugeda", "feedback": "Sorteeri tabletid päevade kaupa, et igaüks saaks neid anda — isegi pimedas" },
+        "2": { "consequence_elderly": "Tabletid sorteeritud päevade kaupa, {{elderlyName}} võttis ise", "consequence": "Ravimid sorteeritud ja ööks valmis", "feedback": null }
+      }
+    }
+  },
+
+  "outcomeScreen": {
+    "seeResults": "Vaata oma tulemusi →",
+    "good": {
+      "headline": "Abi on teel.",
+      "elderlyAndChildren": [
+        "Tunni jooksul saabub päästemeeskond.",
+        "Nad stabiliseerivad {{elderlyName}} kohapeal ja kontrollivad lapsi.",
+        "\"Tegite õigesti — helistades 1247-le tuli meeskond otse teie juurde.\"",
+        "Sa olid valmistunud. Sa panid tähele. Ja kui see loeb, teadsid sa täpselt, mida teha."
+      ],
+      "elderly": [
+        "Tunni jooksul saabub meditsiinimeeskond.",
+        "Nad kontrollivad {{elderlyName}} põhjalikult. \"Dehüdreeritud, aga stabiilne.\"",
+        "\"Tegite täpselt õigesti, helistades tervisenõuande liinile.\"",
+        "Sa olid valmistunud. Sa panid tähele. Ja kui see loeb, teadsid sa täpselt, mida teha."
+      ],
+      "children": [
+        "Kiirabi saabub minutitega.",
+        "Parameedikud manustava kohe epinefriini.",
+        "\"Helistasite õigele numbrile. Veel paar minutit ja see oleks võinud palju hullemini lõppeda.\"",
+        "Su laps stabiliseerub. Sa hingad taas."
+      ],
+      "solo": [
+        "Elektriettevõte registreerib su teate prioriteetse piirkonnana.",
+        "Pärastlõunal saabub heaolukontrolli meeskond.",
+        "\"Hea valik kasutada 1343 — täpselt selle jaoks see ongi.\"",
+        "Vool taastub õhtuks."
+      ]
+    },
+    "partial": {
+      "headline": "Abi saabus.",
+      "elderly": [
+        "Abi saabub, kuigi kulus veidi kauem kui vajalik.",
+        "\"Temaga saab kõik korda,\" ütlevad nad. \"Kuigi oleksite võinud helistada konkreetsemale numbrile — see oleks olnud kiirem.\"",
+        "{{elderlyName}} on stabiliseeritud. Tegid mõistliku valiku, isegi kui mitte ideaalse."
+      ],
+      "default": [
+        "Abi saabub, kuigi kulus veidi kauem kui vajalik.",
+        "Sa tegid mõistliku valiku — abi jõudis kohale, lihtsalt mitte nii kiiresti kui oleks võinud."
+      ]
+    },
+    "delayed": {
+      "headline": "Sa koormasid liine.",
+      "elderly": [
+        "Abi saabub, aga kulus kauem kui oleks pidanud.",
+        "\"Peame {{elderlyName}} haiglasse viima,\" ütlevad nad.",
+        "\"Helistades 112-le mitte-eluohtliku olukorra puhul sidus kriitilisi ressursse ja viivitas teie kõnet.\""
+      ],
+      "default": [
+        "Abi saabub, aga kulus kauem kui oleks pidanud.",
+        "Helistades 112-le mitte-eluohtliku olukorra puhul sidus kriitilisi ressursse ja viivitas su olukorra käsitlemist."
+      ]
+    },
+    "bad": {
+      "headline": "Keegi ei jõudnud õigel ajal.",
+      "elderly": [
+        "Sa ootad. Tunnid mööduvad.",
+        "Lõpuks kontrollib naaber töötava autoga sind ja viib {{elderlyName}} haiglasse.",
+        "Nad paranevad — aga see oli napilt.",
+        "Kui sa oleksid vaid teadnud õiget numbrit..."
+      ],
+      "children": [
+        "Sa ootad. Tunnid mööduvad.",
+        "Lõpuks sõidutab naaber sind ja su last lähimasse kliinikusse.",
+        "See oli napilt.",
+        "Kui sa oleksid vaid teadnud õiget numbrit..."
+      ],
+      "solo": [
+        "Sa ootad. Tunnid mööduvad.",
+        "Lõpuks leiab sind ringkäiku tegev sotsiaaltöötaja.",
+        "Sa paranened — aga see võttis liiga kaua.",
+        "Kui sa oleksid vaid teadnud õiget numbrit..."
+      ]
+    }
+  },
+
+  "inkStory": {
+    "prepCategories": {
+      "water":      { "label": "Vesi",    "description": "Kraanid töötavad veel — aga kui vool läheb, seiskub elektripump. Täida anumad nüüd, enne kui kaotad juurdepääsu.", "timeRange": "5–33 min" },
+      "food":       { "label": "Toit",    "description": "Külmik lakkab töötamast, kui vool katkeb. Varu konserve ja kuivtoitu, mis ei vaja keetmist ega jahutamist.", "timeRange": "~10 min" },
+      "heat":       { "label": "Soojus",  "description": "Keskküte töötab elektriga. Kui võrk kukub, langevad temperatuurid kiiresti — eriti öösel. Omage varusallikat.", "timeRange": "3–22 min" },
+      "light":      { "label": "Valgus",  "description": "Kui tuled kustuvad, on su telefon ainus taskulamp — ja see tühjendab aku kiiresti. Taskulamp varupatareidega hoiab sind turvalisena.", "timeRange": "3–9 min" },
+      "info":       { "label": "Info",    "description": "Internet ja mobiilside võivad katkeda. Patareiraadio on ainus usaldusväärne viis hädaolukorra teadete ja ametlike uuenduste saamiseks.", "timeRange": "2–8 min" },
+      "medication": { "label": "Ravimid", "description": "Apteegid võivad sulgeda ja teed võivad olla läbimatuid. Kui keegi su leibkonnas sõltub regulaarsest ravist, veendu, et teil on piisavalt tormi üle elamiseks.", "timeRange": "2–7 min" },
+      "shop":       { "label": "Pood",    "description": "Osta vett, toitu ja patareisid toidupoest." },
+      "done":       { "label": "Valmis",  "description": "Lõpeta ettevalmistus ja seisa silmitsi läheneva tormiga." }
+    },
+    "prepStatus": { "0": "Ettevalmistamata", "1": "Põhiline", "2": "Põhjalik" },
+    "settings": {
+      "sound": "Heli",
+      "soundOn": "🔊 Sees",
+      "soundOff": "🔇 Väljas",
+      "textAnimation": "Teksti animatsioon",
+      "textOn": "▸ Sees",
+      "textOff": "▸▸ Väljas"
+    }
+  },
+
+  "languageSelect": {
+    "title": "Choose your language",
+    "subtitle": "Valige keel"
+  }
+}

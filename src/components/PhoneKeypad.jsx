@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import './PhoneKeypad.css';
 import { useAudioContext } from '../context/AudioContext';
+import { useTranslation } from '../hooks/useTranslation';
 
 function PhoneKeypad({ onCall, onCancel, scenario }) {
   const [dialedNumber, setDialedNumber] = useState('');
   const { playSfx } = useAudioContext();
+  const { t } = useTranslation();
 
   const handleDigitPress = (digit) => {
     playSfx('dtmf', { digit });
@@ -38,12 +40,12 @@ function PhoneKeypad({ onCall, onCancel, scenario }) {
     <div className="phone-keypad-overlay">
       <div className="phone-keypad">
         <div className="phone-header">
-          <span className="phone-title">Emergency Call</span>
+          <span className="phone-title">{t('phoneKeypad.title')}</span>
           <button className="phone-cancel" onClick={() => { playSfx('close'); onCancel(); }}>✕</button>
         </div>
 
         <div className="phone-display">
-          <span className="dialed-number">{dialedNumber || 'Enter number'}</span>
+          <span className="dialed-number">{dialedNumber || t('phoneKeypad.placeholder')}</span>
         </div>
 
         <div className="keypad-grid">
@@ -72,7 +74,7 @@ function PhoneKeypad({ onCall, onCancel, scenario }) {
             onClick={handleCall}
             disabled={dialedNumber.length === 0}
           >
-            📞 Call
+            📞 {t('phoneKeypad.call')}
           </button>
         </div>
       </div>
