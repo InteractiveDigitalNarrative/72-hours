@@ -14,6 +14,37 @@
     "enter": "ENTER"
   },
 
+  "demography": {
+    "title": "Tell us about you",
+    "subtitle": "A few quick questions before you begin. Your answers help us tailor the experience.",
+    "ageLabel": "Age",
+    "selectPlaceholder": "Select…",
+    "ageOptions": {
+      "under_18": "Under 18",
+      "18_24": "18 – 24",
+      "25_34": "25 – 34",
+      "35_44": "35 – 44",
+      "45_54": "45 – 54",
+      "55_64": "55 – 64",
+      "65_plus": "65 +"
+    },
+    "genderLabel": "Gender",
+    "genderOptions": {
+      "male": "Male",
+      "female": "Female",
+      "non_binary": "Non-binary",
+      "prefer_not_say": "Prefer not to say"
+    },
+    "prepLabel": "Have you prepared for an emergency before?",
+    "prepOptions": {
+      "fully": "Yes, fully",
+      "somewhat": "Somewhat",
+      "never": "No, never"
+    },
+    "skip": "Skip",
+    "continue": "Continue"
+  },
+
   "menu": {
     "title": "STORM ALERT",
     "subtitle": "Crisis Management Simulation",

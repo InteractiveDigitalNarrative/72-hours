@@ -14,6 +14,37 @@
     "enter": "SISENE"
   },
 
+  "demography": {
+    "title": "Räägi meile endast",
+    "subtitle": "Mõned kiired küsimused enne algust. Sinu vastused aitavad meil kogemust kohandada.",
+    "ageLabel": "Vanus",
+    "selectPlaceholder": "Vali…",
+    "ageOptions": {
+      "under_18": "Alla 18",
+      "18_24": "18 – 24",
+      "25_34": "25 – 34",
+      "35_44": "35 – 44",
+      "45_54": "45 – 54",
+      "55_64": "55 – 64",
+      "65_plus": "65 +"
+    },
+    "genderLabel": "Sugu",
+    "genderOptions": {
+      "male": "Mees",
+      "female": "Naine",
+      "non_binary": "Mittebinaarne",
+      "prefer_not_say": "Eelistan mitte öelda"
+    },
+    "prepLabel": "Kas oled varem hädaolukorraks valmistunud?",
+    "prepOptions": {
+      "fully": "Jah, täielikult",
+      "somewhat": "Mõnevõrra",
+      "never": "Ei, mitte kunagi"
+    },
+    "skip": "Jäta vahele",
+    "continue": "Jätka"
+  },
+
   "menu": {
     "title": "TORMI\nHOIATUS",
     "subtitle": "Kriisijuhtimise simulatsioon",

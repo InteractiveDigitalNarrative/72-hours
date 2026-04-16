@@ -5,6 +5,7 @@ import Menu from './components/Menu.jsx';
 import InkStory from './components/InkStory.jsx';
 import LoadingScreen from './components/LoadingScreen.jsx';
 import LanguageSelect from './components/LanguageSelect.jsx';
+import Demography from './components/Demography.jsx';
 import { AudioProvider, useAudioContext } from './context/AudioContext.jsx';
 import { LanguageProvider, useLanguage } from './context/LanguageContext.jsx';
 import './App.css';
@@ -25,6 +26,16 @@ function AppContent() {
 
   const handleLanguageSelect = (lang) => {
     setLanguage(lang);
+    setCurrentScreen('demography');
+  };
+
+  const handleDemographySubmit = (data) => {
+    console.log('[Demography]', data);
+    setCurrentScreen('loading');
+  };
+
+  const handleDemographySkip = () => {
+    console.log('[Demography] skipped');
     setCurrentScreen('loading');
   };
 
@@ -50,6 +61,13 @@ function AppContent() {
     <div className="App">
       {currentScreen === 'language' && (
         <LanguageSelect onSelect={handleLanguageSelect} />
+      )}
+
+      {currentScreen === 'demography' && (
+        <Demography
+          onSubmit={handleDemographySubmit}
+          onSkip={handleDemographySkip}
+        />
       )}
 
       {currentScreen === 'loading' && (
