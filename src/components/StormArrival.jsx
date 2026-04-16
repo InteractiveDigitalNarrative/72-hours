@@ -28,16 +28,25 @@ function StormArrival({ onDismiss }) {
         style={{ backgroundImage: `url(${BASE_URL}Images/winter-storm.jpg)` }}
       />
 
-      {/* Rain streaks */}
-      <div className="storm-rain" aria-hidden="true">
-        {Array.from({ length: 60 }, (_, i) => (
-          <span key={i} className="rain-drop" style={{
-            left: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 1.2}s`,
-            animationDuration: `${0.5 + Math.random() * 0.4}s`,
-            opacity: 0.3 + Math.random() * 0.5,
-          }} />
-        ))}
+      {/* Whiteout fog layer */}
+      <div className="storm-fog" aria-hidden="true" />
+
+      {/* Blizzard snowflakes */}
+      <div className="storm-snow" aria-hidden="true">
+        {Array.from({ length: 300 }, (_, i) => {
+          const size = 1.5 + Math.random() * 5;
+          return (
+            <span key={i} className="snow-flake" style={{
+              left: `${Math.random() * 100}%`,
+              width: `${size}px`,
+              height: `${size}px`,
+              animationDelay: `${Math.random() * 2}s`,
+              animationDuration: `${1.2 + Math.random() * 1.8}s`,
+              opacity: 0.5 + Math.random() * 0.5,
+              '--drift': `${-40 + Math.random() * 15}vw`,
+            }} />
+          );
+        })}
       </div>
 
       {/* Lightning flashes */}

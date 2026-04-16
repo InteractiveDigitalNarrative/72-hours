@@ -12,37 +12,54 @@
   to { opacity: 0; pointer-events: none; }
 }
 
-/* Background photo */
+/* Background photo — heavily desaturated whiteout base */
 .storm-bg {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: brightness(0.35) saturate(0.6);
+  filter: brightness(0.6) saturate(0.15) blur(3px);
 }
 
-/* ── Rain ────────────────────────────────────────────────────────────────────── */
+/* Drifting fog / whiteout haze — like a snowy desert sandstorm */
+.storm-fog {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(220, 230, 245, 0.55), transparent 60%),
+    radial-gradient(ellipse at 70% 60%, rgba(200, 215, 235, 0.5), transparent 65%),
+    linear-gradient(to bottom, rgba(210, 225, 240, 0.45), rgba(180, 200, 220, 0.6));
+  animation: fog-drift 6s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+}
 
-.storm-rain {
+@keyframes fog-drift {
+  from { transform: translateX(-3%) scale(1.05); opacity: 0.85; }
+  to   { transform: translateX(3%)  scale(1.1);  opacity: 1; }
+}
+
+/* ── Blizzard snow ───────────────────────────────────────────────────────── */
+
+.storm-snow {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-.rain-drop {
+.snow-flake {
   position: absolute;
-  top: -10%;
-  width: 1.5px;
-  height: 80px;
-  background: linear-gradient(to bottom, transparent, rgba(180, 210, 255, 0.7));
-  border-radius: 1px;
-  transform: rotate(15deg);
-  animation: rain-fall linear infinite;
+  top: -5%;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+  animation: snow-fall linear infinite;
+  will-change: transform;
 }
 
-@keyframes rain-fall {
-  from { transform: rotate(15deg) translateY(-10vh); }
-  to   { transform: rotate(15deg) translateY(120vh); }
+@keyframes snow-fall {
+  from { transform: translate(0, -10vh); }
+  to   { transform: translate(var(--drift, -20vw), 120vh); }
 }
 
 /* ── Lightning flashes ───────────────────────────────────────────────────────── */

@@ -284,7 +284,7 @@
   },
 
   "sms": {
-    "contact": "RiigiInfo",
+    "contact": "EE-ALARM",
     "contactSub": "Riigi Kriisijuhtimiskeskus",
     "time": "praegu",
     "alertTag": "⚠ TORMIHOIATUS",
