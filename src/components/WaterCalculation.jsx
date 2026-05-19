@@ -90,7 +90,9 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
               <p className="wc-text" dangerouslySetInnerHTML={{
                 __html: t('waterCalc.screen1Text', { isAre, people: PEOPLE, personPeople, days: DAYS })
               }} />
-              <p className="wc-text">{t('waterCalc.screen1Text2')}</p>
+              <p className="wc-text" dangerouslySetInnerHTML={{
+                __html: t('waterCalc.screen1Text2', { lPerDay: L_PER_PERSON_DAY })
+              }} />
 
               <div className="wc-note-reminder" dangerouslySetInnerHTML={{
                 __html: t('waterCalc.screen1Note')

@@ -404,7 +404,7 @@
     "screen1Title": "Water Preparation",
     "screen1Subtitle": "Before you start filling containers…",
     "screen1Text": "There {{isAre}} <strong>{{people}} {{personPeople}}</strong> in your household. The storm is forecast to last up to <strong>{{days}} days</strong>.",
-    "screen1Text2": "Think about how much water a person needs each day to stay healthy — then work out the total for everyone.",
+    "screen1Text2": "Each person needs <strong>{{lPerDay}} litres</strong> of water per day. Work out the total for your household.",
     "screen1Note": "🗒️ <strong>Write down your calculation</strong> — you may need it later.",
     "screen1Btn": "Calculate →",
     "screen1Back": "← Back to preparation",

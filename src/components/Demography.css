@@ -7,7 +7,7 @@
   background-size: cover;
   background-position: center;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 9999;
   overflow-y: auto;
@@ -38,6 +38,7 @@
   max-width: 560px;
   width: 100%;
   padding: 36px 32px;
+  margin: auto;
   background: rgba(20, 14, 8, 0.6);
   border: 1px solid rgba(255, 153, 51, 0.2);
   border-radius: 10px;
@@ -183,4 +184,88 @@
 .demo-continue:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .demo-screen {
+    padding: 20px 12px;
+  }
+
+  .demo-card {
+    padding: 28px 22px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .demo-screen {
+    padding: 16px 10px;
+  }
+
+  .demo-card {
+    padding: 22px 18px;
+    gap: 16px;
+    border-radius: 8px;
+  }
+
+  .demo-title {
+    letter-spacing: 1.5px;
+  }
+
+  .demo-subtitle {
+    font-size: 0.82rem;
+    margin: -6px 0 4px;
+  }
+
+  .demo-field {
+    gap: 8px;
+  }
+
+  .demo-label {
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .demo-select {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .demo-pills {
+    gap: 6px;
+  }
+
+  .demo-pill {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .demo-actions {
+    margin-top: 4px;
+    gap: 12px;
+  }
+
+  .demo-skip {
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .demo-continue {
+    padding: 10px 22px;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+  }
+}
+
+@media (max-height: 700px) {
+  .demo-card {
+    gap: 16px;
+    padding: 22px 22px;
+  }
+
+  .demo-subtitle {
+    margin: -6px 0 2px;
+  }
 }

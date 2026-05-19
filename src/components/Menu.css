@@ -19,6 +19,8 @@
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
     z-index: 1000;
     overflow: hidden;
+    padding-bottom: 170px;
+    box-sizing: border-box;
 }
 
 /* Background image with blur effect */
@@ -370,6 +372,10 @@
    ============================================ */
 
 @media screen and (max-width: 768px) {
+    .menu-container {
+        padding-bottom: 120px;
+    }
+
     .menu-title {
         font-size: 48pt;
         letter-spacing: 4px;
@@ -389,6 +395,22 @@
         font-size: 12pt;
     }
 
+    .menu-header {
+        margin-bottom: 30px;
+    }
+
+    .menu-buttons {
+        margin: 24px 0;
+    }
+
+    .menu-footer {
+        margin-top: 24px;
+    }
+
+    .menu-eu-logo img {
+        height: 80px;
+    }
+
     .modal-content {
         padding: 30px 20px;
     }
@@ -399,12 +421,87 @@
 }
 
 @media screen and (max-width: 480px) {
+    .menu-container {
+        padding-bottom: 90px;
+    }
+
     .menu-title {
         font-size: 36pt;
         letter-spacing: 2px;
     }
 
+    .menu-subtitle {
+        font-size: 11pt;
+    }
+
     .menu-content {
         padding: 20px;
+    }
+
+    .menu-header {
+        margin-bottom: 24px;
+    }
+
+    .menu-buttons {
+        margin: 20px 0;
+    }
+
+    .menu-footer {
+        margin-top: 20px;
+    }
+
+    .menu-btn {
+        padding: 14px 24px;
+        font-size: 11pt;
+    }
+
+    .tagline {
+        font-size: 10pt;
+    }
+
+    .menu-eu-logo {
+        bottom: 16px;
+    }
+
+    .menu-eu-logo img {
+        height: 60px;
+    }
+}
+
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    .menu-container {
+        padding-bottom: 80px;
+    }
+
+    .menu-title {
+        font-size: 32pt;
+        letter-spacing: 3px;
+        margin: 8px 0;
+    }
+
+    .menu-header {
+        margin-bottom: 16px;
+    }
+
+    .menu-buttons {
+        margin: 16px 0;
+        gap: 10px;
+    }
+
+    .menu-btn {
+        padding: 10px 24px;
+        font-size: 11pt;
+    }
+
+    .menu-footer {
+        margin-top: 12px;
+    }
+
+    .menu-eu-logo {
+        bottom: 12px;
+    }
+
+    .menu-eu-logo img {
+        height: 48px;
     }
 }

@@ -404,7 +404,7 @@
     "screen1Title": "Vee ettevalmistus",
     "screen1Subtitle": "Enne kui hakkad anumaid täitma…",
     "screen1Text": "Sinu leibkonnas {{isAre}} <strong>{{people}} {{personPeople}}</strong>. Tormi kestuseks prognoositakse kuni <strong>{{days}} päeva</strong>.",
-    "screen1Text2": "Mõtle, kui palju vett vajab üks inimene päevas tervena püsimiseks — siis arvuta kogus kõigi jaoks.",
+    "screen1Text2": "Iga inimene vajab <strong>{{lPerDay}} liitrit</strong> vett päevas. Arvuta välja kogus oma leibkonna jaoks.",
     "screen1Note": "🗒️ <strong>Kirjuta oma arvutus üles</strong> — sul võib seda hiljem vaja minna.",
     "screen1Btn": "Arvuta →",
     "screen1Back": "← Tagasi ettevalmistuse juurde",

@@ -6,7 +6,7 @@
   left: 0;
   width: 100%;
   height: var(--bottom-bar-height);
-  padding: 0 30px;
+  padding: 0 70px 0 30px;
   background: rgba(0, 0, 0, 0.9);
   z-index: 2499;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -71,7 +71,7 @@
 /* Responsive */
 @media (max-width: 600px) {
   .time-bar-container {
-    padding: 12px 15px;
+    padding: 0 56px 0 15px;
     gap: 12px;
   }
 
@@ -81,6 +81,6 @@
   }
 
   .time-bar-track {
-    width: 50%;
+    width: 45%;
   }
 }
