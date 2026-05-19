@@ -430,6 +430,59 @@
     "people": "people"
   },
 
+  "pantry": {
+    "title": "Check Your Kitchen",
+    "subtitle": "Tick everything you actually have at home right now",
+    "realCheckNote": "🗒️ <strong>Go look in your real kitchen</strong> — be honest, don't guess.",
+    "items": {
+      "bread": "Bread",
+      "canned": "Canned goods",
+      "nuts_pb": "Nuts / peanut butter",
+      "produce": "Fresh produce",
+      "dairy": "Milk / dairy",
+      "frozen": "Frozen meals",
+      "kid_snacks": "Crackers / kid snacks",
+      "soft_food": "Honey, jam, oats"
+    },
+    "spoilReason": {
+      "bread": "stale in ~1 day",
+      "produce": "spoils without a cold fridge",
+      "dairy": "spoils without a cold fridge",
+      "frozen": "thaws when the power dies"
+    },
+    "continueBtn": "See what I have →",
+    "backBtn": "← Back",
+    "summaryTitle": "Your Kitchen Report",
+    "summarySubtitle": "Two lists to keep in mind",
+    "useFirstTitle": "Use first — won't last 3 days",
+    "useFirstEmpty": "Nothing here that needs to be eaten quickly.",
+    "gapsTitle": "Add at the store",
+    "gapsEmpty": "Your kitchen already covers the basics. Nice.",
+    "gapLabels": {
+      "shelf_stable_protein": "Shelf-stable protein (canned beans/fish, nuts, peanut butter)",
+      "no_cook_food": "No-cook food that's ready to eat",
+      "kid_snack": "A kid-friendly snack",
+      "soft_food": "Soft food that's easy to eat",
+      "soft_food_named": "Soft food that's easy for {{name}} to eat"
+    },
+    "medReminder": "Don't forget {{name}}'s medication — check the dose for the next 3 days.",
+    "elderlyFallback": "their",
+    "doneBtn": "Done — back to preparation",
+    "editBtn": "← Re-check items"
+  },
+
+  "storeNote": {
+    "title": "Your shopping note",
+    "subtitle": "From your kitchen check",
+    "covered": "covered",
+    "labels": {
+      "shelf_stable_protein": "Shelf-stable protein",
+      "no_cook_food": "No-cook food",
+      "kid_snack": "Kid-friendly snack",
+      "soft_food": "Soft food"
+    }
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 AM — The Night",
     "nightSubtitle": "The power is out. The storm has taken down the lines.",

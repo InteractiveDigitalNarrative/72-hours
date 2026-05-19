@@ -430,6 +430,59 @@
     "people": "inimest"
   },
 
+  "pantry": {
+    "title": "Kontrolli oma kööki",
+    "subtitle": "Märgi kõik, mis sul praegu päriselt kodus on",
+    "realCheckNote": "🗒️ <strong>Mine vaata päris kööki</strong> — ole aus, ära pakkuda.",
+    "items": {
+      "bread": "Leib / sai",
+      "canned": "Konservid",
+      "nuts_pb": "Pähklid / pähklivõi",
+      "produce": "Värsked puu- ja köögiviljad",
+      "dairy": "Piim / piimatooted",
+      "frozen": "Külmutatud toit",
+      "kid_snacks": "Kreekerid / laste snäkid",
+      "soft_food": "Mesi, moos, helbed"
+    },
+    "spoilReason": {
+      "bread": "kõveneb umbes ühe päevaga",
+      "produce": "rikneb ilma külmkapita",
+      "dairy": "rikneb ilma külmkapita",
+      "frozen": "sulab, kui vool kaob"
+    },
+    "continueBtn": "Vaata, mis mul on →",
+    "backBtn": "← Tagasi",
+    "summaryTitle": "Sinu köögiraport",
+    "summarySubtitle": "Kaks nimekirja, mida meeles pidada",
+    "useFirstTitle": "Söö esimesena — ei pea 3 päeva vastu",
+    "useFirstEmpty": "Pole midagi, mida peaks kiiresti ära sööma.",
+    "gapsTitle": "Osta poest juurde",
+    "gapsEmpty": "Sinu köök katab põhivajadused. Hästi tehtud.",
+    "gapLabels": {
+      "shelf_stable_protein": "Säilitatav valk (konservid, pähklid, pähklivõi)",
+      "no_cook_food": "Toit, mida saab kohe süüa, kuumutamata",
+      "kid_snack": "Lapsesõbralik snäkk",
+      "soft_food": "Pehme, kergesti söödav toit",
+      "soft_food_named": "Pehme toit, mida {{name}} saab kergesti süüa"
+    },
+    "medReminder": "Ära unusta {{name}} ravimeid — kontrolli annust järgmiseks 3 päevaks.",
+    "elderlyFallback": "tema",
+    "doneBtn": "Valmis — tagasi ettevalmistuse juurde",
+    "editBtn": "← Muuda valikuid"
+  },
+
+  "storeNote": {
+    "title": "Sinu ostunimekiri",
+    "subtitle": "Köögikontrollist",
+    "covered": "kaetud",
+    "labels": {
+      "shelf_stable_protein": "Säilitatav valk",
+      "no_cook_food": "Kohe söödav toit",
+      "kid_snack": "Lastele snäkk",
+      "soft_food": "Pehme toit"
+    }
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 — Öö",
     "nightSubtitle": "Vool on ära. Torm on liinid maha võtnud.",

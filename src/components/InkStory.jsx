@@ -14,6 +14,7 @@ import StormArrival from './StormArrival';
 import BreakingNews from './BreakingNews';
 import OutcomeScreen from './OutcomeScreen';
 import FamilySetup from './FamilySetup';
+import PantryCheck from './PantryCheck';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -147,6 +148,10 @@ function InkStory({ onReturnToMenu }) {
     hasElderly: true,
     hasChildren: false,
   });
+
+  // Pantry check state — populated by PantryCheck overlay, consumed by StoreOverlay
+  const [showPantryCheck, setShowPantryCheck] = useState(false);
+  const [pantryResult, setPantryResult] = useState({ gaps: [], useFirst: [] });
 
   // Text speed: 'slow' (fade-in) or 'instant'
   const [textSpeed, setTextSpeed] = useState(() => {
@@ -438,6 +443,15 @@ function InkStory({ onReturnToMenu }) {
         if (tag === 'FAMILY_SETUP') {
           console.log('Showing family setup');
           setShowFamilySetup(true);
+          setStoryText(lines);
+          setChoices([]);
+          return;
+        }
+
+        // Check for PANTRY_CHECK tag
+        if (tag === 'PANTRY_CHECK') {
+          console.log('Showing pantry check');
+          setShowPantryCheck(true);
           setStoryText(lines);
           setChoices([]);
           return;
@@ -736,6 +750,21 @@ function InkStory({ onReturnToMenu }) {
     story.variablesState["water_target"]     = size * 3 * 3;
 
     // Continue the story from where it paused to get the remaining text + choices
+    continueStory();
+  };
+
+  // PANTRY CHECK OVERLAY HANDLER
+  // ============================================
+  const handlePantryClose = ({ gaps, useFirst }) => {
+    setShowPantryCheck(false);
+    setPantryResult({ gaps: gaps || [], useFirst: useFirst || [] });
+
+    const story = storyRef.current;
+    if (!story) return;
+    story.variablesState["pantry_checked"]         = true;
+    story.variablesState["pantry_gaps_count"]      = (gaps || []).length;
+    story.variablesState["pantry_use_first_count"] = (useFirst || []).length;
+
     continueStory();
   };
 
@@ -1292,6 +1321,7 @@ function InkStory({ onReturnToMenu }) {
           shopFood={storeOpenedDirectly ? true : gameVars.shop_food}
           shopBatteries={storeOpenedDirectly ? true : gameVars.shop_batteries}
           shopWaterAmount={storeOpenedDirectly ? (gameVars.shop_water_amount || 10) : gameVars.shop_water_amount}
+          shoppingGaps={pantryResult.gaps}
           onClose={handleStoreClose}
           onTimeCostChange={setLiveStoreCost}
         />
@@ -1351,6 +1381,15 @@ function InkStory({ onReturnToMenu }) {
       {/* Family Setup Overlay */}
       {showFamilySetup && (
         <FamilySetup onClose={handleFamilySetupClose} />
+      )}
+
+      {/* Pantry Check Overlay */}
+      {showPantryCheck && (
+        <PantryCheck
+          household={household}
+          onClose={handlePantryClose}
+          onCancel={() => { setShowPantryCheck(false); continueStory(); }}
+        />
       )}
 
       {/* Floating Settings Button */}

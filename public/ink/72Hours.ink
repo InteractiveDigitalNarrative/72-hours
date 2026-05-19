@@ -28,6 +28,11 @@ VAR prep_medication = 0
 // Set to true by the React WaterCalculation overlay so the Ink quiz is skipped
 VAR water_quiz_done = false
 
+// Set by the React PantryCheck overlay
+VAR pantry_checked = false
+VAR pantry_gaps_count = 0
+VAR pantry_use_first_count = 0
+
 // Water containers filled
 VAR water_target = 18
 VAR water_collected = 0
@@ -482,14 +487,26 @@ You think about food supplies.
 
 === food_kitchen_result ===
 # CLEAR
+# PANTRY_CHECK
 
-You check the pantry and fridge.
+{pantry_use_first_count > 0:
+    A few things in there won't survive the storm — note them as eat-first.
+}
 
-There's some bread that will go stale in a day, a few cans of beans, half a pack of crackers, and some apples.
+{
+    - pantry_gaps_count == 0:
+        Your kitchen actually covers the basics. A trip to the store still wouldn't hurt.
+    - pantry_gaps_count == 1:
+        You spot <b>1 gap</b> to fill on the store run.
+    - else:
+        You spot <b>{pantry_gaps_count} gaps</b> to fill on the store run.
+}
 
-Not ideal for an emergency, but it's something. The bread and apples won't last long though...
++ {pantry_gaps_count > 0 && not shop_food} [🛒 Add the missing items to shopping list]
+    ~ shop_food = true
+    -> food_added_to_list
 
-+ {not shop_food} [🛒 Add emergency food to shopping list]
++ {pantry_gaps_count == 0 && not shop_food} [🛒 Grab extra supplies from the store, just in case]
     ~ shop_food = true
     -> food_added_to_list
 

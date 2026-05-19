@@ -28,6 +28,11 @@ VAR prep_medication = 0
 // Märgitakse true, kui React WaterCalculation overlay on läbitud
 VAR water_quiz_done = false
 
+// Märgitakse PantryCheck overlay poolt
+VAR pantry_checked = false
+VAR pantry_gaps_count = 0
+VAR pantry_use_first_count = 0
+
 // Veekonteinerid täidetud
 VAR water_target = 18
 VAR water_collected = 0
@@ -482,14 +487,26 @@ Mõtled toiduvarude peale.
 
 === food_kitchen_result ===
 # CLEAR
+# PANTRY_CHECK
 
-Kontrollid sahvrit ja külmkappi.
+{pantry_use_first_count > 0:
+    Mõned asjad ei pea tormi vastu — söö need esimesena.
+}
 
-On natuke leiba, mis läheb päevaga kuivaks, paar purki ube, pool pakki kreekerit ja mõned õunad.
+{
+    - pantry_gaps_count == 0:
+        Sinu köök katab põhilise. Poeskäik ei tee siiski paha.
+    - pantry_gaps_count == 1:
+        Märkad <b>1 puuduse</b>, mille saaks poest täita.
+    - else:
+        Märkad <b>{pantry_gaps_count} puudust</b>, mille saaks poest täita.
+}
 
-Hädaolukorraks mitte ideaalne, aga midagi on. Leib ja õunad ei säili kaua...
++ {pantry_gaps_count > 0 && not shop_food} [🛒 Lisa puuduvad asjad ostunimekirja]
+    ~ shop_food = true
+    -> food_added_to_list
 
-+ {not shop_food} [🛒 Lisa hädaolukorra toit ostunimekirja]
++ {pantry_gaps_count == 0 && not shop_food} [🛒 Osta poest siiski lisa, igaks juhuks]
     ~ shop_food = true
     -> food_added_to_list
 

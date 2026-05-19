@@ -55,6 +55,14 @@ const STORE_ITEMS = [
 const CATEGORY_IDS = ['essentials', 'food', 'luxury'];
 const CATEGORY_EMOJIS = { essentials: '🛡️', food: '🍽️', luxury: '🛍️' };
 
+// Maps a pantry-derived gap to the store item ids that can fill it.
+const GAP_ITEM_MAP = {
+  shelf_stable_protein: ['canned', 'nuts', 'peanut_butter'],
+  no_cook_food:         ['canned', 'nuts', 'peanut_butter', 'energy_bars', 'crackers', 'chocolate', 'honey_jam'],
+  kid_snack:            ['energy_bars', 'chocolate', 'crackers', 'peanut_butter'],
+  soft_food:            ['honey_jam', 'peanut_butter', 'bread'],
+};
+
 const shuffle = (arr) => {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -64,7 +72,7 @@ const shuffle = (arr) => {
   return a;
 };
 
-function StoreOverlay({ shopWater, shopFood, shopBatteries, shopWaterAmount, onClose, onTimeCostChange }) {
+function StoreOverlay({ shopWater, shopFood, shopBatteries, shopWaterAmount, shoppingGaps = [], onClose, onTimeCostChange }) {
   const { t } = useTranslation();
   const [showWarning, setShowWarning] = useState(true);
   const [basket, setBasket] = useState([]);
@@ -121,6 +129,12 @@ function StoreOverlay({ shopWater, shopFood, shopBatteries, shopWaterAmount, onC
   const BASE_VISIT_COST = 20;
   const timeCost = BASE_VISIT_COST + basket.length + badClicks.length;
 
+  const gapStatus = useMemo(() => shoppingGaps.map(gap => {
+    const itemIds = GAP_ITEM_MAP[gap] || [];
+    return { gap, covered: itemIds.some(id => basket.includes(id)) };
+  }), [shoppingGaps, basket]);
+  const gapsCovered = gapStatus.filter(g => g.covered).length;
+
   useEffect(() => {
     onTimeCostChange?.(timeCost);
   }, [timeCost, onTimeCostChange]);
@@ -170,6 +184,28 @@ function StoreOverlay({ shopWater, shopFood, shopBatteries, shopWaterAmount, onC
           <span className="store-title">{t('store.headerTitle')}</span>
           <span className="store-subtitle">{t('store.headerSubtitle')}</span>
         </div>
+
+        {shoppingGaps.length > 0 && (
+          <div className="store-note">
+            <div className="store-note-header">
+              <span className="store-note-title">📝 {t('storeNote.title')}</span>
+              <span className="store-note-progress">
+                {gapsCovered} / {shoppingGaps.length} {t('storeNote.covered')}
+              </span>
+            </div>
+            <div className="store-note-chips">
+              {gapStatus.map(({ gap, covered }) => (
+                <span
+                  key={gap}
+                  className={`store-note-chip ${covered ? 'store-note-chip-covered' : ''}`}
+                >
+                  <span className="store-note-check">{covered ? '✓' : '○'}</span>
+                  {t(`storeNote.labels.${gap}`)}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="store-shelves">
           {CATEGORY_IDS.map(catId => {
