@@ -33,6 +33,13 @@ VAR pantry_checked = false
 VAR pantry_gaps_count = 0
 VAR pantry_use_first_count = 0
 
+// Märgitakse HomeSetup overlay poolt
+VAR home_setup_done = false
+VAR home_seal_count = 0
+VAR home_has_exposed_pipes = false
+VAR home_high_heat_loss = false
+VAR home_has_stove = false
+
 // Veekonteinerid täidetud
 VAR water_target = 18
 VAR water_collected = 0
@@ -572,6 +579,9 @@ VAR heat_clothing = false
 
 === category_heat ===
 # CLEAR
+{not home_setup_done:
+    # HOME_SETUP
+}
 
 {
     - prep_heat == 0:
@@ -622,6 +632,7 @@ Kütte keeramine või akende avamine ei aita, kui elekter on ära. Esimene prior
 
 === heat_hub ===
 # CLEAR
+# HEAT_HUB
 
 ~ prep_heat = 1
 
@@ -697,9 +708,15 @@ Lülitad sundventilatsiooni välja, sulged kõik aknad ja topid rätikud tuulet�
 === heat_result_stove ===
 # CLEAR
 
-Kontrollid korstnasiibrit — see avaneb. Puhstad vana tuha ja tood küünist süles täie puid. Ahi on valmis, et kohe süüdata.
+{home_has_stove:
+    Kontrollid korstnasiibrit — see avaneb. Puhstad vana tuha ja tood küünist süles täie puid. Ahi on valmis, et kohe süüdata.
 
-<b>Kontrolli alati korstnasiibrit enne süütamist. Ära jäta tuld kunagi järelevalveta. Hoia tulekustutustekk lähedal.</b>
+    <b>Kontrolli alati korstnasiibrit enne süütamist. Ära jäta tuld kunagi järelevalveta. Hoia tulekustutustekk lähedal.</b>
+- else:
+    Sul siin puuahju pole, aga loed põhitõed siiski läbi: kontrolli, et korstnasiiber on puhas ja avaneb, eemalda vana tuhk, hoia kuiv küttepuit lähedal, ära jäta tuld järelevalveta ja hoia tulekustutustekk käepärast.
+
+    <b>Puuahi või kamin on pika voolukatkestuse ajal üks paremaid asju, mida omada — tasub põhitõdesid teada iga koha jaoks, kus võid kunagi viibida.</b>
+}
 
 + [Jätka]
     -> heat_hub
@@ -707,9 +724,15 @@ Kontrollid korstnasiibrit — see avaneb. Puhstad vana tuha ja tood küünist s�
 === heat_result_pipes ===
 # CLEAR
 
-Mähid lahtised torud vanade rätikute ja kaltsudega. Pole täiuslik isolatsioon, aga võib ära hoida toru lõhkemise.
+{home_has_exposed_pipes:
+    Mähid keldris ja välisseina ääres lahtised torud vanade rätikute ja kaltsudega. Pole täiuslik isolatsioon, aga võib ära hoida toru lõhkemise.
 
-<b>Lõhkenud toru külmunud majas on katastroof katastroofis. Kraanide aeglane tilkumine aitab samuti — liikuv vesi külmub aeglasemalt.</b>
+    <b>Lõhkenud toru külmunud majas on katastroof katastroofis. Kraanide aeglane tilkumine aitab samuti — liikuv vesi külmub aeglasemalt.</b>
+- else:
+    Sinu torud kulgevad köetavate seinte sees, nii et maja kaitseb neid juba. Käid mõttes läbi, mida teeksid, kui nii ei oleks — mähiksid need vanade rätikutega ja jätaksid kraanidest aeglase tilkamise, et vesi liikuma jääks.
+
+    <b>Hea teada sugulaste majade, suvekodude või iga koha kohta, kus on lahtised veetorud. Mässitud toru lõhkeb palju vähem tõenäoliselt.</b>
+}
 
 + [Jätka]
     -> heat_hub

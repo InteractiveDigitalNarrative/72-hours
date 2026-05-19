@@ -6,7 +6,8 @@
       "WebFetch(domain:api.github.com)",
       "Bash(npx vite:*)",
       "Bash(curl:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(\"/Users/ahmedpashafaisal/Documents/Tartu Uni/72hours-react/node_modules/inklecate/bin/inklecate\" -o \"/tmp/72.json\" \"/Users/ahmedpashafaisal/Documents/Tartu Uni/72hours-react/public/ink/72Hours.ink\")"
     ]
   }
 }

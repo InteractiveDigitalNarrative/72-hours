@@ -33,6 +33,13 @@ VAR pantry_checked = false
 VAR pantry_gaps_count = 0
 VAR pantry_use_first_count = 0
 
+// Set by the React HomeSetup overlay
+VAR home_setup_done = false
+VAR home_seal_count = 0
+VAR home_has_exposed_pipes = false
+VAR home_high_heat_loss = false
+VAR home_has_stove = false
+
 // Water containers filled
 VAR water_target = 18
 VAR water_collected = 0
@@ -572,6 +579,9 @@ VAR heat_clothing = false
 
 === category_heat ===
 # CLEAR
+{not home_setup_done:
+    # HOME_SETUP
+}
 
 {
     - prep_heat == 0:
@@ -622,6 +632,7 @@ Cranking the heating or opening windows won't help when the power's out. The fir
 
 === heat_hub ===
 # CLEAR
+# HEAT_HUB
 
 ~ prep_heat = 1
 
@@ -697,9 +708,15 @@ You switch off the forced ventilation, shut every window, and stuff towels along
 === heat_result_stove ===
 # CLEAR
 
-You check the flue — it opens. You clear old ash and haul armloads of firewood from the shed. The stove is ready to light at a moment's notice.
+{home_has_stove:
+    You check the flue — it opens. You clear old ash and haul armloads of firewood from the shed. The stove is ready to light at a moment's notice.
 
-<b>Always check the flue before lighting. Never leave a fire unattended. Keep a fire blanket nearby.</b>
+    <b>Always check the flue before lighting. Never leave a fire unattended. Keep a fire blanket nearby.</b>
+- else:
+    You don't have a wood stove here, but you read through the basics: check the flue is clear and opens, sweep out old ash, keep dry firewood close by, never leave a fire unattended, and keep a fire blanket nearby.
+
+    <b>A wood stove or fireplace is one of the best things to have in a long outage — worth knowing the basics for anywhere you might stay that has one.</b>
+}
 
 + [Continue]
     -> heat_hub
@@ -707,9 +724,15 @@ You check the flue — it opens. You clear old ash and haul armloads of firewood
 === heat_result_pipes ===
 # CLEAR
 
-You wrap exposed pipes with old towels and rags. Not perfect insulation, but it could prevent a burst pipe.
+{home_has_exposed_pipes:
+    You wrap the exposed pipes in the basement and along the outside wall with old towels and rags. Not perfect insulation, but it could prevent a burst pipe.
 
-<b>A burst pipe in a frozen house is a disaster on top of a disaster. A slow drip from taps also helps — moving water freezes slower.</b>
+    <b>A burst pipe in a frozen house is a disaster on top of a disaster. A slow drip from taps also helps — moving water freezes slower.</b>
+- else:
+    Your pipes run inside heated walls, so the house already protects them. You walk through what you'd do if they didn't — wrap them in old towels and rags, leave a slow drip from the taps so the water keeps moving.
+
+    <b>Good to know for relatives' homes, summer cottages, or any place with exposed plumbing. A wrapped pipe is far less likely to crack.</b>
+}
 
 + [Continue]
     -> heat_hub

@@ -15,6 +15,8 @@ import BreakingNews from './BreakingNews';
 import OutcomeScreen from './OutcomeScreen';
 import FamilySetup from './FamilySetup';
 import PantryCheck from './PantryCheck';
+import HomeSetup from './HomeSetup';
+import HeatNote from './HeatNote';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -152,6 +154,13 @@ function InkStory({ onReturnToMenu }) {
   // Pantry check state — populated by PantryCheck overlay, consumed by StoreOverlay
   const [showPantryCheck, setShowPantryCheck] = useState(false);
   const [pantryResult, setPantryResult] = useState({ gaps: [], useFirst: [] });
+
+  // Home setup state — populated by HomeSetup overlay, consumed by HeatNote widget
+  const [showHomeSetup, setShowHomeSetup] = useState(false);
+  const [homeResult, setHomeResult] = useState(null);
+
+  // Tracks the current Ink scene (set by tags like HEAT_HUB) so widgets can show/hide
+  const [currentScene, setCurrentScene] = useState(null);
 
   // Text speed: 'slow' (fade-in) or 'instant'
   const [textSpeed, setTextSpeed] = useState(() => {
@@ -349,6 +358,8 @@ function InkStory({ onReturnToMenu }) {
       shop_batteries: story.variablesState["shop_batteries"],
       shop_visited: story.variablesState["shop_visited"],
       // Heat sub-vars
+      heat_sealed: story.variablesState["heat_sealed"],
+      heat_one_room: story.variablesState["heat_one_room"],
       heat_pipes: story.variablesState["heat_pipes"],
       // Ending tracking
       ending_type: story.variablesState["ending_type"],
@@ -371,6 +382,9 @@ function InkStory({ onReturnToMenu }) {
 
     // Get the next chunk of story text
     const lines = [];
+
+    // Reset per-run scene marker; will be re-set by any HEAT_HUB tag in this run
+    let sceneThisRun = null;
 
     // Keep calling Continue() while there's more content
     while (story.canContinue) {
@@ -457,6 +471,20 @@ function InkStory({ onReturnToMenu }) {
           return;
         }
 
+        // Check for HOME_SETUP tag
+        if (tag === 'HOME_SETUP') {
+          console.log('Showing home setup');
+          setShowHomeSetup(true);
+          setStoryText(lines);
+          setChoices([]);
+          return;
+        }
+
+        // Check for HEAT_HUB tag — heat-note widget should appear
+        if (tag === 'HEAT_HUB') {
+          sceneThisRun = 'heat_hub';
+        }
+
         // Check for BREAKING_NEWS tag
         if (tag === 'BREAKING_NEWS') {
           setShowBreakingNews(true);
@@ -531,6 +559,9 @@ function InkStory({ onReturnToMenu }) {
 
     // Update the story text display
     setStoryText(deduped);
+
+    // Apply scene marker (e.g. heat_hub) for inline widgets like HeatNote
+    setCurrentScene(sceneThisRun);
 
     // Read game variables from Ink
     readGameVars(story);
@@ -764,6 +795,23 @@ function InkStory({ onReturnToMenu }) {
     story.variablesState["pantry_checked"]         = true;
     story.variablesState["pantry_gaps_count"]      = (gaps || []).length;
     story.variablesState["pantry_use_first_count"] = (useFirst || []).length;
+
+    continueStory();
+  };
+
+  // HOME SETUP OVERLAY HANDLER
+  // ============================================
+  const handleHomeSetupClose = (result) => {
+    setShowHomeSetup(false);
+    setHomeResult(result);
+
+    const story = storyRef.current;
+    if (!story) return;
+    story.variablesState["home_setup_done"]        = true;
+    story.variablesState["home_seal_count"]        = (result?.weakSpots || []).length;
+    story.variablesState["home_has_exposed_pipes"] = !!result?.needsPipeInsulation;
+    story.variablesState["home_high_heat_loss"]    = !!result?.highHeatLoss;
+    story.variablesState["home_has_stove"]         = !!result?.hasStove;
 
     continueStory();
   };
@@ -1027,6 +1075,16 @@ function InkStory({ onReturnToMenu }) {
                     <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
                   ))}
                 </div>
+                {currentScene === 'heat_hub' && (
+                  <HeatNote
+                    homeResult={homeResult}
+                    done={{
+                      sealed:  !!gameVars.heat_sealed,
+                      pipes:   !!gameVars.heat_pipes,
+                      oneRoom: !!gameVars.heat_one_room,
+                    }}
+                  />
+                )}
               </div>
             )}
 
@@ -1389,6 +1447,14 @@ function InkStory({ onReturnToMenu }) {
           household={household}
           onClose={handlePantryClose}
           onCancel={() => { setShowPantryCheck(false); continueStory(); }}
+        />
+      )}
+
+      {/* Home Setup Overlay */}
+      {showHomeSetup && (
+        <HomeSetup
+          onClose={handleHomeSetupClose}
+          onCancel={() => { setShowHomeSetup(false); continueStory(); }}
         />
       )}
 

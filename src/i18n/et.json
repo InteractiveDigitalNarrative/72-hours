@@ -483,6 +483,52 @@
     }
   },
 
+  "homeSetup": {
+    "title": "Kõnni oma kodu läbi",
+    "subtitle": "Märgi, mis su kodu kohta käib",
+    "realCheckNote": "🗒️ <strong>Vaata oma päriskodus ringi</strong> — aknad, uksed, torud. Ära pakkuda.",
+    "items": {
+      "apartment": "Korterelamu",
+      "exposed_layout": "Ülemine korrus / nurgakorter / eraldiseisev maja",
+      "old_windows": "Vanad või ühekordsed aknad",
+      "balcony_door": "Rõduuks või suur klaaspind",
+      "exposed_pipes": "Avatud torud (kelder, garaaž, välisseinad)",
+      "wood_stove": "Puuahi või kamin"
+    },
+    "continueBtn": "Vaata, millele keskenduda →",
+    "backBtn": "← Tagasi",
+    "summaryTitle": "Sinu kodu raport",
+    "summarySubtitle": "Mis on soojas püsimiseks kõige tähtsam",
+    "weakSpotsTitle": "Nõrgad kohad, millele keskenduda",
+    "weakSpotsEmpty": "Selgeid nõrku kohti pole — aga tihenda ikkagi enne tormi.",
+    "weakSpotLabels": {
+      "old_windows": "Vanad aknad (suurim soojakadu)",
+      "balcony_door": "Rõduuks / suur klaaspind",
+      "exposed_layout": "Ülemine korrus või eraldiseisev paigutus",
+      "exposed_pipes": "Avatud torud (lõhkemise oht)"
+    },
+    "tipsTitle": "Hea teada",
+    "tipLabels": {
+      "no_stove_aspirational": "Puuahju pole? Tihendamine ja sooja ruumi seadmine annavad ~80% kasust. Ahi on kuldne, kui see kunagi tuleb.",
+      "apartment_neighbors": "Korteris aitavad naabrite seinad — sulge vähem kasutatavate tubade uksed, et see soojus tööle panna."
+    },
+    "doneBtn": "Valmis — hakka ette valmistama",
+    "editBtn": "← Muuda valikuid"
+  },
+
+  "heatNote": {
+    "title": "Sinu kodu prioriteedid",
+    "covered": "tehtud",
+    "chips": {
+      "seal_weak_spots": "Tihenda nõrgad kohad",
+      "insulate_pipes": "Isoleeri avatud torud",
+      "concentrate_heat": "Koonda soojus ühte tuppa"
+    },
+    "tips": {
+      "no_stove": "Puuahju pole? Tihendamine + soe tuba on kõige suurema mõjuga sammud, mida saad teha."
+    }
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 — Öö",
     "nightSubtitle": "Vool on ära. Torm on liinid maha võtnud.",

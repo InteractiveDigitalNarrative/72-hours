@@ -483,6 +483,52 @@
     }
   },
 
+  "homeSetup": {
+    "title": "Walk Through Your Home",
+    "subtitle": "Tick what's true about where you live",
+    "realCheckNote": "🗒️ <strong>Look around your real home</strong> — windows, doors, pipes. Don't guess.",
+    "items": {
+      "apartment": "Apartment building",
+      "exposed_layout": "Top floor / corner / freestanding",
+      "old_windows": "Old or single-pane windows",
+      "balcony_door": "Balcony door or big glass",
+      "exposed_pipes": "Exposed pipes (basement, garage, outside wall)",
+      "wood_stove": "Wood stove or fireplace"
+    },
+    "continueBtn": "See what to focus on →",
+    "backBtn": "← Back",
+    "summaryTitle": "Your Home Report",
+    "summarySubtitle": "What matters most for keeping warm",
+    "weakSpotsTitle": "Weak spots to address",
+    "weakSpotsEmpty": "No obvious weak spots — still seal up before the storm.",
+    "weakSpotLabels": {
+      "old_windows": "Old windows (biggest heat loss)",
+      "balcony_door": "Balcony door / large glass area",
+      "exposed_layout": "Top-floor or freestanding layout",
+      "exposed_pipes": "Exposed pipes (burst risk)"
+    },
+    "tipsTitle": "Good to know",
+    "tipLabels": {
+      "no_stove_aspirational": "No wood stove? Sealing and a warm room cover ~80% of the win. A stove is gold if you ever add one.",
+      "apartment_neighbors": "In a flat, your neighbors' walls help — close doors to less-used rooms to use that warmth."
+    },
+    "doneBtn": "Done — start preparing",
+    "editBtn": "← Re-check"
+  },
+
+  "heatNote": {
+    "title": "Your home priorities",
+    "covered": "done",
+    "chips": {
+      "seal_weak_spots": "Seal weak spots",
+      "insulate_pipes": "Insulate exposed pipes",
+      "concentrate_heat": "Concentrate heat in one room"
+    },
+    "tips": {
+      "no_stove": "No wood stove? Sealing + a warm room are the highest-impact moves you can make."
+    }
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 AM — The Night",
     "nightSubtitle": "The power is out. The storm has taken down the lines.",
