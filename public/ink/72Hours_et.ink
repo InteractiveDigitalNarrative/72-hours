@@ -787,6 +787,7 @@ VAR light_candles = false
 VAR light_headlamp = false
 VAR light_lantern = false
 VAR light_powerbank = false
+VAR light_rationing = false
 
 // Määratud React LightAudit ülekatte poolt
 VAR light_audit_done = false
@@ -882,6 +883,7 @@ Taskulamp on turvaline, kohene ja ei tühjenda telefoni akut. Hoia seda kohas, m
 {light_lantern: ✓ Ruumivalgus valmis}
 {light_candles: ✓ Küünlad ja tikud (varuks)}
 {light_powerbank: ✓ Akupank laetud}
+{light_rationing: ✓ Plaan, kuidas see vastu peaks}
 
 Mida soovid teha?
 
@@ -917,6 +919,11 @@ Mida soovid teha?
     ~ light_powerbank = true
     ~ current_time = current_time + 2
     -> light_result_powerbank
+
++ {not light_rationing} [🔆 Planeeri, kuidas valgus vastu peaks — 2 min]
+    ~ light_rationing = true
+    ~ current_time = current_time + 2
+    -> light_result_rationing
 
 + [✓ Valgusega valmis]
     -> light_complete
@@ -1046,15 +1053,35 @@ Kogud majast küünlad kokku ja leiad köögisahtlist tikud. Paned need stabiils
 + [Jätka]
     -> light_hub
 
+=== light_result_rationing ===
+# CLEAR
+
+Mõtled tänasest ööst kaugemale — elekter võib olla väljas kolm päeva, mitte kolm tundi.
+
+Teed plaani: kasuta <b>madalaimat heledust</b>, mis on piisav, valgusta <b>ainult tuba, kus oled</b>, ja lülita välja kohe, kui lahkud. Akunäljased tööd — toidu valmistamine, vee toomine, koristamine — teed <b>seni, kuni veel päevavalgus on</b>, hoides valgustid pimeda jaoks.
+
+<b>Valgusallikas on väärt vaid niikaua, kui see vastu peab. Säästmine võib muuta ühe öö elektri kolmeks.</b>
+
+Varuks, mis kunagi tühjaks ei saa, paned tähele kaht võimalust: su <b>auto saab telefone laadida</b> USB-pesa kaudu ja <b>vända- või päikesevalgusti</b> ei vaja patareisid üldse. Ja hoiad valgust mitmes kohas — magamistoas, köögis ja väljapääsu juures.
+
++ [Jätka]
+    -> light_hub
+
 === light_complete ===
 # CLEAR
 
 {
+    - light_flashlight && (light_batteries || shop_batteries) && (light_headlamp || light_lantern) && light_powerbank && light_rationing:
+        ~ prep_light = 2
+        <b>Täielikult ettevalmistatud!</b>
+
+        Taskulamp uute patareidega, käed-vabad või ruumivalgus, laetud akupank — ja plaan, kuidas see kõik kolm ööd vastu peaks. Pimedus ei üllata sind.
+
     - light_flashlight && (light_batteries || shop_batteries) && (light_headlamp || light_lantern) && light_powerbank:
         ~ prep_light = 2
         <b>Hästi ettevalmistatud!</b>
 
-        Taskulamp uute patareidega, käed-vabad või ruumivalgus valmis ja laetud akupank telefonile. Pimedus ei üllata sind.
+        Taskulamp uute patareidega, käed-vabad või ruumivalgus valmis ja laetud akupank telefonile. Üks asi jääb veel mõelda: kuidas panna see kõik vastu pidama kolm ööd, mitte kolm tundi.
 
     - light_flashlight && (light_batteries || shop_batteries):
         ~ prep_light = 2
@@ -1506,6 +1533,14 @@ Elekter on ära. Torm pidi liinid maha võtma.
         Käsi leiab taskulambi täpselt sealt, kuhu selle panid — pimedusest välja {search_seconds} sekundiga. {light_batteries || shop_batteries: Tugev ja ere.| Kiir on nõrk — patareid on peaaegu tühjad — aga töötab.} Telefon jääb taskusse.
     - else:
         Leiad selle lõpuks — aga alles pärast {search_seconds} pikka, ärevat sekundit pilkases pimeduses sahtlites tuhnimist. {light_batteries || shop_batteries: Vähemalt on kiir tugev.| Ja kiir on nõrk; patareid on peaaegu tühjad.}
+}
+
+{search_found:
+    {light_rationing:
+        Hoiad seda madalaimal kasulikul seadel ja lülitad välja alati, kui seda vaja pole — see peab vastu pidama päevi, mitte tunde.
+    - else:
+        Jätad selle eredalt põlema, mõtlemata veel, mitu ööd see valgus peab venima.
+    }
 }
 
 <b>Taskulamp kohas, mille saad voodist kätte, muudab hirmutava pimedas rabelemise mõneks sekundiks. Otsusta koht — ja veendu, et kõik teavad seda.</b>

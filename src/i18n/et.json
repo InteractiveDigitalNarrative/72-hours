@@ -569,7 +569,8 @@
       "get_flashlight": "Korralda eraldi taskulamp",
       "get_handsfree": "Sea üles käed-vabad valgus (pealamp)",
       "get_area": "Sea üles ruumivalgus (latern)",
-      "charge_powerbank": "Lae telefoni jaoks akupank"
+      "charge_powerbank": "Lae telefoni jaoks akupank",
+      "make_it_last": "Planeeri, kuidas valgus 3 ööd vastu peaks"
     },
     "tips": {
       "candle_safety": "Kasutad küünlaid? Hoia need süttivatest asjadest eemal ja ära jäta kunagi järelevalveta."

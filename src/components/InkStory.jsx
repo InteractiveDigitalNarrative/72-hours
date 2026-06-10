@@ -377,6 +377,7 @@ function InkStory({ onReturnToMenu }) {
       light_headlamp: story.variablesState["light_headlamp"],
       light_lantern: story.variablesState["light_lantern"],
       light_powerbank: story.variablesState["light_powerbank"],
+      light_rationing: story.variablesState["light_rationing"],
       flashlight_spot: story.variablesState["flashlight_spot"],
       // Ending tracking
       ending_type: story.variablesState["ending_type"],
@@ -1165,6 +1166,7 @@ function InkStory({ onReturnToMenu }) {
                       headlamp:  !!gameVars.light_headlamp,
                       lantern:   !!gameVars.light_lantern,
                       powerbank: !!gameVars.light_powerbank,
+                      rationing: !!gameVars.light_rationing,
                     }}
                   />
                 )}

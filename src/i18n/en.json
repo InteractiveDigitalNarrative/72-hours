@@ -569,7 +569,8 @@
       "get_flashlight": "Sort out a dedicated flashlight",
       "get_handsfree": "Set up a hands-free light (headlamp)",
       "get_area": "Set up an area light (lantern)",
-      "charge_powerbank": "Charge a power bank for your phone"
+      "charge_powerbank": "Charge a power bank for your phone",
+      "make_it_last": "Plan how to make your light last 3 nights"
     },
     "tips": {
       "candle_safety": "Using candles? Keep them away from anything that burns and never leave them unattended."

@@ -787,6 +787,7 @@ VAR light_candles = false
 VAR light_headlamp = false
 VAR light_lantern = false
 VAR light_powerbank = false
+VAR light_rationing = false
 
 // Set by the React LightAudit overlay
 VAR light_audit_done = false
@@ -882,6 +883,7 @@ A flashlight is safe, instant, and doesn't drain your phone. Keep it somewhere e
 {light_lantern: ✓ Area light ready}
 {light_candles: ✓ Candles & matches (backup)}
 {light_powerbank: ✓ Power bank charged}
+{light_rationing: ✓ Plan to make it last}
 
 What do you want to do?
 
@@ -917,6 +919,11 @@ What do you want to do?
     ~ light_powerbank = true
     ~ current_time = current_time + 2
     -> light_result_powerbank
+
++ {not light_rationing} [🔆 Plan how to make your light last — 2 min]
+    ~ light_rationing = true
+    ~ current_time = current_time + 2
+    -> light_result_rationing
 
 + [✓ Done with light]
     -> light_complete
@@ -1046,15 +1053,35 @@ You gather candles from around the house and find a box of matches in the kitche
 + [Continue]
     -> light_hub
 
+=== light_result_rationing ===
+# CLEAR
+
+You think past tonight — the power could be out for three days, not three hours.
+
+You make a plan: use the <b>lowest brightness</b> that's enough, light <b>only the room you're in</b>, and switch off the moment you leave. The battery-hungry jobs — cooking, fetching water, tidying — you'll do <b>while there's still daylight</b>, saving your lights for the dark.
+
+<b>A light source is only as good as how long it lasts. Rationing can turn one night of power into three.</b>
+
+For backup that never runs flat, you note two options: your <b>car can charge phones</b> through its USB port, and a <b>hand-crank or solar light</b> needs no batteries at all. And you keep a light in more than one place — bedroom, kitchen, and by an exit.
+
++ [Continue]
+    -> light_hub
+
 === light_complete ===
 # CLEAR
 
 {
+    - light_flashlight && (light_batteries || shop_batteries) && (light_headlamp || light_lantern) && light_powerbank && light_rationing:
+        ~ prep_light = 2
+        <b>Fully prepared!</b>
+
+        A flashlight with fresh batteries, a hands-free or area light, a charged power bank — and a plan to make it all last three nights. You won't be caught in the dark.
+
     - light_flashlight && (light_batteries || shop_batteries) && (light_headlamp || light_lantern) && light_powerbank:
         ~ prep_light = 2
         <b>Well prepared!</b>
 
-        A flashlight with fresh batteries, a hands-free or area light ready, and a charged power bank for your phone. You won't be caught in the dark.
+        A flashlight with fresh batteries, a hands-free or area light ready, and a charged power bank for your phone. One thing left to think about: how to make it all last three nights, not three hours.
 
     - light_flashlight && (light_batteries || shop_batteries):
         ~ prep_light = 2
@@ -1506,6 +1533,14 @@ The power is out. The storm must have taken down the lines.
         Your hand finds the flashlight exactly where you left it — out of the dark in {search_seconds} seconds. {light_batteries || shop_batteries: Steady and bright.| The beam is weak — the batteries are nearly gone — but it works.} Your phone stays in your pocket.
     - else:
         You find it eventually — but only after {search_seconds} long, anxious seconds of fumbling through drawers in the pitch black. {light_batteries || shop_batteries: At least the beam is strong.| And the beam is weak; the batteries are nearly gone.}
+}
+
+{search_found:
+    {light_rationing:
+        You keep it on its lowest useful setting and switch it off whenever you don't need it — this has to last for days, not hours.
+    - else:
+        You leave it burning bright, not yet thinking about how many more nights this light has to stretch.
+    }
 }
 
 <b>A flashlight in a spot you can reach from bed turns a frightening scramble in the dark into a few seconds. Decide the spot — and make sure everyone knows it.</b>

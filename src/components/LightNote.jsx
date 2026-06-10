@@ -45,6 +45,13 @@ function LightNote({ lightResult, done }) {
     });
   }
 
+  // Making light last 72 hours matters for everyone, regardless of what they own
+  chips.push({
+    key: 'make_it_last',
+    label: t('lightNote.chips.make_it_last'),
+    covered: !!done?.rationing,
+  });
+
   if (chips.length === 0) return null;
 
   const covered = chips.filter(c => c.covered).length;
