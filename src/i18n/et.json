@@ -605,6 +605,58 @@
     "continue": "Jätka"
   },
 
+  "rumorSort": {
+    "title": "Signaal vs müra",
+    "summaryTitle": "Signaal vs müra",
+    "subtitle": "Tormi lähenedes voolab teateid sisse. Mida teed igaühega?",
+    "officialBadge": "Ametlik",
+    "verdicts": {
+      "trust": "Usalda",
+      "verify": "Kontrolli",
+      "ignore": "Eira"
+    },
+    "correct": "Hea valik.",
+    "incorrect": "Ettevaatust.",
+    "shouldBe": "parem oleks",
+    "scoreLabel": "õigesti sorteeritud",
+    "next": "Edasi",
+    "seeResult": "Vaata tulemust",
+    "done": "Jätka",
+    "takeaway": "<strong>Usalda</strong> ametlikke allikaid — EE-ALARM teade telefonis, hädaolukorra teade Vikerraadios või kriis.ee. <strong>Kontrolli</strong> kõike usutavat, kuid kinnitamata, enne kui tegutsed. <strong>Eira</strong> — ja ära kunagi edasta — teateid, mis põhinevad kiirustamisel, salatsemisel või 'jaga kohe'. Kriisis võib kuulujutt, mille levitad, päriselt kahju teha.",
+    "messages": {
+      "gov_alert": {
+        "channel": "EE-ALARM",
+        "text": "Riiklik hädaolukorra teade: öösel tugev torm. Püsi siseruumides. Võimalik 24–48h elektrikatkestus. Jälgi ametlikke kanaleid.",
+        "why": "See on ametlik rahva hoiatussüsteem. Usalda ja tegutse selle järgi."
+      },
+      "water_poison": {
+        "channel": "Sotsiaalmeedia",
+        "text": "🚨 Kraanivesi on linnas SAASTUNUD!! Võimud varjavad seda — JAGA, enne kui see kustutatakse!!",
+        "why": "Kiirustamine, salatsemine, 'jaga enne kustutamist' ja ükski ametlik allikas ei kinnita — õpikunäide kuulujutust. Ära tegutse selle järgi ega levita seda."
+      },
+      "free_fuel": {
+        "channel": "Grupivestlus",
+        "text": "Naaber ütleb, et nurga peal tanklas jagatakse tasuta kütust — juba pikk järjekord.",
+        "why": "Usutav, aga kuulujutt, mis võib saata ohtliku rahvamassi tormama. Ära edasta; kontrolli ametlikust allikast enne tegutsemist."
+      },
+      "radio_advice": {
+        "channel": "Vikerraadio",
+        "text": "Hädaolukorra teade: Päästeamet soovitab seadmed kohe laadida ja kontrollida eakaid naabreid. Elekter tagasi ~36 tunni jooksul.",
+        "why": "Ametlik hädaolukorra raadio, mis edastab võimude nõuandeid. Usaldusväärne — tegutse selle järgi."
+      },
+      "chain_forward": {
+        "channel": "Edastatud sõnum",
+        "text": "⚠ Edasta see 10 inimesele tunni jooksul, muidu hädaabi teavitussüsteem lülitub su piirkonnas välja!",
+        "why": "Ahelkirja hirmutamine. Päris hoiatussüsteemid niimoodi ei tööta. Eira ja ära kunagi edasta."
+      },
+      "bridge_photo": {
+        "channel": "Sotsiaalmeedia",
+        "text": "Levib foto kokkuvarisenud sillast peateel — kas see on ehtne?",
+        "why": "Foto võib olla vana või hoopis mujalt. Kontrolli ametlikust infost enne uskumist või jagamist."
+      }
+    }
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 — Öö",
     "nightSubtitle": "Vool on ära. Torm on liinid maha võtnud.",

@@ -1110,9 +1110,16 @@ For backup that never runs flat, you note two options: your <b>car can charge ph
 VAR info_radio = false
 VAR info_radio_batteries = false
 VAR info_phone_charged = false
+VAR info_contact_plan = false
+// Set by the React RumorSort overlay
+VAR info_drill_done = false
+VAR info_drill_score = 0
 
 === category_info ===
 # CLEAR
+{not info_drill_done:
+    -> info_drill
+}
 
 {
     - prep_info == 0:
@@ -1181,6 +1188,8 @@ Phone calls drain battery, and your friend probably knows as much as you do. In 
 {info_radio: ✓ Radio found}
 {info_radio_batteries: ✓ Radio batteries}
 {info_phone_charged: ✓ Phone charged & ready}
+{info_drill_done: ✓ Practised spotting rumors}
+{info_contact_plan: ✓ Contact plan agreed}
 
 + {not info_radio} [📻 Find the battery radio — 3 min]
     ~ info_radio = true
@@ -1200,18 +1209,47 @@ Phone calls drain battery, and your friend probably knows as much as you do. In 
     ~ current_time = current_time + 2
     -> info_result_phone
 
++ {not info_contact_plan} [📋 Agree how to reach each other — 2 min]
+    ~ info_contact_plan = true
+    ~ current_time = current_time + 2
+    -> info_result_contact_plan
+
 + [✓ Done with information]
     -> info_complete
 
 + [← Back to preparation]
     -> preparation_hub
 
+=== info_drill ===
+# CLEAR
+# RUMOR_SORT
+-> info_drill_result
+
+=== info_drill_result ===
+# CLEAR
+
+{
+    - info_drill_score >= 5:
+        <b>Sharp eye.</b> You sorted the official alerts from the panic with barely a slip.
+    - info_drill_score >= 3:
+        <b>Not bad.</b> You caught most of the rumors — a couple slipped past.
+    - else:
+        <b>Tricky, isn't it?</b> Several rumors got past you. In a real crisis that's how panic spreads.
+}
+
+The rule that holds up: <b>trust official sources, verify anything unconfirmed before you act, and never forward what you can't stand behind.</b> A calm head is part of being prepared.
+
++ [Continue]
+    -> category_info
+
 === info_result_radio ===
 # CLEAR
 
-You dig through the hall closet and find the old battery radio. You turn the dial — static, then faint voices. The emergency broadcast frequency still works.
+You dig through the hall closet and find the old battery radio. You turn the dial — static, then faint voices. The emergency broadcast still comes through.
 
 <b>The batteries are low though. It might last a few hours at most.</b>
+
+A radio is your lifeline when the internet and mobile network go down. In Estonia, official emergency information goes out over <b>Vikerraadio</b>, alongside <b>EE-ALARM</b> alerts to your phone and updates on <b>kriis.ee</b> — worth knowing where to turn before you need it.
 
 + [Continue]
     -> info_hub
@@ -1252,15 +1290,36 @@ While it charges, you switch on power saving mode and turn off background apps.
 + [Continue]
     -> info_hub
 
+=== info_result_contact_plan ===
+# CLEAR
+
+You take two minutes to agree how you'll stay in touch if the storm separates you or the network jams.
+
+<b>Your plan:</b>
+• <b>Text, don't call</b> — short messages get through when congested networks block voice calls, and they sip far less battery.
+• Pick <b>one out-of-area contact</b> everyone messages to relay news — often easier to reach than each other.
+• Agree a simple <b>meeting point</b>, and who checks on whom.
+
+Exactly who's on the list is up to your household — the point is that everyone knows the plan before they need it.
+
++ [Continue]
+    -> info_hub
+
 === info_complete ===
 # CLEAR
 
 {
-    - info_radio && (info_radio_batteries || shop_batteries) && info_phone_charged:
+    - info_radio && (info_radio_batteries || shop_batteries) && info_phone_charged && info_drill_done:
         ~ prep_info = 2
         <b>Fully prepared!</b>
 
-        Radio ready with batteries, phone charged and in power-save mode. You'll stay informed no matter what.
+        Radio ready with batteries, phone charged and in power-save mode — and a clear head for telling real alerts from rumors. You'll stay informed no matter what.
+
+    - info_radio && (info_radio_batteries || shop_batteries) && info_phone_charged:
+        ~ prep_info = 2
+        <b>Well prepared.</b>
+
+        Radio ready, phone charged. {info_drill_done: | One thing left: practise telling official alerts from the rumors that fly in a crisis.}
 
     - info_radio:
         <b>Basic preparation.</b>

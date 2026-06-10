@@ -20,6 +20,7 @@ import HeatNote from './HeatNote';
 import LightAudit from './LightAudit';
 import LightNote from './LightNote';
 import FlashlightSearch from './FlashlightSearch';
+import RumorSort from './RumorSort';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -168,6 +169,9 @@ function InkStory({ onReturnToMenu }) {
 
   // Crisis-night flashlight search mini-game
   const [showFlashlightSearch, setShowFlashlightSearch] = useState(false);
+
+  // Information "Signal vs Noise" rumor-sorting mini-game
+  const [showRumorSort, setShowRumorSort] = useState(false);
 
   // Tracks the current Ink scene (set by tags like HEAT_HUB) so widgets can show/hide
   const [currentScene, setCurrentScene] = useState(null);
@@ -520,6 +524,14 @@ function InkStory({ onReturnToMenu }) {
         // Check for FLASHLIGHT_SEARCH tag — crisis-night dark search mini-game
         if (tag === 'FLASHLIGHT_SEARCH') {
           setShowFlashlightSearch(true);
+          setStoryText(lines);
+          setChoices([]);
+          return;
+        }
+
+        // Check for RUMOR_SORT tag — Signal vs Noise mini-game
+        if (tag === 'RUMOR_SORT') {
+          setShowRumorSort(true);
           setStoryText(lines);
           setChoices([]);
           return;
@@ -885,6 +897,19 @@ function InkStory({ onReturnToMenu }) {
     story.variablesState["search_seconds"]    = result?.seconds ?? 0;
     story.variablesState["search_found"]      = !!result?.foundIt;
     story.variablesState["search_known_spot"] = !!result?.usedKnownSpot;
+
+    continueStory();
+  };
+
+  // RUMOR SORT (Signal vs Noise) HANDLER
+  // ============================================
+  const handleRumorSortClose = (result) => {
+    setShowRumorSort(false);
+
+    const story = storyRef.current;
+    if (!story) return;
+    story.variablesState["info_drill_done"]  = true;
+    story.variablesState["info_drill_score"] = result?.correct ?? 0;
 
     continueStory();
   };
@@ -1562,6 +1587,11 @@ function InkStory({ onReturnToMenu }) {
           }
           onClose={handleFlashlightSearchClose}
         />
+      )}
+
+      {/* Information "Signal vs Noise" rumor game */}
+      {showRumorSort && (
+        <RumorSort onClose={handleRumorSortClose} />
       )}
 
       {/* Floating Settings Button */}

@@ -1,0 +1,249 @@
+/* ============================================
+   RUMOR SORT — Signal vs Noise mini-game
+   ============================================ */
+
+.rs-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 10, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 2500;
+  backdrop-filter: blur(8px);
+  animation: rs-fade 0.3s ease;
+  padding: var(--top-bar-height, 60px) 20px var(--bottom-bar-height, 20px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 160, 255, 0.3) transparent;
+}
+
+@keyframes rs-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.rs-panel {
+  background: linear-gradient(145deg, #141c2a, #1a2438);
+  border: 1px solid rgba(70, 130, 210, 0.25);
+  border-radius: 20px;
+  padding: clamp(18px, 3vh, 32px) clamp(18px, 4vw, 30px);
+  max-width: 520px;
+  width: 100%;
+  margin: auto 0;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(70, 130, 210, 0.08);
+  animation: rs-up 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2.5vh, 18px);
+}
+
+@keyframes rs-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Header ──────────────────────────────── */
+
+.rs-icon {
+  display: block;
+  font-size: clamp(26px, 5vh, 38px);
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.rs-header { text-align: center; }
+
+.rs-header h2 {
+  color: #dceeff;
+  font-size: clamp(16px, 2.5vh, 22px);
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.rs-subtitle {
+  color: #7ba0c4;
+  font-size: clamp(12px, 1.6vh, 14px);
+  margin: 0;
+}
+
+/* ── Progress dots ───────────────────────── */
+
+.rs-progress {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+.rs-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(120, 160, 200, 0.25);
+  transition: all 0.2s ease;
+}
+
+.rs-dot-done { background: rgba(120, 200, 160, 0.6); }
+.rs-dot-on   { background: #6fb6ff; transform: scale(1.35); box-shadow: 0 0 8px rgba(110, 180, 255, 0.6); }
+
+/* ── Message card ────────────────────────── */
+
+.rs-message {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(120, 160, 200, 0.2);
+  border-left: 3px solid rgba(150, 160, 175, 0.6);
+  border-radius: 12px;
+  padding: 14px 16px;
+  animation: rs-fade 0.3s ease;
+}
+
+.rs-message-official {
+  border-left-color: #5fd08a;
+  background: rgba(95, 208, 138, 0.06);
+}
+
+.rs-message-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.rs-channel {
+  color: #9fb4cc;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.rs-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #0d1f15;
+  background: #5fd08a;
+  border-radius: 20px;
+  padding: 2px 8px;
+  letter-spacing: 0.3px;
+}
+
+.rs-message-text {
+  color: #e6f0fb;
+  font-size: clamp(13px, 1.9vh, 15px);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ── Verdict buttons ─────────────────────── */
+
+.rs-verdicts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.rs-verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(120, 160, 200, 0.25);
+  border-radius: 12px;
+  padding: 12px 6px;
+  color: #cfe2f5;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rs-verdict-emoji { font-size: 22px; line-height: 1; }
+
+.rs-verdict-trust:hover  { background: rgba(95, 208, 138, 0.16); border-color: rgba(95, 208, 138, 0.6); }
+.rs-verdict-verify:hover { background: rgba(240, 190, 90, 0.16); border-color: rgba(240, 190, 90, 0.6); }
+.rs-verdict-ignore:hover { background: rgba(240, 110, 110, 0.16); border-color: rgba(240, 110, 110, 0.6); }
+
+/* ── Feedback ────────────────────────────── */
+
+.rs-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: rs-fade 0.3s ease;
+}
+
+.rs-feedback-verdict {
+  font-size: clamp(13px, 1.8vh, 15px);
+  font-weight: 700;
+  margin: 0;
+}
+
+.rs-right { color: #7fe0a6; }
+.rs-wrong { color: #ff9b9b; }
+
+.rs-answer { color: #d6b87a; font-weight: 600; }
+
+.rs-why {
+  color: #c2d4e8;
+  font-size: clamp(12px, 1.6vh, 13.5px);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Summary ─────────────────────────────── */
+
+.rs-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.rs-score-num {
+  color: #6fb6ff;
+  font-size: clamp(34px, 6vh, 48px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.rs-score-den { color: #5a7898; font-size: 0.5em; font-weight: 600; }
+
+.rs-score-label {
+  color: #8aa6c2;
+  font-size: 12px;
+}
+
+.rs-takeaway {
+  background: rgba(80, 130, 180, 0.08);
+  border: 1px dashed rgba(120, 180, 230, 0.3);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #c8dcf0;
+  font-size: clamp(12px, 1.6vh, 13.5px);
+  line-height: 1.5;
+}
+
+.rs-takeaway strong { color: #9fd0ff; }
+
+/* ── Primary button ──────────────────────── */
+
+.rs-btn-primary {
+  background: linear-gradient(135deg, #2e6bb5, #3680d1);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  padding: 12px 20px;
+  font-size: clamp(13px, 1.8vh, 15px);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(50, 110, 200, 0.35);
+  transition: filter 0.15s ease;
+}
+
+.rs-btn-primary:hover { filter: brightness(1.12); }

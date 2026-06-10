@@ -1110,9 +1110,16 @@ Varuks, mis kunagi tühjaks ei saa, paned tähele kaht võimalust: su <b>auto sa
 VAR info_radio = false
 VAR info_radio_batteries = false
 VAR info_phone_charged = false
+VAR info_contact_plan = false
+// Määratud React RumorSort ülekatte poolt
+VAR info_drill_done = false
+VAR info_drill_score = 0
 
 === category_info ===
 # CLEAR
+{not info_drill_done:
+    -> info_drill
+}
 
 {
     - prep_info == 0:
@@ -1181,6 +1188,8 @@ Telefonikõned kulutavad akut ja sinu sõber teab ilmselt sama palju kui sina. K
 {info_radio: ✓ Raadio leitud}
 {info_radio_batteries: ✓ Raadio patareid}
 {info_phone_charged: ✓ Telefon laetud ja valmis}
+{info_drill_done: ✓ Harjutasid kuulujuttude äratundmist}
+{info_contact_plan: ✓ Sidepidamise plaan kokku lepitud}
 
 + {not info_radio} [📻 Otsi patareiraadio — 3 min]
     ~ info_radio = true
@@ -1200,18 +1209,47 @@ Telefonikõned kulutavad akut ja sinu sõber teab ilmselt sama palju kui sina. K
     ~ current_time = current_time + 2
     -> info_result_phone
 
++ {not info_contact_plan} [📋 Leppige kokku, kuidas üksteiseni jõuda — 2 min]
+    ~ info_contact_plan = true
+    ~ current_time = current_time + 2
+    -> info_result_contact_plan
+
 + [✓ Infoga valmis]
     -> info_complete
 
 + [← Tagasi ettevalmistustesse]
     -> preparation_hub
 
+=== info_drill ===
+# CLEAR
+# RUMOR_SORT
+-> info_drill_result
+
+=== info_drill_result ===
+# CLEAR
+
+{
+    - info_drill_score >= 5:
+        <b>Terav silm.</b> Erisid ametlikud hoiatused paanikast peaaegu eksimatult.
+    - info_drill_score >= 3:
+        <b>Pole paha.</b> Tabasid enamiku kuulujuttudest — paar libises läbi.
+    - else:
+        <b>Keeruline, eks?</b> Mitu kuulujuttu pääses läbi. Päris kriisis just nii paanika levibki.
+}
+
+Reegel, mis peab: <b>usalda ametlikke allikaid, kontrolli kõike kinnitamata enne tegutsemist ja ära kunagi edasta seda, mille taga sa seista ei saa.</b> Rahulik pea on osa valmisolekust.
+
++ [Jätka]
+    -> category_info
+
 === info_result_radio ===
 # CLEAR
 
-Tuhnid esikukapis ja leiad vana patareiraadio. Keerad nuppu — kõigepealt staatiline müra, siis nõrgad hääled. Hädaolukorra sagedus töötab veel.
+Tuhnid esikukapis ja leiad vana patareiraadio. Keerad nuppu — kõigepealt staatiline müra, siis nõrgad hääled. Hädaolukorra teade tuleb ikka läbi.
 
 <b>Patareid on aga nõrgad. Ehk peab vastu paar tundi.</b>
+
+Raadio on su elujoon, kui internet ja mobiililevi kaovad. Eestis edastatakse ametlikku hädainfot <b>Vikerraadios</b>, lisaks <b>EE-ALARM</b> hoiatused telefoni ja uuendused <b>kriis.ee</b> lehel — tasub teada, kuhu pöörduda, enne kui vaja läheb.
 
 + [Jätka]
     -> info_hub
@@ -1252,15 +1290,36 @@ Laadimise ajal lülitad sisse energiasäästurežiimi ja sulged taustarakendused
 + [Jätka]
     -> info_hub
 
+=== info_result_contact_plan ===
+# CLEAR
+
+Võtad kaks minutit, et leppida kokku, kuidas püsite ühenduses, kui torm teid lahutab või võrk ummistub.
+
+<b>Teie plaan:</b>
+• <b>Saada sõnum, ära helista</b> — lühikesed sõnumid jõuavad kohale ka siis, kui ülekoormatud võrk kõnesid blokeerib, ja kulutavad palju vähem akut.
+• Valige <b>üks väljaspool piirkonda asuv kontakt</b>, kellele kõik sõnumi saadavad ja kes uudiseid edastab — sageli kergem tabada kui üksteist.
+• Leppige kokku lihtne <b>kohtumispaik</b> ja kes keda kontrollib.
+
+Kes täpselt nimekirjas on, sõltub teie perest — oluline on, et kõik teaksid plaani enne, kui seda vaja läheb.
+
++ [Jätka]
+    -> info_hub
+
 === info_complete ===
 # CLEAR
 
 {
-    - info_radio && (info_radio_batteries || shop_batteries) && info_phone_charged:
+    - info_radio && (info_radio_batteries || shop_batteries) && info_phone_charged && info_drill_done:
         ~ prep_info = 2
         <b>Täielikult ettevalmistatud!</b>
 
-        Raadio patareidega valmis, telefon laetud ja energiasäästurežiimis. Sa oled informeeritud olenemata olukorrast.
+        Raadio patareidega valmis, telefon laetud ja energiasäästurežiimis — ja selge pea, et eristada päris hoiatusi kuulujuttudest. Sa oled informeeritud olenemata olukorrast.
+
+    - info_radio && (info_radio_batteries || shop_batteries) && info_phone_charged:
+        ~ prep_info = 2
+        <b>Hästi ettevalmistatud.</b>
+
+        Raadio valmis, telefon laetud. {info_drill_done: | Üks asi jääb: harjuta eristama ametlikke hoiatusi kuulujuttudest, mis kriisis lendavad.}
 
     - info_radio:
         <b>Põhiline ettevalmistus.</b>

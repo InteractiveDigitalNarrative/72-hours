@@ -605,6 +605,58 @@
     "continue": "Continue"
   },
 
+  "rumorSort": {
+    "title": "Signal vs Noise",
+    "summaryTitle": "Signal vs Noise",
+    "subtitle": "Messages are flooding in as the storm builds. What do you do with each?",
+    "officialBadge": "Official",
+    "verdicts": {
+      "trust": "Trust",
+      "verify": "Verify",
+      "ignore": "Ignore"
+    },
+    "correct": "Good call.",
+    "incorrect": "Careful.",
+    "shouldBe": "better to",
+    "scoreLabel": "sorted well",
+    "next": "Next",
+    "seeResult": "See result",
+    "done": "Continue",
+    "takeaway": "<strong>Trust</strong> official sources — an EE-ALARM phone alert, the emergency broadcast on Vikerraadio, or kriis.ee. <strong>Verify</strong> anything plausible but unconfirmed before acting on it. <strong>Ignore</strong> — and never forward — messages built on urgency, secrecy, or 'share now'. In a crisis, a rumour you spread can do real harm.",
+    "messages": {
+      "gov_alert": {
+        "channel": "EE-ALARM",
+        "text": "Government emergency alert: severe storm overnight. Stay indoors. Power outages of 24–48h possible. Follow official channels.",
+        "why": "This is the official public warning system. Trust it and act on it."
+      },
+      "water_poison": {
+        "channel": "Social media",
+        "text": "🚨 The tap water is CONTAMINATED across the city!! Authorities are hiding it — SHARE before this gets deleted!!",
+        "why": "Urgency, secrecy, 'share before it's deleted', and no official source — a textbook rumour. Don't act on it, and don't spread it."
+      },
+      "free_fuel": {
+        "channel": "Group chat",
+        "text": "My neighbour says the petrol station on the corner is giving out free fuel — huge queue already.",
+        "why": "Plausible, but it's hearsay that could send a dangerous crowd rushing out. Don't pass it on; check an official source before acting."
+      },
+      "radio_advice": {
+        "channel": "Vikerraadio",
+        "text": "Emergency broadcast: the Rescue Board advises charging your devices now and checking on elderly neighbours. Power is expected back within ~36 hours.",
+        "why": "The official emergency broadcaster carrying authorities' advice. Trustworthy — act on it."
+      },
+      "chain_forward": {
+        "channel": "Forwarded message",
+        "text": "⚠ Forward this to 10 people within the hour or the emergency alert network will shut down in your area!",
+        "why": "A chain-letter scare. Real alert systems don't work this way. Ignore it and never forward it."
+      },
+      "bridge_photo": {
+        "channel": "Social media",
+        "text": "A photo is going around of a collapsed bridge on the main road — is it real?",
+        "why": "A photo can be old or from somewhere else entirely. Verify against official info before believing or sharing it."
+      }
+    }
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 AM — The Night",
     "nightSubtitle": "The power is out. The storm has taken down the lines.",
