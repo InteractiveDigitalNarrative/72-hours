@@ -796,6 +796,14 @@ VAR owns_lantern = false
 VAR owns_candles = false
 VAR owns_powerbank = false
 
+// Where the flashlight is kept: -1 undecided, 0 nowhere/drawer, 1 hallway, 2 bedside
+VAR flashlight_spot = -1
+// Crisis-night dark search (React FlashlightSearch overlay)
+VAR flashlight_search_done = false
+VAR search_seconds = 0
+VAR search_found = false
+VAR search_known_spot = false
+
 === category_light ===
 # CLEAR
 {not light_audit_done:
@@ -927,6 +935,36 @@ What do you want to do?
     You don't have a dedicated flashlight here — and that's the single most important light to own. You put it at the very top of your shopping list.
 
     <b>A handheld flashlight is safe, instant, and won't drain the phone you need for calls. Aim for at least one per person, kept somewhere everyone can find in the dark.</b>
+}
+
+Now decide where it lives — so you can find it the moment the lights go out.
+
++ [🛏️ On the bedside table — within reach of bed]
+    ~ flashlight_spot = 2
+    -> light_spot_result
++ [🚪 By the front door / in the hallway]
+    ~ flashlight_spot = 1
+    -> light_spot_result
++ [🗄️ Just toss it back in the junk drawer]
+    ~ flashlight_spot = 0
+    -> light_spot_result
+
+=== light_spot_result ===
+# CLEAR
+
+{
+    - flashlight_spot == 2:
+        You set it on the bedside table. If the power dies at night, your hand finds it before your feet hit the floor.
+
+        <b>Best spot of all — a light you can reach without standing up in the dark is the one that prevents falls.</b>
+    - flashlight_spot == 1:
+        You leave it on the hallway shelf by the door, where the whole household passes and everyone can find it.
+
+        <b>A shared, known spot beats a hidden one. Even better if you keep a second light by the bed.</b>
+    - else:
+        You drop it back in the junk drawer with the tape and old cables.
+
+        <b>Out of sight, out of mind — in a real blackout you'd be digging through clutter in the pitch dark. Pick one spot everyone knows.</b>
 }
 
 + [Continue]
@@ -1445,7 +1483,14 @@ You wake up. The storm has arrived — wind hammering the walls, rattling the wi
 The power is out. The storm must have taken down the lines.
 
 * [Reach for a light]
-    -> crisis_night
+    -> reach_for_light
+
+=== reach_for_light ===
+# CLEAR
+{not flashlight_search_done:
+    # FLASHLIGHT_SEARCH
+}
+-> crisis_night
 
 // ============================================
 // CRISIS — NIGHT
@@ -1455,13 +1500,15 @@ The power is out. The storm must have taken down the lines.
 # CONSEQUENCE: light
 
 {
-    - prep_light == 0:
-        You feel around in the dark for your phone. The screen flicks on — bright enough, but not made for this. By morning, the battery is at 23%.
-    - prep_light == 1:
-        You find the flashlight by memory and click it on. The beam is weak, flickering — the batteries are nearly gone. You use it sparingly.
+    - not search_found:
+        You never get a proper light in your hands. Your phone screen lights the way — bright enough, but not made for this. By morning, the battery is at 23%.
+    - search_known_spot:
+        Your hand finds the flashlight exactly where you left it — out of the dark in {search_seconds} seconds. {light_batteries || shop_batteries: Steady and bright.| The beam is weak — the batteries are nearly gone — but it works.} Your phone stays in your pocket.
     - else:
-        Your hand finds the flashlight exactly where you left it. Steady, bright. Your phone stays in your pocket.
+        You find it eventually — but only after {search_seconds} long, anxious seconds of fumbling through drawers in the pitch black. {light_batteries || shop_batteries: At least the beam is strong.| And the beam is weak; the batteries are nearly gone.}
 }
+
+<b>A flashlight in a spot you can reach from bed turns a frightening scramble in the dark into a few seconds. Decide the spot — and make sure everyone knows it.</b>
 
 * [Continue]
     -> night_heat

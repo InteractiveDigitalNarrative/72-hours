@@ -576,6 +576,34 @@
     }
   },
 
+  "flashlightSearch": {
+    "title": "3:47 — pilkane pimedus",
+    "inTheDark": "pimedas",
+    "remind": {
+      "bedside": "Hoiad taskulampi öökapil. Liiguta kuma sinna ja koputa.",
+      "hallway": "Hoiad taskulampi esiku riiulil. Liiguta kuma sinna ja koputa.",
+      "none": "Sa pole kindel, kuhu selle jätsid. Liiguta kuma ringi ja koputa kohti, et otsida."
+    },
+    "spots": {
+      "bedside": "Öökapp",
+      "hallway": "Esiku riiul",
+      "coat": "Mantli tasku",
+      "junk_drawer": "Kräbusahtel",
+      "coffee_table": "Diivanilaud"
+    },
+    "reveals": {
+      "bedside": "Klaas vett ja laadimisjuhe.",
+      "hallway": "Võtmed ja virn avamata posti.",
+      "coat": "Peenraha ja vana tšekk.",
+      "junk_drawer": "Teip, tühjad pastakad, sassis juhtmed…",
+      "coffee_table": "Küünal — aga tikke siin pole."
+    },
+    "foundKnown": "Täpselt seal, kuhu jätsid.",
+    "foundFumble": "Leidsid — lõpuks ometi.",
+    "giveUp": "Anna alla — kasuta telefoni",
+    "continue": "Jätka"
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 — Öö",
     "nightSubtitle": "Vool on ära. Torm on liinid maha võtnud.",

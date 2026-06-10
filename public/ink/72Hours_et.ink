@@ -796,6 +796,14 @@ VAR owns_lantern = false
 VAR owns_candles = false
 VAR owns_powerbank = false
 
+// Kus taskulampi hoitakse: -1 otsustamata, 0 mitte kusagil/sahtlis, 1 esikus, 2 öökapil
+VAR flashlight_spot = -1
+// Öine pimedusotsing kriisis (React FlashlightSearch ülekate)
+VAR flashlight_search_done = false
+VAR search_seconds = 0
+VAR search_found = false
+VAR search_known_spot = false
+
 === category_light ===
 # CLEAR
 {not light_audit_done:
@@ -927,6 +935,36 @@ Mida soovid teha?
     Sul pole siin eraldi taskulampi — ja just see on kõige olulisem valgusallikas, mis omada. Paned selle ostunimekirja kõige etteotsa.
 
     <b>Käes hoitav taskulamp on turvaline, kohene ja ei tühjenda telefoni akut, mida vajad kõnedeks. Soovita vähemalt üks inimese kohta, hoituna kohas, mille kõik pimedas üles leiavad.</b>
+}
+
+Nüüd otsusta, kus see asub — et leiad selle hetkel, kui tuled kustuvad.
+
++ [🛏️ Öökapil — voodist käeulatuses]
+    ~ flashlight_spot = 2
+    -> light_spot_result
++ [🚪 Esiku ukse juures]
+    ~ flashlight_spot = 1
+    -> light_spot_result
++ [🗄️ Viska lihtsalt tagasi kräbusahtlisse]
+    ~ flashlight_spot = 0
+    -> light_spot_result
+
+=== light_spot_result ===
+# CLEAR
+
+{
+    - flashlight_spot == 2:
+        Paned selle öökapile. Kui elekter öösel kaob, leiab käsi selle enne, kui jalad põrandat puudutavad.
+
+        <b>Parim koht üldse — valgus, mille saad kätte ilma pimedas püsti tõusmata, on see, mis hoiab ära kukkumised.</b>
+    - flashlight_spot == 1:
+        Jätad selle esiku riiulile ukse juurde, kust kogu pere möödub ja kõik selle üles leiavad.
+
+        <b>Jagatud, teadaolev koht on parem kui peidetud. Veel parem, kui hoiad teist valgust voodi juures.</b>
+    - else:
+        Pillad selle tagasi kräbusahtlisse teibi ja vanade juhtmete sekka.
+
+        <b>Silmist, südamest — päris elektrikatkestuse ajal tuhniksid pilkases pimeduses prügi seas. Vali üks koht, mida kõik teavad.</b>
 }
 
 + [Jätka]
@@ -1445,7 +1483,14 @@ Aeg puhata enne, kui hullem tuleb.
 Elekter on ära. Torm pidi liinid maha võtma.
 
 * [Ulatu valgusallika poole]
-    -> crisis_night
+    -> reach_for_light
+
+=== reach_for_light ===
+# CLEAR
+{not flashlight_search_done:
+    # FLASHLIGHT_SEARCH
+}
+-> crisis_night
 
 // ============================================
 // KRIIS — ÖÖ
@@ -1455,13 +1500,15 @@ Elekter on ära. Torm pidi liinid maha võtma.
 # CONSEQUENCE: light
 
 {
-    - prep_light == 0:
-        Kobad pimedas telefoni. Ekraan süttib — piisavalt hele, aga pole selleks mõeldud. Hommikuks on aku 23% juures.
-    - prep_light == 1:
-        Leiad taskulambi mälu järgi ja vajutad sisse. Kiir on nõrk, vilgub — patareid on peaaegu tühjad. Kasutad seda säästvalt.
+    - not search_found:
+        Sa ei saagi korralikku valgust kätte. Telefoni ekraan valgustab teed — piisavalt hele, aga pole selleks mõeldud. Hommikuks on aku 23% juures.
+    - search_known_spot:
+        Käsi leiab taskulambi täpselt sealt, kuhu selle panid — pimedusest välja {search_seconds} sekundiga. {light_batteries || shop_batteries: Tugev ja ere.| Kiir on nõrk — patareid on peaaegu tühjad — aga töötab.} Telefon jääb taskusse.
     - else:
-        Käsi leiab taskulambi täpselt sealt, kuhu selle panid. Tugev, ere valgus. Telefon jääb taskusse.
+        Leiad selle lõpuks — aga alles pärast {search_seconds} pikka, ärevat sekundit pilkases pimeduses sahtlites tuhnimist. {light_batteries || shop_batteries: Vähemalt on kiir tugev.| Ja kiir on nõrk; patareid on peaaegu tühjad.}
 }
+
+<b>Taskulamp kohas, mille saad voodist kätte, muudab hirmutava pimedas rabelemise mõneks sekundiks. Otsusta koht — ja veendu, et kõik teavad seda.</b>
 
 * [Jätka]
     -> night_heat

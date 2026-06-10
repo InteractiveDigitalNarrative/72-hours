@@ -19,6 +19,7 @@ import HomeSetup from './HomeSetup';
 import HeatNote from './HeatNote';
 import LightAudit from './LightAudit';
 import LightNote from './LightNote';
+import FlashlightSearch from './FlashlightSearch';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -164,6 +165,9 @@ function InkStory({ onReturnToMenu }) {
   // Light audit state — populated by LightAudit overlay, consumed by LightNote widget
   const [showLightAudit, setShowLightAudit] = useState(false);
   const [lightResult, setLightResult] = useState(null);
+
+  // Crisis-night flashlight search mini-game
+  const [showFlashlightSearch, setShowFlashlightSearch] = useState(false);
 
   // Tracks the current Ink scene (set by tags like HEAT_HUB) so widgets can show/hide
   const [currentScene, setCurrentScene] = useState(null);
@@ -368,10 +372,12 @@ function InkStory({ onReturnToMenu }) {
       heat_one_room: story.variablesState["heat_one_room"],
       heat_pipes: story.variablesState["heat_pipes"],
       // Light sub-vars
+      light_flashlight: story.variablesState["light_flashlight"],
       light_batteries: story.variablesState["light_batteries"],
       light_headlamp: story.variablesState["light_headlamp"],
       light_lantern: story.variablesState["light_lantern"],
       light_powerbank: story.variablesState["light_powerbank"],
+      flashlight_spot: story.variablesState["flashlight_spot"],
       // Ending tracking
       ending_type: story.variablesState["ending_type"],
       total_prep: story.variablesState["total_prep"],
@@ -508,6 +514,14 @@ function InkStory({ onReturnToMenu }) {
         // Check for LIGHT_HUB tag — light-note widget should appear
         if (tag === 'LIGHT_HUB') {
           sceneThisRun = 'light_hub';
+        }
+
+        // Check for FLASHLIGHT_SEARCH tag — crisis-night dark search mini-game
+        if (tag === 'FLASHLIGHT_SEARCH') {
+          setShowFlashlightSearch(true);
+          setStoryText(lines);
+          setChoices([]);
+          return;
         }
 
         // Check for BREAKING_NEWS tag
@@ -855,6 +869,21 @@ function InkStory({ onReturnToMenu }) {
     story.variablesState["owns_lantern"]     = !!result?.hasLantern;
     story.variablesState["owns_candles"]     = !!result?.hasCandles;
     story.variablesState["owns_powerbank"]   = !!result?.hasPowerBank;
+
+    continueStory();
+  };
+
+  // FLASHLIGHT SEARCH (crisis night) HANDLER
+  // ============================================
+  const handleFlashlightSearchClose = (result) => {
+    setShowFlashlightSearch(false);
+
+    const story = storyRef.current;
+    if (!story) return;
+    story.variablesState["flashlight_search_done"] = true;
+    story.variablesState["search_seconds"]    = result?.seconds ?? 0;
+    story.variablesState["search_found"]      = !!result?.foundIt;
+    story.variablesState["search_known_spot"] = !!result?.usedKnownSpot;
 
     continueStory();
   };
@@ -1517,6 +1546,19 @@ function InkStory({ onReturnToMenu }) {
         <LightAudit
           onClose={handleLightAuditClose}
           onCancel={() => { setShowLightAudit(false); continueStory(); }}
+        />
+      )}
+
+      {/* Crisis-night flashlight search */}
+      {showFlashlightSearch && (
+        <FlashlightSearch
+          hasFlashlight={!!gameVars.light_flashlight}
+          knownSpot={
+            gameVars.flashlight_spot === 2 ? 'bedside'
+              : gameVars.flashlight_spot === 1 ? 'hallway'
+              : 'none'
+          }
+          onClose={handleFlashlightSearchClose}
         />
       )}
 

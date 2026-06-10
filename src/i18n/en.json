@@ -576,6 +576,34 @@
     }
   },
 
+  "flashlightSearch": {
+    "title": "3:47 AM — pitch dark",
+    "inTheDark": "in the dark",
+    "remind": {
+      "bedside": "You keep your flashlight on the bedside table. Sweep the glow to it and tap.",
+      "hallway": "You keep your flashlight on the hallway shelf. Sweep the glow to it and tap.",
+      "none": "You're not sure where you left it. Sweep the glow around and tap spots to search."
+    },
+    "spots": {
+      "bedside": "Bedside table",
+      "hallway": "Hallway shelf",
+      "coat": "Coat pocket",
+      "junk_drawer": "Junk drawer",
+      "coffee_table": "Coffee table"
+    },
+    "reveals": {
+      "bedside": "A glass of water and a charging cable.",
+      "hallway": "Keys and a stack of unopened mail.",
+      "coat": "Loose change and an old receipt.",
+      "junk_drawer": "Tape, dead pens, tangled cables…",
+      "coffee_table": "A candle — but no matches here."
+    },
+    "foundKnown": "Right where you left it.",
+    "foundFumble": "Found it — finally.",
+    "giveUp": "Give up — use your phone",
+    "continue": "Continue"
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 AM — The Night",
     "nightSubtitle": "The power is out. The storm has taken down the lines.",

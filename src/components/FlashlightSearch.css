@@ -1,0 +1,241 @@
+/* ============================================
+   FLASHLIGHT SEARCH — find a light in the dark
+   ============================================ */
+
+.fs-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2600;
+  animation: fs-fade 0.5s ease;
+  padding: var(--top-bar-height, 60px) 16px var(--bottom-bar-height, 20px);
+  box-sizing: border-box;
+}
+
+@keyframes fs-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.fs-panel {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fs-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.fs-title {
+  color: #d8e0ea;
+  font-size: clamp(14px, 2.2vh, 18px);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.fs-timer {
+  color: #7e8a98;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.fs-timer-hot { color: #ff8c6b; }
+
+.fs-instruction {
+  color: #8893a1;
+  font-size: clamp(11px, 1.5vh, 13px);
+  margin: 0;
+  text-align: center;
+  min-height: 16px;
+}
+
+/* When you remember exactly where you put it */
+.fs-remind-known {
+  color: #d9c08a;
+  font-style: italic;
+}
+
+/* ── The dark room ───────────────────────── */
+
+.fs-scene {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 56vh;
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 40%, #1a1f28 0%, #0a0c11 70%, #050608 100%);
+  border: 1px solid rgba(120, 140, 170, 0.12);
+  cursor: crosshair;
+  touch-action: none;
+  transition: background 0.6s ease;
+}
+
+.fs-scene-found {
+  background:
+    radial-gradient(ellipse at 50% 40%, #3a4252 0%, #232a36 80%);
+  cursor: default;
+}
+
+/* Darkness layer — a transparent "torch" hole around the glow.
+   Sits above the spots (z-index 2 > 1) so it hides them in the dark,
+   but pointer-events:none lets taps fall through to the spots. */
+.fs-darkness {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    circle 130px at var(--gx) var(--gy),
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 62px,
+    rgba(2, 4, 8, 0.86) 130px,
+    rgba(2, 4, 8, 0.97) 100%
+  );
+  transition: background 0.05s linear;
+}
+
+/* A subtle warm tint inside the torch beam */
+.fs-scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: radial-gradient(
+    circle 110px at var(--gx) var(--gy),
+    rgba(255, 220, 150, 0.10) 0%,
+    rgba(255, 220, 150, 0) 70%
+  );
+}
+
+.fs-scene-found::after { opacity: 0; }
+
+/* ── Hiding spots ────────────────────────── */
+
+.fs-spot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: #9fb0c4;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 6px;
+  z-index: 1;
+}
+
+.fs-spot-emoji {
+  font-size: 22px;
+  line-height: 1;
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.8));
+}
+
+.fs-spot-label {
+  font-size: 10px;
+  color: #b6c4d6;
+  text-shadow: 0 1px 3px #000;
+  white-space: nowrap;
+}
+
+.fs-spot:hover .fs-spot-label { color: #e6eefa; }
+
+.fs-spot-searched {
+  opacity: 0.4;
+}
+
+.fs-spot-searched .fs-spot-emoji { color: #5a6573; }
+
+.fs-spot-found {
+  z-index: 4;
+  animation: fs-pop 0.5s ease;
+}
+
+.fs-spot-found .fs-spot-emoji {
+  font-size: 34px;
+  filter: drop-shadow(0 0 16px rgba(255, 220, 140, 0.9));
+}
+
+.fs-spot-found .fs-spot-label { color: #ffe9b8; font-weight: 700; }
+
+@keyframes fs-pop {
+  0%   { transform: translate(-50%, -50%) scale(0.6); }
+  60%  { transform: translate(-50%, -50%) scale(1.25); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ── Reveal log + messages ───────────────── */
+
+.fs-reveal {
+  color: #97a3b2;
+  font-size: 13px;
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+  min-height: 18px;
+  animation: fs-fade 0.3s ease;
+}
+
+.fs-found-msg {
+  color: #ffe1a8;
+  font-size: clamp(14px, 2vh, 17px);
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+  animation: fs-fade 0.5s ease;
+}
+
+.fs-continue {
+  align-self: center;
+  background: linear-gradient(135deg, #c8901f, #e0a829);
+  border: none;
+  border-radius: 10px;
+  color: #1c1206;
+  padding: 11px 26px;
+  font-size: clamp(13px, 1.8vh, 15px);
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(220, 170, 50, 0.35);
+  transition: filter 0.15s ease;
+  animation: fs-fade 0.5s ease;
+}
+
+.fs-continue:hover { filter: brightness(1.1); }
+
+/* ── Give-up / phone fallback ────────────── */
+
+.fs-giveup {
+  align-self: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(150, 170, 200, 0.3);
+  border-radius: 10px;
+  color: #b9c6d6;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  animation: fs-fade 0.4s ease;
+}
+
+.fs-giveup:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #e6eefa;
+}
