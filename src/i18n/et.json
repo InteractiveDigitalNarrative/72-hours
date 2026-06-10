@@ -657,6 +657,73 @@
     }
   },
 
+  "cabinetCheck": {
+    "title": "Kontrolli ravimikappi",
+    "summaryTitle": "Kapp kontrollitud",
+    "subtitle": "Koputa igal esemel, loe silti ja otsusta, mida sellega teha.",
+    "hint": "Koputa esemel, et näha selle kuupäeva ja kogust.",
+    "fridgeTag": "Hoia külmas",
+    "verdicts": {
+      "keep": "Jäta",
+      "restock": "Osta juurde",
+      "toss": "Viska ära"
+    },
+    "correct": "Hea valik.",
+    "incorrect": "Ettevaatust — parem oleks",
+    "scoreLabel": "õigesti sorteeritud",
+    "restockTitle": "Lisa ostunimekirja",
+    "seeList": "Vaata nimekirja",
+    "done": "Jätka",
+    "takeaway": "<strong>Kontrolli aegumiskuupäevi</strong> kaks korda aastas. Hoia igast retseptiravimist <strong>7 päeva varu</strong>. <strong>Viska aegunud ravimid ära</strong> — vana antibiootikumid ja adrenaliinipenni vii apteeki, mitte kunagi prügikasti. Ja tea, millised ravimid peavad <strong>külmas püsima</strong>, kui vool kaob.",
+    "items": {
+      "painkillers": {
+        "name": "Valuvaigistid",
+        "detail": "Aegus 8 kuud tagasi",
+        "why": "Aegunud valuvaigistid kaotavad toime — viska ära ja lisa värske pakk nimekirja."
+      },
+      "plasters": {
+        "name": "Plaastrid",
+        "detail": "Kehtiv · hästi varustatud",
+        "why": "Kehtiv ja palju järel. Jäta alles — see on su esmaabikomplekti tugisammas."
+      },
+      "antiseptic": {
+        "name": "Antiseptik",
+        "detail": "Pudel peaaegu tühi",
+        "why": "Peaaegu otsas — osta juurde. Seda läheb haavade puhastamiseks vaja, kui kliinikusse niisama põigata ei saa."
+      },
+      "allergy": {
+        "name": "Allergiatabletid",
+        "detail": "Aegus eelmisel kuul",
+        "why": "Aegunud — viska ära. Kui keegi reageerib õietolmule, tolmule või putukahammustusele, vaheta välja, et see vajadusel toimiks."
+      },
+      "vitamins": {
+        "name": "Igapäevased vitamiinid",
+        "detail": "Kehtiv",
+        "why": "Võib alles jätta — kahju pole. Ära lase sel lihtsalt tõrjuda välja ravimeid, mis kriisis tegelikult loevad."
+      },
+      "bp_pills": {
+        "name": "Vererõhuravimid",
+        "detail": "Kehtiv · jäänud vaid 5 päeva",
+        "why": "Igapäevane retseptiravim, mida on jäänud vaid 5 päeva. Osta kohe juurde — hoia 7 päeva varu, et suletud apteek sind kunagi üllatama ei jääks."
+      },
+      "insulin": {
+        "name": "Insuliin",
+        "detail": "Kehtiv · pool penni järel",
+        "why": "Kehtiv — jäta alles. Aga see peab külmas püsima: voolukatkestuse ajal hoiab külmkapp umbes 4 tundi suletuna, siis tõsta külmakotti jääkottidega. Küsi apteekrilt, kui kaua sinu oma väljas olla tohib."
+      },
+      "fever_syrup": {
+        "name": "Lapse palavikusiirup",
+        "detail": "Aegub järgmisel nädalal · pool pudelit",
+        "why": "Aegumas ja pool otsas. Vaheta kohe välja, et see oleks valmis, kui keset tormi palavik tuleb."
+      },
+      "epipen": {
+        "name": "Adrenaliinipenn (EpiPen)",
+        "detail": "Aegus 2 kuud tagasi",
+        "why": "Aegunud adrenaliinipenn ei pruugi raske allergilise reaktsiooni korral toimida. Vaheta kohe välja ja hoia kohas, kust kõik selle leiavad — see on 112 olukord."
+      }
+    }
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 — Öö",
     "nightSubtitle": "Vool on ära. Torm on liinid maha võtnud.",

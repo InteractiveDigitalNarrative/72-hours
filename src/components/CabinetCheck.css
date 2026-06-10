@@ -1,0 +1,329 @@
+/* ============================================
+   CABINET CHECK — medicine triage mini-game
+   ============================================ */
+
+.cc-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 10, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 2500;
+  backdrop-filter: blur(8px);
+  animation: cc-fade 0.3s ease;
+  padding: var(--top-bar-height, 60px) 20px var(--bottom-bar-height, 20px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 200, 160, 0.3) transparent;
+}
+
+@keyframes cc-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.cc-panel {
+  background: linear-gradient(145deg, #14241e, #1a2c24);
+  border: 1px solid rgba(90, 200, 150, 0.22);
+  border-radius: 20px;
+  padding: clamp(18px, 3vh, 32px) clamp(18px, 4vw, 30px);
+  max-width: 520px;
+  width: 100%;
+  margin: auto 0;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(90, 200, 150, 0.08);
+  animation: cc-up 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2.5vh, 18px);
+}
+
+@keyframes cc-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Header ──────────────────────────────── */
+
+.cc-icon {
+  display: block;
+  font-size: clamp(26px, 5vh, 38px);
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.cc-header { text-align: center; }
+
+.cc-header h2 {
+  color: #dcfaee;
+  font-size: clamp(16px, 2.5vh, 22px);
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.cc-subtitle {
+  color: #7bc4a4;
+  font-size: clamp(12px, 1.6vh, 14px);
+  margin: 0;
+}
+
+/* ── Progress counter ────────────────────── */
+
+.cc-progress {
+  text-align: center;
+  color: #7bc4a4;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+  margin-top: -6px;
+}
+
+/* ── Shelf grid ──────────────────────────── */
+
+.cc-shelf {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 460px) {
+  .cc-shelf { grid-template-columns: repeat(2, 1fr); }
+}
+
+.cc-item {
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(120, 200, 160, 0.18);
+  border-radius: 12px;
+  padding: 12px 6px;
+  color: #cfeede;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  min-height: 76px;
+}
+
+.cc-item:hover { background: rgba(90, 180, 140, 0.14); border-color: rgba(120, 210, 170, 0.5); }
+
+.cc-item-active {
+  border-color: rgba(120, 220, 180, 0.8);
+  box-shadow: 0 0 14px rgba(90, 200, 150, 0.25);
+}
+
+.cc-item-emoji { font-size: 24px; line-height: 1; }
+.cc-item-name { font-size: 11px; text-align: center; line-height: 1.2; }
+
+.cc-frost {
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  font-size: 12px;
+  filter: drop-shadow(0 0 4px rgba(140, 210, 255, 0.7));
+}
+
+.cc-item-keep    { background: rgba(95, 208, 138, 0.12); border-color: rgba(95, 208, 138, 0.45); }
+.cc-item-restock { background: rgba(240, 190, 90, 0.12); border-color: rgba(240, 190, 90, 0.45); }
+.cc-item-toss    { background: rgba(240, 110, 110, 0.10); border-color: rgba(240, 110, 110, 0.4); opacity: 0.8; }
+
+.cc-item-badge {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.cc-badge-keep    { color: #6fe0a0; }
+.cc-badge-restock { color: #f0c46a; }
+.cc-badge-toss    { color: #ff8c8c; }
+
+/* ── Inspect panel ───────────────────────── */
+
+.cc-hint {
+  color: #6f9a86;
+  font-size: 12.5px;
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+  min-height: 18px;
+}
+
+.cc-inspect {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(120, 200, 160, 0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: cc-fade 0.25s ease;
+}
+
+.cc-inspect-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cc-inspect-name {
+  color: #eafff6;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.cc-inspect-date {
+  color: #a8ccbb;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cc-inspect-fridge {
+  align-self: flex-start;
+  margin-top: 2px;
+  background: rgba(120, 190, 255, 0.14);
+  border: 1px solid rgba(140, 200, 255, 0.4);
+  border-radius: 20px;
+  padding: 2px 9px;
+  color: #aee0ff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ── Verdicts ────────────────────────────── */
+
+.cc-verdicts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.cc-verdict {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(120, 180, 160, 0.25);
+  border-radius: 10px;
+  padding: 10px 4px;
+  color: #cfeede;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cc-verdict-emoji { font-size: 19px; line-height: 1; }
+
+.cc-verdict-keep:hover    { background: rgba(95, 208, 138, 0.16); border-color: rgba(95, 208, 138, 0.6); }
+.cc-verdict-restock:hover { background: rgba(240, 190, 90, 0.16); border-color: rgba(240, 190, 90, 0.6); }
+.cc-verdict-toss:hover    { background: rgba(240, 110, 110, 0.16); border-color: rgba(240, 110, 110, 0.6); }
+
+/* ── Feedback ────────────────────────────── */
+
+.cc-feedback { display: flex; flex-direction: column; gap: 7px; animation: cc-fade 0.25s ease; }
+
+.cc-feedback-verdict {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.cc-right { color: #7fe0a6; }
+.cc-wrong { color: #ff9b9b; }
+
+.cc-why {
+  color: #c2e0d2;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Summary ─────────────────────────────── */
+
+.cc-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.cc-score-num {
+  color: #6fe0a0;
+  font-size: clamp(34px, 6vh, 48px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.cc-score-den { color: #4f8c70; font-size: 0.5em; font-weight: 600; }
+.cc-score-label { color: #8ac2aa; font-size: 12px; }
+
+.cc-restock {
+  background: rgba(240, 190, 90, 0.08);
+  border: 1px solid rgba(240, 190, 90, 0.25);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.cc-restock-head {
+  color: #f0c46a;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.cc-restock-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cc-restock-list li {
+  color: #e6dcc4;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cc-restock-emoji { font-size: 15px; }
+
+.cc-takeaway {
+  background: rgba(90, 180, 140, 0.08);
+  border: 1px dashed rgba(120, 210, 170, 0.3);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #cae6d8;
+  font-size: clamp(12px, 1.6vh, 13.5px);
+  line-height: 1.5;
+}
+
+.cc-takeaway strong { color: #8fe6bb; }
+
+/* ── Primary button ──────────────────────── */
+
+.cc-btn-primary {
+  background: linear-gradient(135deg, #2e9b6b, #34b27c);
+  border: none;
+  border-radius: 10px;
+  color: #06231a;
+  padding: 12px 20px;
+  font-size: clamp(13px, 1.8vh, 15px);
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(50, 170, 120, 0.3);
+  transition: filter 0.15s ease;
+}
+
+.cc-btn-primary:hover { filter: brightness(1.1); }

@@ -21,6 +21,7 @@ import LightAudit from './LightAudit';
 import LightNote from './LightNote';
 import FlashlightSearch from './FlashlightSearch';
 import RumorSort from './RumorSort';
+import CabinetCheck from './CabinetCheck';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -172,6 +173,9 @@ function InkStory({ onReturnToMenu }) {
 
   // Information "Signal vs Noise" rumor-sorting mini-game
   const [showRumorSort, setShowRumorSort] = useState(false);
+
+  // Medication "Medicine cabinet check" triage mini-game
+  const [showCabinetCheck, setShowCabinetCheck] = useState(false);
 
   // Tracks the current Ink scene (set by tags like HEAT_HUB) so widgets can show/hide
   const [currentScene, setCurrentScene] = useState(null);
@@ -370,6 +374,7 @@ function InkStory({ onReturnToMenu }) {
       shop_water_amount: story.variablesState["shop_water_amount"],
       shop_food: story.variablesState["shop_food"],
       shop_batteries: story.variablesState["shop_batteries"],
+      shop_meds: story.variablesState["shop_meds"],
       shop_visited: story.variablesState["shop_visited"],
       // Heat sub-vars
       heat_sealed: story.variablesState["heat_sealed"],
@@ -532,6 +537,14 @@ function InkStory({ onReturnToMenu }) {
         // Check for RUMOR_SORT tag — Signal vs Noise mini-game
         if (tag === 'RUMOR_SORT') {
           setShowRumorSort(true);
+          setStoryText(lines);
+          setChoices([]);
+          return;
+        }
+
+        // Check for MED_CABINET tag — medicine cabinet triage mini-game
+        if (tag === 'MED_CABINET') {
+          setShowCabinetCheck(true);
           setStoryText(lines);
           setChoices([]);
           return;
@@ -914,6 +927,23 @@ function InkStory({ onReturnToMenu }) {
     continueStory();
   };
 
+  // CABINET CHECK (medicine triage) HANDLER
+  // ============================================
+  const handleCabinetCheckClose = (result) => {
+    setShowCabinetCheck(false);
+
+    const story = storyRef.current;
+    if (!story) return;
+    story.variablesState["med_cabinet_done"]  = true;
+    story.variablesState["med_cabinet_score"] = result?.correct ?? 0;
+    story.variablesState["med_cabinet_total"] = result?.total ?? 0;
+    if ((result?.restock ?? 0) > 0) {
+      story.variablesState["shop_meds"] = true;
+    }
+
+    continueStory();
+  };
+
   // STORE OVERLAY HANDLER
   // ============================================
 
@@ -1149,13 +1179,14 @@ function InkStory({ onReturnToMenu }) {
       )}
 
       {/* Shopping List - visible during preparation when items added */}
-      {!!gameVars.in_preparation && (!!gameVars.shop_water || !!gameVars.shop_food || !!gameVars.shop_batteries) && !gameVars.shop_visited && (
+      {!!gameVars.in_preparation && (!!gameVars.shop_water || !!gameVars.shop_food || !!gameVars.shop_batteries || !!gameVars.shop_meds) && !gameVars.shop_visited && (
         <div className="shopping-list">
           <div className="shopping-list-header">🛒 Shopping List</div>
           <ul className="shopping-list-items">
             {!!gameVars.shop_water && <li>💧 Bottled water ({gameVars.shop_water_amount}L)</li>}
             {!!gameVars.shop_food && <li>🍞 Emergency food</li>}
             {!!gameVars.shop_batteries && <li>🔋 Batteries</li>}
+            {!!gameVars.shop_meds && <li>💊 Medicines</li>}
           </ul>
         </div>
       )}
@@ -1592,6 +1623,11 @@ function InkStory({ onReturnToMenu }) {
       {/* Information "Signal vs Noise" rumor game */}
       {showRumorSort && (
         <RumorSort onClose={handleRumorSortClose} />
+      )}
+
+      {/* Medication "Medicine cabinet check" mini-game */}
+      {showCabinetCheck && (
+        <CabinetCheck household={household} onClose={handleCabinetCheckClose} />
       )}
 
       {/* Floating Settings Button */}

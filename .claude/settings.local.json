@@ -27,7 +27,8 @@
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('notes found:', len\\(d['results']\\)\\); [print\\(' -', r.get\\('title'\\)\\) for r in d['results']]\")",
       "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('src/i18n/en.json'\\)\\); JSON.parse\\(require\\('fs'\\).readFileSync\\('src/i18n/et.json'\\)\\); console.log\\('i18n JSON OK'\\)\")",
       "Bash(npx eslint *)",
-      "Bash(echo \"--- exit: $? ---\")"
+      "Bash(echo \"--- exit: $? ---\")",
+      "Bash(./node_modules/inklecate/bin/inklecate -o /tmp/et_test.json public/ink/72Hours_et.ink)"
     ]
   }
 }

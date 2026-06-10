@@ -68,6 +68,7 @@ VAR shop_water = false
 VAR shop_water_amount = 0
 VAR shop_food = false
 VAR shop_batteries = false
+VAR shop_meds = false
 VAR shop_visited = false
 
 // Telefonikõne tulemuse jälgimine
@@ -197,7 +198,7 @@ Mida soovid ette valmistada?
 + [💊 Ravimid{prep_medication: ✓}]
     -> category_medication
 
-+ {(shop_water || shop_food || shop_batteries) && not shop_visited} [🛒 Mine poodi]
++ {(shop_water || shop_food || shop_batteries || shop_meds) && not shop_visited} [🛒 Mine poodi]
     -> go_to_store
 
 + [Ettevalmistused tehtud - oota tormi]
@@ -541,6 +542,10 @@ Maksad ja kiirustad varudega koju. Tuul tugevneb.
 
 {shop_batteries:
     Haarasid kaasa <b>uued patareid</b> taskulambi ja raadio jaoks.
+}
+
+{shop_meds:
+    Põikad ka apteeki ja täiendad <b>ravimeid</b>, mille märkisid — aegunud asendatud, vähesed juurde ostetud.
 }
 
 {food_canned || food_crackers || food_nuts || food_energy_bars || food_chocolate || food_longlife_bread || food_honey_jam:
@@ -1343,9 +1348,18 @@ Kes täpselt nimekirjas on, sõltub teie perest — oluline on, et kõik teaksid
 VAR med_pills_counted = false
 VAR med_organized = false
 VAR med_first_aid = false
+VAR med_fridge = false
+VAR med_card = false
+// Määratud React CabinetCheck ülekatte poolt
+VAR med_cabinet_done = false
+VAR med_cabinet_score = 0
+VAR med_cabinet_total = 0
 
 === category_medication ===
 # CLEAR
+{not med_cabinet_done:
+    -> med_cabinet
+}
 
 {
     - prep_medication == 0:
@@ -1358,12 +1372,12 @@ VAR med_first_aid = false
                 Kontrolli oma isiklikke ravimeid ja esmaabikomplekti.
         }
 
-        Kriisis võivad apteegid olla päevi suletud. Mida peaksid esimesena kontrollima?
+        Kriisis võivad apteegid olla päevi suletud. Mida on kõige olulisem hästi varuda?
 
-        + [Valuvaigistite varu]
+        + [Valuvaigistid]
             -> med_quiz_pain
 
-        + [Retseptiravimite varu]
+        + [Retseptiravimid]
             -> med_quiz_right
 
         + [Esmaabikomplekt]
@@ -1382,6 +1396,31 @@ VAR med_first_aid = false
 
 + [← Tagasi]
     -> preparation_hub
+
+=== med_cabinet ===
+# CLEAR
+# MED_CABINET
+-> med_cabinet_result
+
+=== med_cabinet_result ===
+# CLEAR
+
+~ med_pills_counted = true
+~ med_first_aid = true
+
+{
+    - med_cabinet_score >= med_cabinet_total:
+        <b>Terav silm.</b> Märkasid aegunud pakid ja väikese varu probleemideta.
+    - med_cabinet_score >= med_cabinet_total - 1:
+        <b>Korralik kontroll.</b> Tabasid enamiku — otsus või paar läks mööda.
+    - else:
+        <b>Tasub lähemalt vaadata.</b> Mõni aegunud või vähene ese libises läbi — kerge märkamata jätta, kerge parandada.
+}
+
+{shop_meds: Lüngad on nüüd su ostunimekirjas. }<b>Kontrolli kuupäevi kaks korda aastas, hoia igast retseptiravimist 7-päevane varu ja vii vanad ravimid apteeki — mitte kunagi prügikasti.</b>
+
++ [Jätka]
+    -> category_medication
 
 === med_quiz_pain ===
 # CLEAR
@@ -1422,29 +1461,25 @@ Esmaabikomplekt on oluline, aga vanaema igapäevane retseptiravim on kriitiline.
 
 ~ prep_medication = 1
 
-{med_pills_counted: ✓ Tabletid loetud}
-{med_organized: ✓ Ravimid sorteeritud}
-{med_first_aid: ✓ Esmaabikomplekt kontrollitud}
+{med_cabinet_done: ✓ Kapp kontrollitud}
+{med_organized: ✓ Tabletid päevade kaupa sorteeritud}
+{med_fridge: ✓ Külmkapi-ravimite plaan}
+{med_card: ✓ Hädaolukorra ravimikaart}
 
-+ {not med_pills_counted && has_elderly} [💊 Loe {elderly_relation} tabletid — 2 min]
-    ~ med_pills_counted = true
-    ~ current_time = current_time + 2
-    -> med_result_count
-
-+ {not med_pills_counted && not has_elderly} [💊 Loe retseptiravimid — 2 min]
-    ~ med_pills_counted = true
-    ~ current_time = current_time + 2
-    -> med_result_count
-
-+ {med_pills_counted && not med_organized} [🗂️ Sorteeri ravimid päevade kaupa — 3 min]
++ {not med_organized} [🗂️ Sorteeri tabletid päevade kaupa — 3 min]
     ~ med_organized = true
     ~ current_time = current_time + 3
     -> med_result_organize
 
-+ {not med_first_aid} [➕ Kontrolli esmaabikomplekti — 2 min]
-    ~ med_first_aid = true
++ {not med_fridge} [🧊 Tee plaan külmkapis hoitavatele ravimitele — 2 min]
+    ~ med_fridge = true
     ~ current_time = current_time + 2
-    -> med_result_firstaid
+    -> med_result_fridge
+
++ {not med_card} [📝 Kirjuta hädaolukorra ravimikaart — 3 min]
+    ~ med_card = true
+    ~ current_time = current_time + 3
+    -> med_result_card
 
 + [✓ Ravimitega valmis]
     -> medication_complete
@@ -1452,18 +1487,30 @@ Esmaabikomplekt on oluline, aga vanaema igapäevane retseptiravim on kriitiline.
 + [← Tagasi ettevalmistustesse]
     -> preparation_hub
 
-=== med_result_count ===
+=== med_result_fridge ===
 # CLEAR
 
 {has_elderly:
-    Leiad {elderly_relation} vererõhutabletid köögilaualt ja loed need hoolikalt.
+    Mõtled kõigele, mis külmkapis hoitakse — {elderly_relation} ravimid, insuliin, mõned silmatilgad.
 - else:
-    Loed oma retseptiravimid hoolikalt üle.
+    Mõtled kõigele, mis külmkapis hoitakse — insuliin, mõned antibiootikumid, teatud silmatilgad.
 }
 
-<b>5 päeva varu.</b> Peaks tormist piisama — aga napilt.
+Voolu puudumisel püsib külmkapp külm umbes <b>4 tundi, kui ust ei avata</b>. Pärast seda tõstaksid külmad ravimid <b>külmakotti jääkottidega</b> ja hoiaksid külmkapi ust võimalikult kinni.
 
-<i>Eksperdid soovitavad hoida kodus alati vähemalt 7-päevast retseptiravimite varu.</i>
+<b>Tea, millised su ravimid peavad külmas püsima ja kui kaua nad väljas olla tohivad — su apteeker oskab öelda. Mõnel on paar sooja tundi okei, teisel mitte.</b>
+
++ [Jätka]
+    -> medication_hub
+
+=== med_result_card ===
+# CLEAR
+
+Kirjutad iga kodus oleva inimese kohta lihtsa kaardi: tema <b>ravimid ja annused</b>, võimalikud <b>allergiad</b>, kestvad <b>haigused</b> ning <b>arsti ja apteegi</b> numbrid.
+
+Üks koopia läheb esmaabikomplekti ja teed sellest telefoniga foto.
+
+<b>Kui sa ise rääkida ei saa — või keegi peab aitama pereliiget — ütleb see kaart sekunditega kõik olulise. See on üks kasulikemaid asju igas hädaolukorra komplektis.</b>
 
 + [Jätka]
     -> medication_hub
@@ -1488,30 +1535,19 @@ Esmaabikomplekt on oluline, aga vanaema igapäevane retseptiravim on kriitiline.
 + [Jätka]
     -> medication_hub
 
-=== med_result_firstaid ===
-# CLEAR
-
-Kaevad esmaabikomplekti vannitoakapist välja ja kontrollid sisu.
-
-Sidemed, antiseptik, valuvaigistid, palavikualandajad... enamasti korras. Valuvaigistid aegusid eelmisel aastal.
-
-<b>Mitte täiuslik, aga piisab.</b>
-
-<i>Hea hädaolukorra komplekt peaks sisaldama: sidemed, antiseptik, valuvaigistid, palavikualandajad, allergia ravimid ja kõik retseptiravimid.</i>
-
-+ [Jätka]
-    -> medication_hub
-
 === medication_complete ===
 # CLEAR
 
 {
-    - med_pills_counted && med_organized && med_first_aid:
+    - med_cabinet_done && med_organized && med_fridge && med_card:
         ~ prep_medication = 2
-        {has_elderly: {elderly_relation} ravimid on sorteeritud ja käeulatuses. | Ravimid on sorteeritud ja käeulatuses.} Esmaabikomplekt on kontrollitud. Oled hästi ettevalmistatud.
-    - med_pills_counted || med_first_aid:
+        {has_elderly: {elderly_relation} ravimid on sorteeritud, kehtivad ja käeulatuses. | Su ravimid on sorteeritud, kehtivad ja käeulatuses.} Külmkapi-plaan ja hädaolukorra kaart tehtud. Oled hästi ettevalmistatud.
+    - med_cabinet_done && (med_organized || med_card):
+        ~ prep_medication = 2
+        <b>Hästi ettevalmistatud.</b> Kapp on kontrollitud ja põhiasjad korras. {not med_fridge: Plaan külmkapi-ravimitele teeks pildi täielikuks.}
+    - med_cabinet_done:
         ~ prep_medication = 1
-        Põhiasjad on tehtud. {not med_organized: {has_elderly: Tablettide sorteerimine päevade kaupa teeks asjad {elderly_relation} jaoks pimedas lihtsamaks. | Tablettide sorteerimine päevade kaupa teeks asjad pimedas lihtsamaks.}}
+        <b>Põhiasjad tehtud.</b> Oled kapi kontrollinud — tablettide sorteerimine päevade kaupa ja ravimikaardi kirjutamine teeksid raskel hetkel tõelist vahet.
     - else:
         ~ prep_medication = 1
         Oled ravimitele mõelnud, aga palju pole veel teinud.

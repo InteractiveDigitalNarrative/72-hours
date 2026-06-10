@@ -68,6 +68,7 @@ VAR shop_water = false
 VAR shop_water_amount = 0
 VAR shop_food = false
 VAR shop_batteries = false
+VAR shop_meds = false
 VAR shop_visited = false
 
 // Phone call outcome tracking
@@ -197,7 +198,7 @@ What do you want to prepare?
 + [💊 Medication{prep_medication: ✓}]
     -> category_medication
 
-+ {(shop_water || shop_food || shop_batteries) && not shop_visited} [🛒 Go to Store]
++ {(shop_water || shop_food || shop_batteries || shop_meds) && not shop_visited} [🛒 Go to Store]
     -> go_to_store
 
 + [Done preparing - wait for storm]
@@ -541,6 +542,10 @@ You pay and hurry home with your supplies.
 
 {shop_batteries:
     You grabbed <b>fresh batteries</b> for the flashlight and radio.
+}
+
+{shop_meds:
+    You stop by the pharmacy too and restock the <b>medicines</b> you flagged — the expired ones replaced, the low ones topped up.
 }
 
 {food_canned || food_crackers || food_nuts || food_energy_bars || food_chocolate || food_longlife_bread || food_honey_jam:
@@ -1343,9 +1348,18 @@ Exactly who's on the list is up to your household — the point is that everyone
 VAR med_pills_counted = false
 VAR med_organized = false
 VAR med_first_aid = false
+VAR med_fridge = false
+VAR med_card = false
+// Set by the React CabinetCheck overlay
+VAR med_cabinet_done = false
+VAR med_cabinet_score = 0
+VAR med_cabinet_total = 0
 
 === category_medication ===
 # CLEAR
+{not med_cabinet_done:
+    -> med_cabinet
+}
 
 {
     - prep_medication == 0:
@@ -1358,12 +1372,12 @@ VAR med_first_aid = false
                 Check your personal medication supply and first-aid kit.
         }
 
-        In a crisis, pharmacies may be closed for days. What should you check first?
+        In a crisis, pharmacies may be closed for days. Which is most critical to keep well-stocked?
 
-        + [Pain medication stock]
+        + [Pain medication]
             -> med_quiz_pain
 
-        + [Prescription medicine supply]
+        + [Prescription medicine]
             -> med_quiz_right
 
         + [First-aid kit]
@@ -1382,6 +1396,31 @@ VAR med_first_aid = false
 
 + [← Back]
     -> preparation_hub
+
+=== med_cabinet ===
+# CLEAR
+# MED_CABINET
+-> med_cabinet_result
+
+=== med_cabinet_result ===
+# CLEAR
+
+~ med_pills_counted = true
+~ med_first_aid = true
+
+{
+    - med_cabinet_score >= med_cabinet_total:
+        <b>Sharp eye.</b> You spotted the expired boxes and the low stock without trouble.
+    - med_cabinet_score >= med_cabinet_total - 1:
+        <b>Decent check.</b> You caught most of it — a call or two was off.
+    - else:
+        <b>Worth a closer look.</b> A few expired or low items slipped past — easy to miss, easy to fix.
+}
+
+{shop_meds: The gaps are on your shopping list now. }<b>Check dates twice a year, keep a 7-day buffer of any prescription, and return old medicines to a pharmacy — never the bin.</b>
+
++ [Continue]
+    -> category_medication
 
 === med_quiz_pain ===
 # CLEAR
@@ -1422,29 +1461,25 @@ A first-aid kit is important, but grandmother's daily prescription medication is
 
 ~ prep_medication = 1
 
-{med_pills_counted: ✓ Pills counted}
-{med_organized: ✓ Medication organized}
-{med_first_aid: ✓ First-aid kit checked}
+{med_cabinet_done: ✓ Cabinet checked}
+{med_organized: ✓ Pills organized by day}
+{med_fridge: ✓ Fridge-medicine plan}
+{med_card: ✓ Emergency medicine card}
 
-+ {not med_pills_counted && has_elderly} [💊 Count {elderly_relation}'s pills — 2 min]
-    ~ med_pills_counted = true
-    ~ current_time = current_time + 2
-    -> med_result_count
-
-+ {not med_pills_counted && not has_elderly} [💊 Count prescription pills — 2 min]
-    ~ med_pills_counted = true
-    ~ current_time = current_time + 2
-    -> med_result_count
-
-+ {med_pills_counted && not med_organized} [🗂️ Organize medication by day — 3 min]
++ {not med_organized} [🗂️ Organize pills by day — 3 min]
     ~ med_organized = true
     ~ current_time = current_time + 3
     -> med_result_organize
 
-+ {not med_first_aid} [➕ Check first-aid kit — 2 min]
-    ~ med_first_aid = true
++ {not med_fridge} [🧊 Plan for refrigerated medicines — 2 min]
+    ~ med_fridge = true
     ~ current_time = current_time + 2
-    -> med_result_firstaid
+    -> med_result_fridge
+
++ {not med_card} [📝 Write an emergency medicine card — 3 min]
+    ~ med_card = true
+    ~ current_time = current_time + 3
+    -> med_result_card
 
 + [✓ Done with medication]
     -> medication_complete
@@ -1452,18 +1487,30 @@ A first-aid kit is important, but grandmother's daily prescription medication is
 + [← Back to preparation]
     -> preparation_hub
 
-=== med_result_count ===
+=== med_result_fridge ===
 # CLEAR
 
 {has_elderly:
-    You find {elderly_relation}'s blood pressure pills on the kitchen counter and count them carefully.
+    You think about anything that lives in the fridge — {elderly_relation}'s medicines, insulin, certain eye drops.
 - else:
-    You count your prescription pills carefully.
+    You think about anything that lives in the fridge — insulin, some antibiotics, certain eye drops.
 }
 
-<b>5 days' worth left.</b> That should last through the storm — but just barely.
+With the power out, a fridge stays cold for about <b>4 hours unopened</b>. Beyond that, you'd move cold medicines into a <b>cool bag with ice packs</b> and keep the fridge door shut as much as possible.
 
-<i>Experts recommend keeping at least a 7-day supply of prescription medicines at home.</i>
+<b>Know which of your medicines must stay cold and how long they can be out — your pharmacist can tell you. For some, a few warm hours is fine; for others it isn't.</b>
+
++ [Continue]
+    -> medication_hub
+
+=== med_result_card ===
+# CLEAR
+
+You write a simple card for each person at home: their <b>medicines and doses</b>, any <b>allergies</b>, ongoing <b>conditions</b>, and the numbers for your <b>doctor and pharmacy</b>.
+
+One copy goes in the first-aid kit, and you snap a photo of it on your phone.
+
+<b>If you can't speak for yourself — or someone has to help a family member — this card tells them what matters in seconds. It's one of the most useful things in any emergency kit.</b>
 
 + [Continue]
     -> medication_hub
@@ -1488,30 +1535,19 @@ A first-aid kit is important, but grandmother's daily prescription medication is
 + [Continue]
     -> medication_hub
 
-=== med_result_firstaid ===
-# CLEAR
-
-You dig out the first-aid kit from the bathroom cabinet and check inside.
-
-Bandages, antiseptic, painkillers, fever reducers... mostly intact. The painkillers expired last year.
-
-<b>Not perfect, but it'll do.</b>
-
-<i>A good emergency kit should include: bandages, antiseptic, painkillers, fever reducers, allergy medication, and any prescription medicines.</i>
-
-+ [Continue]
-    -> medication_hub
-
 === medication_complete ===
 # CLEAR
 
 {
-    - med_pills_counted && med_organized && med_first_aid:
+    - med_cabinet_done && med_organized && med_fridge && med_card:
         ~ prep_medication = 2
-        {has_elderly: {elderly_relation}'s medication is sorted and within reach. | Medication sorted and within reach.} First-aid kit is checked. You're well prepared.
-    - med_pills_counted || med_first_aid:
+        {has_elderly: {elderly_relation}'s medicines are sorted, in date, and within reach. | Your medicines are sorted, in date, and within reach.} Fridge plan and emergency card done. You're well prepared.
+    - med_cabinet_done && (med_organized || med_card):
+        ~ prep_medication = 2
+        <b>Well prepared.</b> The cabinet's checked and the essentials are sorted. {not med_fridge: A plan for any fridge medicines would round it off.}
+    - med_cabinet_done:
         ~ prep_medication = 1
-        You've done the basics. {not med_organized: {has_elderly: Organizing the pills by day would make things easier for {elderly_relation} in the dark. | Organizing the pills by day would make things easier in the dark.}}
+        <b>Basics done.</b> You've checked the cabinet — organizing the pills by day and writing a medicine card would make a real difference if things get hard.
     - else:
         ~ prep_medication = 1
         You've thought about medication, but haven't done much yet.

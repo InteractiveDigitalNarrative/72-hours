@@ -657,6 +657,73 @@
     }
   },
 
+  "cabinetCheck": {
+    "title": "Check the Medicine Cabinet",
+    "summaryTitle": "Cabinet Checked",
+    "subtitle": "Tap each item, read the label, and decide what to do with it.",
+    "hint": "Tap an item to check its date and quantity.",
+    "fridgeTag": "Keep refrigerated",
+    "verdicts": {
+      "keep": "Keep",
+      "restock": "Restock",
+      "toss": "Bin it"
+    },
+    "correct": "Good call.",
+    "incorrect": "Careful — better to",
+    "scoreLabel": "sorted correctly",
+    "restockTitle": "Add to your shopping list",
+    "seeList": "See your list",
+    "done": "Continue",
+    "takeaway": "<strong>Check expiry dates</strong> twice a year. Keep a <strong>7-day buffer</strong> of any prescription. <strong>Bin expired medicines</strong> — return old antibiotics and adrenaline pens to a pharmacy, never the bin. And know which medicines must <strong>stay cold</strong> if the power fails.",
+    "items": {
+      "painkillers": {
+        "name": "Painkillers",
+        "detail": "Expired 8 months ago",
+        "why": "Expired painkillers lose strength — bin them and add a fresh box to your list."
+      },
+      "plasters": {
+        "name": "Plasters",
+        "detail": "In date · well stocked",
+        "why": "In date and plenty left. Keep it — the backbone of your first-aid kit."
+      },
+      "antiseptic": {
+        "name": "Antiseptic",
+        "detail": "Almost empty bottle",
+        "why": "Nearly out — restock it. You'll want it for cleaning cuts when you can't just pop to a clinic."
+      },
+      "allergy": {
+        "name": "Allergy tablets",
+        "detail": "Expired last month",
+        "why": "Expired — bin it. If anyone reacts to pollen, dust or stings, replace it so it works when needed."
+      },
+      "vitamins": {
+        "name": "Daily vitamins",
+        "detail": "In date",
+        "why": "Fine to keep — no harm in it. Just don't let it crowd out the medicines that actually matter in a crisis."
+      },
+      "bp_pills": {
+        "name": "Blood-pressure pills",
+        "detail": "In date · only 5 days left",
+        "why": "A daily prescription with just 5 days left. Restock now — keep a 7-day buffer so a closed pharmacy never catches you out."
+      },
+      "insulin": {
+        "name": "Insulin",
+        "detail": "In date · half a pen left",
+        "why": "In date — keep it. But it must stay cold: in an outage the fridge holds about 4 hours closed, then move it to a cool bag with ice packs. Ask your pharmacist how long yours can be out."
+      },
+      "fever_syrup": {
+        "name": "Child's fever syrup",
+        "detail": "Expires next week · half a bottle",
+        "why": "About to expire and half gone. Replace it now so it's ready if a fever hits mid-storm."
+      },
+      "epipen": {
+        "name": "Adrenaline pen (EpiPen)",
+        "detail": "Expired 2 months ago",
+        "why": "An expired adrenaline pen may not work in a severe allergic reaction. Replace it straight away and keep it where everyone can find it — this is a 112 situation."
+      }
+    }
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 AM — The Night",
     "nightSubtitle": "The power is out. The storm has taken down the lines.",
