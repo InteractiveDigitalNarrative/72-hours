@@ -784,9 +784,23 @@ Lülitad sundventilatsiooni välja, sulged kõik aknad ja topid rätikud tuulet�
 VAR light_flashlight = false
 VAR light_batteries = false
 VAR light_candles = false
+VAR light_headlamp = false
+VAR light_lantern = false
+VAR light_powerbank = false
+
+// Määratud React LightAudit ülekatte poolt
+VAR light_audit_done = false
+VAR owns_flashlight = false
+VAR owns_headlamp = false
+VAR owns_lantern = false
+VAR owns_candles = false
+VAR owns_powerbank = false
 
 === category_light ===
 # CLEAR
+{not light_audit_done:
+    # LIGHT_AUDIT
+}
 
 {
     - prep_light == 0:
@@ -849,14 +863,21 @@ Taskulamp on turvaline, kohene ja ei tühjenda telefoni akut. Hoia seda kohas, m
 
 === light_hub ===
 # CLEAR
+# LIGHT_HUB
 
 ~ prep_light = 1
 
-{light_flashlight: ✓ Taskulamp leitud}
+<b>Valguse ettevalmistus:</b>
+{light_flashlight: ✓ Taskulamp korras}
 {light_batteries: ✓ Uued patareid}
-{light_candles: ✓ Küünlad ja tikud}
+{light_headlamp: ✓ Käed-vabad valgus valmis}
+{light_lantern: ✓ Ruumivalgus valmis}
+{light_candles: ✓ Küünlad ja tikud (varuks)}
+{light_powerbank: ✓ Akupank laetud}
 
-+ {not light_flashlight} [🔦 Otsi taskulamp — 3 min]
+Mida soovid teha?
+
++ {not light_flashlight} [🔦 Otsi taskulamp ja kontrolli — 3 min]
     ~ light_flashlight = true
     ~ current_time = current_time + 3
     -> light_result_flashlight
@@ -869,10 +890,25 @@ Taskulamp on turvaline, kohene ja ei tühjenda telefoni akut. Hoia seda kohas, m
     ~ shop_batteries = true
     -> light_result_shop_batteries
 
++ {not light_headlamp} [💡 Pane välja käed-vabad valgus — 3 min]
+    ~ light_headlamp = true
+    ~ current_time = current_time + 3
+    -> light_result_headlamp
+
++ {not light_lantern} [🏮 Sea üles ruumivalgus — 3 min]
+    ~ light_lantern = true
+    ~ current_time = current_time + 3
+    -> light_result_lantern
+
 + {not light_candles} [🕯️ Kogu küünlad ja tikud — 3 min]
     ~ light_candles = true
     ~ current_time = current_time + 3
     -> light_result_candles
+
++ {not light_powerbank} [🔌 Lae telefoni jaoks akupank — 2 min]
+    ~ light_powerbank = true
+    ~ current_time = current_time + 2
+    -> light_result_powerbank
 
 + [✓ Valgusega valmis]
     -> light_complete
@@ -883,11 +919,15 @@ Taskulamp on turvaline, kohene ja ei tühjenda telefoni akut. Hoia seda kohas, m
 === light_result_flashlight ===
 # CLEAR
 
-Leiad taskulambi esikukapi seest. Vajutad sisse — kiir on nõrk ja kollakas.
+{owns_flashlight:
+    Leiad taskulambi esikukapi seest ja vajutad sisse — kiir on nõrk ja kollakas.
 
-<b>Patareid on peaaegu tühjad.</b> Mõnda aega töötab, aga öö üle ei pea.
+    <b>Patareid on peaaegu tühjad.</b> Mõnda aega töötab, aga öö üle ei pea. Vajad uusi patareisid.
+- else:
+    Sul pole siin eraldi taskulampi — ja just see on kõige olulisem valgusallikas, mis omada. Paned selle ostunimekirja kõige etteotsa.
 
-Vajad uusi patareisid.
+    <b>Käes hoitav taskulamp on turvaline, kohene ja ei tühjenda telefoni akut, mida vajad kõnedeks. Soovita vähemalt üks inimese kohta, hoituna kohas, mille kõik pimedas üles leiavad.</b>
+}
 
 + [Jätka]
     -> light_hub
@@ -899,9 +939,9 @@ Tuhnid köögi sahtlites ja esiku kräbukarpi...
 
 ~ light_batteries = true
 
-Leiad pakikese AA-patareisid, mis on peidetud vana teibi taha. Näevad kasutamata välja.
+Leiad pakikese AA-patareisid, mis on peidetud vana teibi taha. Näevad kasutamata välja — vahetad need sisse ja kiir on ere ja tugev.
 
-<b>Vahetad need sisse — kiir on ere ja tugev.</b>
+<b>Patareitarkus: tea, milliseid suurusi su seadmed kasutavad (enamik lampe on AA või AAA), hoia varupakk igast ja vaheta vana varu välja, et see poleks vajaduse hetkel tühi.</b>
 
 + [Jätka]
     -> light_hub
@@ -909,7 +949,37 @@ Leiad pakikese AA-patareisid, mis on peidetud vana teibi taha. Näevad kasutamat
 === light_result_shop_batteries ===
 # CLEAR
 
-Lisad <b>patareid</b> ostunimekirja. Ostad poest uued.
+Lisad <b>patareid</b> ostunimekirja — õiged suurused taskulambile ja teistele seadmetele.
+
+<b>Osta varupakk igast suurusest, mida su seadmed kasutavad, ja kontrolli kuupäevi, et ei hoiaks juba pooltühje patareisid.</b>
+
++ [Jätka]
+    -> light_hub
+
+=== light_result_headlamp ===
+# CLEAR
+
+{owns_headlamp:
+    Otsid välja pealambi, kontrollid, et see töötab, ja jätad selle taskulambi kõrvale.
+- else:
+    Sul pole veel pealampi, aga paned tähele — isegi odav tasub end ära.
+}
+
+<b>Pealamp jätab mõlemad käed vabaks — toidu valmistamiseks, esmaabiks, asjade parandamiseks või lapse kandmiseks pimedas. Kui see kord olemas, on see tavaliselt esimene lamp, mille järele haarad.</b>
+
++ [Jätka]
+    -> light_hub
+
+=== light_result_lantern ===
+# CLEAR
+
+{owns_lantern:
+    Paned latern köögilauale, kus see valgustab kogu tuba.
+- else:
+    Sul pole laternat, aga paned tähele, kui kasulik see oleks. Hädas annab taskulamp veeklaasis seistes või valge lae poole suunatuna pehmema, kogu tuba katva kuma.
+}
+
+<b>Kaks valgusliiki teevad kaht tööd: taskulamp või pealamp on punktkiir liikumiseks ja töödeks; latern on ruumivalgus, mis täidab toa, et kogu pere saaks koos istuda. Püüa omada mõlemat.</b>
 
 + [Jätka]
     -> light_hub
@@ -917,9 +987,23 @@ Lisad <b>patareid</b> ostunimekirja. Ostad poest uued.
 === light_result_candles ===
 # CLEAR
 
-Kogud majast küünlad kokku ja leiad köögisahtlist tikud. Paned need elutuppa ja kööki — valmis süütamiseks.
+Kogud majast küünlad kokku ja leiad köögisahtlist tikud. Paned need stabiilsetele, vabadele pindadele elutuppa ja kööki.
 
-<b>Küünlad on hea varuvalgusti, aga ära jäta neid kunagi järelevalveta. Hoia need kardinatest ja paberist eemal. Tikud olgu alati käepärast.</b>
+<b>Küünlad on varuvalgus, mitte põhiplaan — lahtine leek on üks sagedasi tulekahju põhjusi elektrikatkestuste ajal. Ära jäta põlevat küünalt kunagi järelevalveta ega kardinate, paberi lähedale või sinna, kus laps või lemmikloom selle ümber lükkab, ja kustuta kõik enne magamaminekut.</b>
+
++ [Jätka]
+    -> light_hub
+
+=== light_result_powerbank ===
+# CLEAR
+
+{owns_powerbank:
+    Laed akupanga täis ja jätad selle laadimisjuhtmega ukse juurde.
+- else:
+    Sul pole akupanka, aga lisad selle nimekirja — ja vahepeal laed kõik olemasolevad seadmed 100%-ni, kuni elekter veel on.
+}
+
+<b>Su telefon on su elujoon hoiatuste ja hädaabikõnede jaoks. Laetud akupank hoiab seda päevi elus — lae kõik enne tormi täis.</b>
 
 + [Jätka]
     -> light_hub
@@ -928,21 +1012,27 @@ Kogud majast küünlad kokku ja leiad köögisahtlist tikud. Paned need elutuppa
 # CLEAR
 
 {
-    - light_flashlight && (light_batteries || shop_batteries) && light_candles:
+    - light_flashlight && (light_batteries || shop_batteries) && (light_headlamp || light_lantern) && light_powerbank:
         ~ prep_light = 2
         <b>Hästi ettevalmistatud!</b>
 
-        Taskulamp valmis, patareid korras, küünlad varuks. Pimedus ei üllata sind.
+        Taskulamp uute patareidega, käed-vabad või ruumivalgus valmis ja laetud akupank telefonile. Pimedus ei üllata sind.
+
+    - light_flashlight && (light_batteries || shop_batteries):
+        ~ prep_light = 2
+        <b>Hea ettevalmistus.</b>
+
+        Toimiv taskulamp koos toitega on selle tuum. Pealamp, latern ja laetud akupank teeksid pildi täielikuks.
 
     - light_flashlight:
         <b>Põhiline ettevalmistus.</b>
 
-        Sul on taskulamp, aga {light_batteries == false: patareid on nõrgad.}{light_batteries: varuvalgusti oleks kasulik.}
+        Sul on taskulamp, aga {light_batteries == false && not shop_batteries: patareid on nõrgad — sea see enne tormi korda.}{light_batteries || shop_batteries: ka varuvalgus kuluks ära.}
 
     - else:
-        <b>Sa pole veel valgusallikat leidnud.</b>
+        <b>Sa pole veel valgusallikat korraldanud.</b>
 
-        Ilma valguseta on pimedas majas liikumine ohtlik.
+        Ilma usaldusväärse valguseta on pimedas majas liikumine ohtlik.
 }
 
 + [← Tagasi ettevalmistustesse]

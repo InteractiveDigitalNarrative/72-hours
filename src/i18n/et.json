@@ -529,6 +529,53 @@
     }
   },
 
+  "lightAudit": {
+    "title": "Milline valgus sul on?",
+    "subtitle": "Märgi valgusallikad, mis sul tegelikult olemas on",
+    "realCheckNote": "🗒️ <strong>Mõtle oma päris kodu peale</strong> — sahtlid, kapid, auto. Ära loe seda, mida alles plaanid osta.",
+    "items": {
+      "flashlight": "Taskulamp",
+      "headlamp": "Pealamp (käed-vabad)",
+      "lantern": "Latern (valgustab tuba)",
+      "candles": "Küünlad ja tikud",
+      "power_bank": "Akupank"
+    },
+    "continueBtn": "Vaata, millele keskenduda →",
+    "backBtn": "← Tagasi",
+    "summaryTitle": "Sinu valguse ülevaade",
+    "summarySubtitle": "Mis on puudu öise elektrikatkestuse jaoks",
+    "gapsTitle": "Täitmist vajavad lüngad",
+    "gapsEmpty": "Oled hästi varustatud — siiski testi kõik enne tormi läbi.",
+    "gapLabels": {
+      "no_flashlight": "Pole eraldi taskulampi (kõige olulisem omada)",
+      "no_handsfree": "Pole käed-vabad valgust — pealamp vabastab käed",
+      "no_area": "Pole ruumivalgust — latern valgustab kogu toa",
+      "no_powerbank": "Pole akupanka telefoni elus hoidmiseks"
+    },
+    "tipsTitle": "Hea teada",
+    "tipLabels": {
+      "candle_safety": "Küünlad on ainult varuks — lahtine leek on üks sagedasi katkestuse-tulekahjude põhjusi. Ära jäta kunagi järelevalveta.",
+      "battery_rotation": "Hoia varupatareisid suurustes, mida su seadmed kasutavad, ja vaheta vana varu välja, et see poleks tühi."
+    },
+    "doneBtn": "Valmis — alusta ettevalmistust",
+    "editBtn": "← Kontrolli uuesti"
+  },
+
+  "lightNote": {
+    "title": "Sinu valguse prioriteedid",
+    "covered": "tehtud",
+    "chips": {
+      "fresh_batteries": "Hangi taskulambile uued patareid",
+      "get_flashlight": "Korralda eraldi taskulamp",
+      "get_handsfree": "Sea üles käed-vabad valgus (pealamp)",
+      "get_area": "Sea üles ruumivalgus (latern)",
+      "charge_powerbank": "Lae telefoni jaoks akupank"
+    },
+    "tips": {
+      "candle_safety": "Kasutad küünlaid? Hoia need süttivatest asjadest eemal ja ära jäta kunagi järelevalveta."
+    }
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 — Öö",
     "nightSubtitle": "Vool on ära. Torm on liinid maha võtnud.",

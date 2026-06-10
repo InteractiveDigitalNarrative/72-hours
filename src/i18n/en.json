@@ -529,6 +529,53 @@
     }
   },
 
+  "lightAudit": {
+    "title": "What Light Do You Have?",
+    "subtitle": "Tick the light sources you actually own",
+    "realCheckNote": "🗒️ <strong>Think about your real home</strong> — drawers, closets, the car. Don't count what you mean to buy.",
+    "items": {
+      "flashlight": "Flashlight",
+      "headlamp": "Headlamp (hands-free)",
+      "lantern": "Lantern (lights a room)",
+      "candles": "Candles & matches",
+      "power_bank": "Power bank"
+    },
+    "continueBtn": "See what to focus on →",
+    "backBtn": "← Back",
+    "summaryTitle": "Your Light Report",
+    "summarySubtitle": "What's missing for a power cut at night",
+    "gapsTitle": "Gaps to fill",
+    "gapsEmpty": "You're well stocked — still test everything before the storm.",
+    "gapLabels": {
+      "no_flashlight": "No dedicated flashlight (the #1 thing to own)",
+      "no_handsfree": "No hands-free light — a headlamp frees your hands",
+      "no_area": "No area light — a lantern lights a whole room",
+      "no_powerbank": "No power bank to keep your phone alive"
+    },
+    "tipsTitle": "Good to know",
+    "tipLabels": {
+      "candle_safety": "Candles are backup only — open flame is a top cause of outage fires. Never leave one unattended.",
+      "battery_rotation": "Keep spare batteries in the sizes your devices use, and rotate old stock so it's never flat."
+    },
+    "doneBtn": "Done — start preparing",
+    "editBtn": "← Re-check"
+  },
+
+  "lightNote": {
+    "title": "Your light priorities",
+    "covered": "done",
+    "chips": {
+      "fresh_batteries": "Get fresh batteries for the flashlight",
+      "get_flashlight": "Sort out a dedicated flashlight",
+      "get_handsfree": "Set up a hands-free light (headlamp)",
+      "get_area": "Set up an area light (lantern)",
+      "charge_powerbank": "Charge a power bank for your phone"
+    },
+    "tips": {
+      "candle_safety": "Using candles? Keep them away from anything that burns and never leave them unattended."
+    }
+  },
+
   "crisisScreen": {
     "nightTitle": "3:47 AM — The Night",
     "nightSubtitle": "The power is out. The storm has taken down the lines.",

@@ -784,9 +784,23 @@ You switch off the forced ventilation, shut every window, and stuff towels along
 VAR light_flashlight = false
 VAR light_batteries = false
 VAR light_candles = false
+VAR light_headlamp = false
+VAR light_lantern = false
+VAR light_powerbank = false
+
+// Set by the React LightAudit overlay
+VAR light_audit_done = false
+VAR owns_flashlight = false
+VAR owns_headlamp = false
+VAR owns_lantern = false
+VAR owns_candles = false
+VAR owns_powerbank = false
 
 === category_light ===
 # CLEAR
+{not light_audit_done:
+    # LIGHT_AUDIT
+}
 
 {
     - prep_light == 0:
@@ -849,14 +863,21 @@ A flashlight is safe, instant, and doesn't drain your phone. Keep it somewhere e
 
 === light_hub ===
 # CLEAR
+# LIGHT_HUB
 
 ~ prep_light = 1
 
-{light_flashlight: ✓ Flashlight found}
+<b>Light preparation:</b>
+{light_flashlight: ✓ Flashlight sorted}
 {light_batteries: ✓ Fresh batteries}
-{light_candles: ✓ Candles & matches}
+{light_headlamp: ✓ Hands-free light ready}
+{light_lantern: ✓ Area light ready}
+{light_candles: ✓ Candles & matches (backup)}
+{light_powerbank: ✓ Power bank charged}
 
-+ {not light_flashlight} [🔦 Find the flashlight — 3 min]
+What do you want to do?
+
++ {not light_flashlight} [🔦 Find & check the flashlight — 3 min]
     ~ light_flashlight = true
     ~ current_time = current_time + 3
     -> light_result_flashlight
@@ -869,10 +890,25 @@ A flashlight is safe, instant, and doesn't drain your phone. Keep it somewhere e
     ~ shop_batteries = true
     -> light_result_shop_batteries
 
++ {not light_headlamp} [💡 Set out a hands-free light — 3 min]
+    ~ light_headlamp = true
+    ~ current_time = current_time + 3
+    -> light_result_headlamp
+
++ {not light_lantern} [🏮 Set up an area light — 3 min]
+    ~ light_lantern = true
+    ~ current_time = current_time + 3
+    -> light_result_lantern
+
 + {not light_candles} [🕯️ Gather candles & matches — 3 min]
     ~ light_candles = true
     ~ current_time = current_time + 3
     -> light_result_candles
+
++ {not light_powerbank} [🔌 Charge a power bank for your phone — 2 min]
+    ~ light_powerbank = true
+    ~ current_time = current_time + 2
+    -> light_result_powerbank
 
 + [✓ Done with light]
     -> light_complete
@@ -883,11 +919,15 @@ A flashlight is safe, instant, and doesn't drain your phone. Keep it somewhere e
 === light_result_flashlight ===
 # CLEAR
 
-You find the flashlight in the hall closet. You click it on — the beam is weak and yellowish.
+{owns_flashlight:
+    You find the flashlight in the hall closet and click it on — the beam is weak and yellowish.
 
-<b>The batteries are low.</b> It'll work for a while, but won't last the night.
+    <b>The batteries are low.</b> It'll work for a while, but won't last the night. You need fresh batteries.
+- else:
+    You don't have a dedicated flashlight here — and that's the single most important light to own. You put it at the very top of your shopping list.
 
-You need fresh batteries.
+    <b>A handheld flashlight is safe, instant, and won't drain the phone you need for calls. Aim for at least one per person, kept somewhere everyone can find in the dark.</b>
+}
 
 + [Continue]
     -> light_hub
@@ -899,9 +939,9 @@ You rummage through kitchen drawers and the junk box in the hallway...
 
 ~ light_batteries = true
 
-You find a pack of AA batteries tucked behind some old tape. They look unused.
+You find a pack of AA batteries tucked behind some old tape. They look unused — you swap them in and the beam is bright and strong.
 
-<b>You swap them in — the beam is bright and strong.</b>
+<b>Battery sense: know which sizes your devices use (most lights are AA or AAA), keep a spare pack of each, and rotate old stock so it's never flat when you need it.</b>
 
 + [Continue]
     -> light_hub
@@ -909,7 +949,37 @@ You find a pack of AA batteries tucked behind some old tape. They look unused.
 === light_result_shop_batteries ===
 # CLEAR
 
-You add <b>batteries</b> to your shopping list. You'll grab fresh ones at the store.
+You add <b>batteries</b> to your shopping list — the right sizes for your flashlight and any other devices.
+
+<b>Buy a spare pack of each size your devices use, and check the dates so you're not storing batteries that are already half-dead.</b>
+
++ [Continue]
+    -> light_hub
+
+=== light_result_headlamp ===
+# CLEAR
+
+{owns_headlamp:
+    You dig out the headlamp, check that it works, and leave it next to the flashlight.
+- else:
+    You don't have a headlamp yet, but you note it down — even a cheap one is worth it.
+}
+
+<b>A headlamp keeps both hands free — for cooking, first aid, fixing things, or carrying a child in the dark. Once you own one, it's usually the first light you'll reach for.</b>
+
++ [Continue]
+    -> light_hub
+
+=== light_result_lantern ===
+# CLEAR
+
+{owns_lantern:
+    You set the lantern on the kitchen table where it can light the whole room.
+- else:
+    You don't have a lantern, but you note how useful one would be. In a pinch, standing a flashlight in a glass of water or aiming it at a white ceiling throws a softer, room-wide glow.
+}
+
+<b>Two kinds of light do two jobs: a flashlight or headlamp is a spot beam for moving and tasks; a lantern is area light that fills a room so the whole family can sit together. Aim to have both.</b>
 
 + [Continue]
     -> light_hub
@@ -917,9 +987,23 @@ You add <b>batteries</b> to your shopping list. You'll grab fresh ones at the st
 === light_result_candles ===
 # CLEAR
 
-You gather candles from around the house and find a box of matches in the kitchen drawer. You place them in the living room and kitchen — ready to light if needed.
+You gather candles from around the house and find a box of matches in the kitchen drawer. You set them on stable, clear surfaces in the living room and kitchen.
 
-<b>Candles are good backup light, but never leave them unattended. Keep them away from curtains and paper. Always have matches nearby.</b>
+<b>Candles are backup light, not your main plan — open flame is a leading cause of fires during power cuts. Never leave one burning unattended or near curtains, paper, or where a child or pet could knock it over, and blow them all out before sleep.</b>
+
++ [Continue]
+    -> light_hub
+
+=== light_result_powerbank ===
+# CLEAR
+
+{owns_powerbank:
+    You top up the power bank to full and set it by the door with a charging cable.
+- else:
+    You don't have a power bank, but you add one to your list — and meanwhile you charge every device you do have to 100% while the power's still on.
+}
+
+<b>Your phone is your lifeline for alerts and emergency calls. A charged power bank can keep it alive for days — charge everything before the storm hits.</b>
 
 + [Continue]
     -> light_hub
@@ -928,21 +1012,27 @@ You gather candles from around the house and find a box of matches in the kitche
 # CLEAR
 
 {
-    - light_flashlight && (light_batteries || shop_batteries) && light_candles:
+    - light_flashlight && (light_batteries || shop_batteries) && (light_headlamp || light_lantern) && light_powerbank:
         ~ prep_light = 2
         <b>Well prepared!</b>
 
-        Flashlight ready, batteries sorted, candles as backup. You won't be caught in the dark.
+        A flashlight with fresh batteries, a hands-free or area light ready, and a charged power bank for your phone. You won't be caught in the dark.
+
+    - light_flashlight && (light_batteries || shop_batteries):
+        ~ prep_light = 2
+        <b>Good preparation.</b>
+
+        A working flashlight with power is the core of it. A headlamp, a lantern, and a charged power bank would round things out.
 
     - light_flashlight:
         <b>Basic preparation.</b>
 
-        You have a flashlight, but {light_batteries == false: the batteries are weak.}{light_batteries: it could use some backup.}
+        You have a flashlight, but {light_batteries == false && not shop_batteries: the batteries are weak — sort that before the storm.}{light_batteries || shop_batteries: it could use some backup light too.}
 
     - else:
-        <b>You haven't found a light source yet.</b>
+        <b>You haven't sorted a light source yet.</b>
 
-        Without light, navigating the house at night will be dangerous.
+        Without reliable light, moving around the house at night will be dangerous.
 }
 
 + [← Back to preparation]

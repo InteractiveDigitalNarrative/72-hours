@@ -1,0 +1,94 @@
+/* ============================================
+   LIGHT NOTE — sticky note rendered in light_hub
+   ============================================ */
+
+.light-note {
+  background: linear-gradient(180deg, rgba(255, 205, 110, 0.10), rgba(255, 205, 110, 0.04));
+  border: 1px solid rgba(255, 210, 120, 0.3);
+  border-radius: 12px;
+  padding: 10px 14px 12px;
+  margin: 12px 0;
+  animation: ln-up 0.3s ease;
+}
+
+@keyframes ln-up {
+  from { transform: translateY(-6px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.light-note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.light-note-title {
+  color: #ffce7a;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.light-note-progress {
+  color: #c9a35a;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.light-note-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.light-note-chip {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(255, 210, 120, 0.08);
+  border: 1px solid rgba(255, 210, 120, 0.3);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: #ffe6b8;
+  font-size: 12px;
+  line-height: 1.35;
+  transition: all 0.2s ease;
+}
+
+.light-note-chip-covered {
+  background: rgba(120, 220, 160, 0.14);
+  border-color: rgba(120, 220, 160, 0.5);
+  color: #c0f5d6;
+}
+
+.light-note-chip-covered .light-note-chip-text {
+  text-decoration: line-through;
+  text-decoration-color: rgba(120, 220, 160, 0.55);
+}
+
+.light-note-check {
+  font-size: 12px;
+  width: 12px;
+  text-align: center;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.light-note-chip-covered .light-note-check {
+  color: #6fe8a4;
+  text-decoration: none;
+}
+
+.light-note-tip {
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: rgba(255, 160, 90, 0.08);
+  border: 1px dashed rgba(255, 160, 90, 0.35);
+  border-radius: 8px;
+  color: #f0c8a8;
+  font-size: 11.5px;
+  line-height: 1.4;
+}

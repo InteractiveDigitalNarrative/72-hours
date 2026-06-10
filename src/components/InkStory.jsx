@@ -17,6 +17,8 @@ import FamilySetup from './FamilySetup';
 import PantryCheck from './PantryCheck';
 import HomeSetup from './HomeSetup';
 import HeatNote from './HeatNote';
+import LightAudit from './LightAudit';
+import LightNote from './LightNote';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -158,6 +160,10 @@ function InkStory({ onReturnToMenu }) {
   // Home setup state — populated by HomeSetup overlay, consumed by HeatNote widget
   const [showHomeSetup, setShowHomeSetup] = useState(false);
   const [homeResult, setHomeResult] = useState(null);
+
+  // Light audit state — populated by LightAudit overlay, consumed by LightNote widget
+  const [showLightAudit, setShowLightAudit] = useState(false);
+  const [lightResult, setLightResult] = useState(null);
 
   // Tracks the current Ink scene (set by tags like HEAT_HUB) so widgets can show/hide
   const [currentScene, setCurrentScene] = useState(null);
@@ -361,6 +367,11 @@ function InkStory({ onReturnToMenu }) {
       heat_sealed: story.variablesState["heat_sealed"],
       heat_one_room: story.variablesState["heat_one_room"],
       heat_pipes: story.variablesState["heat_pipes"],
+      // Light sub-vars
+      light_batteries: story.variablesState["light_batteries"],
+      light_headlamp: story.variablesState["light_headlamp"],
+      light_lantern: story.variablesState["light_lantern"],
+      light_powerbank: story.variablesState["light_powerbank"],
       // Ending tracking
       ending_type: story.variablesState["ending_type"],
       total_prep: story.variablesState["total_prep"],
@@ -483,6 +494,20 @@ function InkStory({ onReturnToMenu }) {
         // Check for HEAT_HUB tag — heat-note widget should appear
         if (tag === 'HEAT_HUB') {
           sceneThisRun = 'heat_hub';
+        }
+
+        // Check for LIGHT_AUDIT tag
+        if (tag === 'LIGHT_AUDIT') {
+          console.log('Showing light audit');
+          setShowLightAudit(true);
+          setStoryText(lines);
+          setChoices([]);
+          return;
+        }
+
+        // Check for LIGHT_HUB tag — light-note widget should appear
+        if (tag === 'LIGHT_HUB') {
+          sceneThisRun = 'light_hub';
         }
 
         // Check for BREAKING_NEWS tag
@@ -816,6 +841,24 @@ function InkStory({ onReturnToMenu }) {
     continueStory();
   };
 
+  // LIGHT AUDIT OVERLAY HANDLER
+  // ============================================
+  const handleLightAuditClose = (result) => {
+    setShowLightAudit(false);
+    setLightResult(result);
+
+    const story = storyRef.current;
+    if (!story) return;
+    story.variablesState["light_audit_done"] = true;
+    story.variablesState["owns_flashlight"]  = !!result?.hasFlashlight;
+    story.variablesState["owns_headlamp"]    = !!result?.hasHeadlamp;
+    story.variablesState["owns_lantern"]     = !!result?.hasLantern;
+    story.variablesState["owns_candles"]     = !!result?.hasCandles;
+    story.variablesState["owns_powerbank"]   = !!result?.hasPowerBank;
+
+    continueStory();
+  };
+
   // STORE OVERLAY HANDLER
   // ============================================
 
@@ -1082,6 +1125,17 @@ function InkStory({ onReturnToMenu }) {
                       sealed:  !!gameVars.heat_sealed,
                       pipes:   !!gameVars.heat_pipes,
                       oneRoom: !!gameVars.heat_one_room,
+                    }}
+                  />
+                )}
+                {currentScene === 'light_hub' && (
+                  <LightNote
+                    lightResult={lightResult}
+                    done={{
+                      batteries: !!gameVars.light_batteries || !!gameVars.shop_batteries,
+                      headlamp:  !!gameVars.light_headlamp,
+                      lantern:   !!gameVars.light_lantern,
+                      powerbank: !!gameVars.light_powerbank,
                     }}
                   />
                 )}
@@ -1455,6 +1509,14 @@ function InkStory({ onReturnToMenu }) {
         <HomeSetup
           onClose={handleHomeSetupClose}
           onCancel={() => { setShowHomeSetup(false); continueStory(); }}
+        />
+      )}
+
+      {/* Light Audit Overlay */}
+      {showLightAudit && (
+        <LightAudit
+          onClose={handleLightAuditClose}
+          onCancel={() => { setShowLightAudit(false); continueStory(); }}
         />
       )}
 
