@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import './CabinetCheck.css';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { useDialog } from '../hooks/useDialog';
 
 // Item pool. Distinct emoji per item; `fridge` flags a cold-chain medicine.
 // The shelf is assembled from the player's household, so it stays personal.
@@ -45,6 +46,7 @@ function CabinetCheck({ household, onClose }) {
   const { t } = useTranslation();
   const { playSfx } = useAudioContext();
 
+  const dialogRef = useDialog();
   const items = useMemo(() => buildItems(household), [household]);
 
   const [verdicts, setVerdicts] = useState({});
@@ -82,7 +84,7 @@ function CabinetCheck({ household, onClose }) {
 
   if (showSummary) {
     return (
-      <div className="cc-overlay">
+      <div className="cc-overlay" ref={dialogRef} role="dialog" aria-modal="true" aria-label={t('cabinetCheck.summaryTitle')}>
         <div className="cc-panel">
           <div className="cc-header">
             <span className="cc-icon">🧰</span>
@@ -117,7 +119,7 @@ function CabinetCheck({ household, onClose }) {
   }
 
   return (
-    <div className="cc-overlay">
+    <div className="cc-overlay" ref={dialogRef} role="dialog" aria-modal="true" aria-label={t('cabinetCheck.title')}>
       <div className="cc-panel">
         <div className="cc-header">
           <span className="cc-icon">🧰</span>

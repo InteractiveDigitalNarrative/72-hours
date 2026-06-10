@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import './LightAudit.css';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { useDialog } from '../hooks/useDialog';
 
 const ITEMS = [
   { id: 'flashlight',  emoji: '🔦' },
@@ -38,6 +39,7 @@ function computeResult(toggled) {
 function LightAudit({ onClose, onCancel }) {
   const { t } = useTranslation();
   const { playSfx } = useAudioContext();
+  const dialogRef = useDialog({ onEscape: onCancel });
   const [screen, setScreen] = useState(1);
   const [toggled, setToggled] = useState({});
 
@@ -59,7 +61,7 @@ function LightAudit({ onClose, onCancel }) {
   };
 
   return (
-    <div className="la-overlay">
+    <div className="la-overlay" ref={dialogRef} role="dialog" aria-modal="true" aria-label={t('lightAudit.title')}>
       <div className="la-panel">
 
         {screen === 1 && (

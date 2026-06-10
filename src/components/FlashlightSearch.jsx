@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import './FlashlightSearch.css';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { useDialog } from '../hooks/useDialog';
 
 // Fixed hiding spots in the dark room (positions in %)
 const SPOTS = [
@@ -22,6 +23,7 @@ function knownSpotId(knownSpot) {
 function FlashlightSearch({ hasFlashlight, knownSpot = 'none', onClose }) {
   const { t } = useTranslation();
   const { playSfx } = useAudioContext();
+  const dialogRef = useDialog();
 
   const hintId = knownSpotId(knownSpot);
 
@@ -116,7 +118,7 @@ function FlashlightSearch({ hasFlashlight, knownSpot = 'none', onClose }) {
   const reminderKey = knownSpot === 'none' ? 'none' : knownSpot;
 
   return (
-    <div className="fs-overlay">
+    <div className="fs-overlay" ref={dialogRef} role="dialog" aria-modal="true" aria-label={t('flashlightSearch.title')}>
       <div className="fs-panel">
         <div className="fs-topbar">
           <span className="fs-title">🌑 {t('flashlightSearch.title')}</span>

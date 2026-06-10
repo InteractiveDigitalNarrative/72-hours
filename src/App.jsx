@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Menu from './components/Menu.jsx';
-import InkStory from './components/InkStory.jsx';
+import InkStory, { SAVE_KEY } from './components/InkStory.jsx';
 import LoadingScreen from './components/LoadingScreen.jsx';
 import LanguageSelect from './components/LanguageSelect.jsx';
 import Demography from './components/Demography.jsx';
@@ -11,9 +11,10 @@ import { LanguageProvider, useLanguage } from './context/LanguageContext.jsx';
 import './App.css';
 
 function AppContent() {
-  const { language, setLanguage } = useLanguage();
+  const { setLanguage } = useLanguage();
   const [currentScreen, setCurrentScreen] = useState('language');
-  const [hasSavedGame] = useState(false);
+  const [hasSavedGame, setHasSavedGame] = useState(false);
+  const [resume, setResume] = useState(false);
 
   const { playAmbient } = useAudioContext();
 
@@ -23,6 +24,15 @@ function AppContent() {
       playAmbient('menu');
     }
   }, [currentScreen, playAmbient]);
+
+  // Whether an in-progress save exists — refreshed each time we head to the menu.
+  const refreshSavedGame = () => {
+    try {
+      setHasSavedGame(!!localStorage.getItem(SAVE_KEY));
+    } catch {
+      setHasSavedGame(false);
+    }
+  };
 
   const handleLanguageSelect = (lang) => {
     setLanguage(lang);
@@ -42,18 +52,30 @@ function AppContent() {
   // Loading screen "ENTER" click — first user gesture, safe to start audio
   const handleEnter = () => {
     playAmbient('menu');
+    refreshSavedGame();
     setCurrentScreen('menu');
   };
 
   const handleStartGame = () => {
+    // New game — discard any in-progress save so it starts clean.
+    try { localStorage.removeItem(SAVE_KEY); } catch { /* ignore */ }
+    setResume(false);
     setCurrentScreen('game');
   };
 
   const handleContinueGame = () => {
+    // Resume the saved game in the language it was played in.
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      const save = raw ? JSON.parse(raw) : null;
+      if (save?.lang) setLanguage(save.lang);
+    } catch { /* ignore — InkStory will fall back to a fresh start */ }
+    setResume(true);
     setCurrentScreen('game');
   };
 
   const handleReturnToMenu = () => {
+    refreshSavedGame();
     setCurrentScreen('menu');
   };
 
@@ -83,7 +105,7 @@ function AppContent() {
       )}
 
       {currentScreen === 'game' && (
-        <InkStory onReturnToMenu={handleReturnToMenu} />
+        <InkStory onReturnToMenu={handleReturnToMenu} resume={resume} />
       )}
 
     </div>

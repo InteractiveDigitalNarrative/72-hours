@@ -28,7 +28,13 @@
       "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('src/i18n/en.json'\\)\\); JSON.parse\\(require\\('fs'\\).readFileSync\\('src/i18n/et.json'\\)\\); console.log\\('i18n JSON OK'\\)\")",
       "Bash(npx eslint *)",
       "Bash(echo \"--- exit: $? ---\")",
-      "Bash(./node_modules/inklecate/bin/inklecate -o /tmp/et_test.json public/ink/72Hours_et.ink)"
+      "Bash(./node_modules/inklecate/bin/inklecate -o /tmp/et_test.json public/ink/72Hours_et.ink)",
+      "Bash(xargs -I{} sh -c 'echo \"$\\(grep -c \"@media\" {}\\) {}\"')",
+      "Bash(sed -n '1,8p' src/components/InkStory.css)",
+      "Bash(sed -n '1142,1167p' src/components/InkStory.css)",
+      "Bash(sed -n '13,17p' src/components/Menu.css)",
+      "Bash(sed -n '31,35p' src/components/StoreOverlay.css)",
+      "Bash(sed -n '1,6p' src/App.css)"
     ]
   }
 }

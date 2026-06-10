@@ -3,6 +3,7 @@
 .ink-story-container {
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   background-color: #000;
   background-size: cover;
@@ -1164,6 +1165,7 @@
     /* Reset fixed height for wide screens — grid handles layout */
     height: auto;
     max-height: calc(100vh - var(--top-bar-height) - var(--bottom-bar-height) - 16px);
+    max-height: calc(100dvh - var(--top-bar-height) - var(--bottom-bar-height) - 16px);
     overflow: hidden;
     gap: clamp(20px, 3vw, 40px);
     padding: clamp(24px, 3vh, 40px) clamp(24px, 4vw, 48px);

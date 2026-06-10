@@ -29,8 +29,8 @@
 .store-container {
   width: 100%;
   max-width: 700px;
-  height: calc(100dvh - var(--top-bar-height) - var(--bottom-bar-height) - 16px);
   height: calc(100vh - var(--top-bar-height) - var(--bottom-bar-height) - 16px);
+  height: calc(100dvh - var(--top-bar-height) - var(--bottom-bar-height) - 16px);
   background: linear-gradient(145deg, #1a1a1a, #252525);
   border-radius: 20px;
   border: 1px solid rgba(255, 153, 51, 0.2);
@@ -609,7 +609,7 @@
   }
 
   .store-item-desc {
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .store-basket {

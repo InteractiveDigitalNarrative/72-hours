@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './RumorSort.css';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { useDialog } from '../hooks/useDialog';
 
 // The feed. `correct` is the intended verdict; `channel` tags the source style.
 const MESSAGES = [
@@ -22,6 +23,7 @@ const VERDICTS = [
 function RumorSort({ onClose }) {
   const { t } = useTranslation();
   const { playSfx } = useAudioContext();
+  const dialogRef = useDialog();
 
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState(null);
@@ -61,7 +63,7 @@ function RumorSort({ onClose }) {
   if (showSummary) {
     const total = MESSAGES.length;
     return (
-      <div className="rs-overlay">
+      <div className="rs-overlay" ref={dialogRef} role="dialog" aria-modal="true" aria-label={t('rumorSort.summaryTitle')}>
         <div className="rs-panel">
           <div className="rs-header">
             <span className="rs-icon">📡</span>
@@ -84,7 +86,7 @@ function RumorSort({ onClose }) {
   }
 
   return (
-    <div className="rs-overlay">
+    <div className="rs-overlay" ref={dialogRef} role="dialog" aria-modal="true" aria-label={t('rumorSort.title')}>
       <div className="rs-panel">
         <div className="rs-header">
           <span className="rs-icon">📡</span>

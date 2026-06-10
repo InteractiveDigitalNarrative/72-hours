@@ -25,6 +25,9 @@ import CabinetCheck from './CabinetCheck';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
 
+// localStorage key for the in-progress save (bump the suffix if the shape changes)
+export const SAVE_KEY = 'storm_save_v1';
+
 // Structural prep-choice data — translatable text comes from t() at render time
 const PREP_CHOICE_ICONS = {
   water: '💧', food: '🍞', heat: '🔥', light: '🔦', info: '📻', radio: '📻',
@@ -62,7 +65,7 @@ const splitChoiceIcon = (text) => {
     : { icon: null, label: text };
 };
 
-function InkStory({ onReturnToMenu }) {
+function InkStory({ onReturnToMenu, resume = false }) {
   // ============================================
   // AUDIO & TRANSLATION
   // ============================================
@@ -266,8 +269,31 @@ function InkStory({ onReturnToMenu }) {
 
           storyRef.current = story;
 
-          // STEP 4: Get first chunk of story
-          continueStory();
+          // STEP 4: Either resume a saved game or start from the beginning
+          let resumed = false;
+          if (resume) {
+            try {
+              const raw = localStorage.getItem(SAVE_KEY);
+              const save = raw ? JSON.parse(raw) : null;
+              if (save && save.ink) {
+                story.state.LoadJson(save.ink);
+                if (save.household) setHousehold(save.household);
+                if (typeof save.weatherStage === 'number') setWeatherStage(save.weatherStage);
+                if (save.background) setBackground(save.background);
+                // Re-sync choices + game vars at the restored choice point,
+                // then restore the text that was on screen (same as the Back button).
+                continueStory();
+                setStoryText(save.text || []);
+                resumed = true;
+              }
+            } catch (e) {
+              console.warn('Could not resume saved game:', e);
+            }
+          }
+
+          if (!resumed) {
+            continueStory();
+          }
 
           setStoryLoaded(true);
         } else {
@@ -294,6 +320,38 @@ function InkStory({ onReturnToMenu }) {
       }
     };
   }, []); // Empty array = run once on mount
+
+  // ============================================
+  // AUTO-SAVE — checkpoint whenever the story settles on a real choice point.
+  // When an overlay is open the story sets choices to [], so guarding on
+  // choices.length naturally avoids saving mid-overlay (which couldn't resume).
+  useEffect(() => {
+    if (!storyLoaded || !storyRef.current) return;
+    if (!choices || choices.length === 0) return;
+    if (showEndingScreen) return;
+    try {
+      const save = {
+        v: 1,
+        lang: language,
+        ink: storyRef.current.state.toJson(),
+        text: storyText,
+        household,
+        weatherStage,
+        background,
+      };
+      localStorage.setItem(SAVE_KEY, JSON.stringify(save));
+    } catch (e) {
+      // Storage full / serialisation issue — non-fatal, just skip this save.
+      console.warn('Auto-save failed:', e);
+    }
+  }, [storyText, choices, storyLoaded, showEndingScreen, household, weatherStage, background, language]);
+
+  // Clear the save once the game is over, so "Continue" only offers in-progress runs.
+  useEffect(() => {
+    if (showEndingScreen) {
+      try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ }
+    }
+  }, [showEndingScreen]);
 
   // ============================================
   // WEATHER STAGE — advances at two narrative moments:

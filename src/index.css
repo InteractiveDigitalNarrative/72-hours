@@ -28,6 +28,7 @@ a:hover {
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   overflow: hidden;
 }
@@ -55,9 +56,25 @@ button {
 button:hover {
   border-color: #646cff;
 }
-button:focus,
-button:focus-visible {
-  outline: none;
+/* Visible focus ring for keyboard users (not shown on mouse click) */
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #7fbcff;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Respect the OS "reduce motion" setting — calm all animations/transitions */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @media (prefers-color-scheme: light) {

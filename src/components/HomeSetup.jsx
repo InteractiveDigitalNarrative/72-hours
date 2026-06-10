@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import './HomeSetup.css';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { useDialog } from '../hooks/useDialog';
 
 const ITEMS = [
   { id: 'apartment',      emoji: '🏢' },
@@ -36,6 +37,7 @@ function computeResult(toggled) {
 function HomeSetup({ onClose, onCancel }) {
   const { t } = useTranslation();
   const { playSfx } = useAudioContext();
+  const dialogRef = useDialog({ onEscape: onCancel });
   const [screen, setScreen] = useState(1);
   const [toggled, setToggled] = useState({});
 
@@ -57,7 +59,7 @@ function HomeSetup({ onClose, onCancel }) {
   };
 
   return (
-    <div className="hs-overlay">
+    <div className="hs-overlay" ref={dialogRef} role="dialog" aria-modal="true" aria-label={t('homeSetup.title')}>
       <div className="hs-panel">
 
         {screen === 1 && (
