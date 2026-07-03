@@ -39,6 +39,9 @@ VAR home_seal_count = 0
 VAR home_has_exposed_pipes = false
 VAR home_high_heat_loss = false
 VAR home_has_stove = false
+// Fixed dwelling facts from HomeSetup: building = apartment|detached|terraced|rural; heating = district|electric|wood_gas
+VAR home_building = ""
+VAR home_heating = ""
 
 // Water containers filled
 VAR water_target = 18
@@ -69,6 +72,12 @@ VAR shop_water_amount = 0
 VAR shop_food = false
 VAR shop_batteries = false
 VAR shop_meds = false
+VAR shop_warm = false
+VAR shop_flashlight = false
+VAR shop_powerbank = false
+VAR shop_headlamp = false
+VAR shop_lantern = false
+VAR shop_matches = false
 VAR shop_visited = false
 
 // Phone call outcome tracking
@@ -198,7 +207,7 @@ What do you want to prepare?
 + [💊 Medication{prep_medication: ✓}]
     -> category_medication
 
-+ {(shop_water || shop_food || shop_batteries || shop_meds) && not shop_visited} [🛒 Go to Store]
++ {(shop_water || shop_food || shop_batteries || shop_meds || shop_warm || shop_flashlight || shop_powerbank || shop_headlamp || shop_lantern || shop_matches) && not shop_visited} [🛒 Go to Store]
     -> go_to_store
 
 + [Done preparing - wait for storm]
@@ -544,6 +553,26 @@ You pay and hurry home with your supplies.
     You grabbed <b>fresh batteries</b> for the flashlight and radio.
 }
 
+{shop_flashlight:
+    You picked up a <b>dedicated flashlight</b> — the one light worth having above all others.
+}
+
+{shop_powerbank:
+    You grabbed a <b>power bank</b> to keep your phone alive through the outage.
+}
+
+{shop_headlamp || shop_lantern:
+    You added {shop_headlamp && shop_lantern: a <b>headlamp and a lantern</b>|{shop_headlamp: a <b>headlamp</b>|a <b>lantern</b>}} to round out your lighting.
+}
+
+{shop_matches:
+    You grabbed <b>matches</b> so your candles aren't dead weight.
+}
+
+{shop_warm:
+    You grabbed <b>extra blankets and warm supplies</b> to trap more heat through the cold nights.
+}
+
 {shop_meds:
     You stop by the pharmacy too and restock the <b>medicines</b> you flagged — the expired ones replaced, the low ones topped up.
 }
@@ -590,7 +619,7 @@ VAR heat_clothing = false
 
 {
     - prep_heat == 0:
-        You think ahead — when the power goes out, the central heating stops. It's {temperature}°C outside.
+        You think ahead — when the power goes out, {home_heating == "electric": your electric heating dies completely|{home_heating == "wood_gas": the house cools unless you keep the stove fed|the district heating pump stops and the radiators go cold}}. It's {temperature}°C outside.
 
         What's the most important thing to do FIRST?
 
@@ -680,11 +709,23 @@ What do you want to do?
     ~ current_time = current_time + 3
     -> heat_result_clothing
 
++ {not shop_warm} [🛒 Add blankets & warm supplies to shopping list]
+    ~ shop_warm = true
+    -> heat_added_to_list
+
 + [✓ Done with heat]
     -> heat_complete
 
 + [← Back to preparation]
     -> preparation_hub
+
+=== heat_added_to_list ===
+# CLEAR
+
+You add <b>extra blankets and warm supplies</b> to your shopping list — more layers mean more trapped heat when the warmth has to last.
+
++ [← Back to heat]
+    -> heat_hub
 
 === heat_result_sealed ===
 # CLEAR
@@ -800,6 +841,7 @@ VAR owns_flashlight = false
 VAR owns_headlamp = false
 VAR owns_lantern = false
 VAR owns_candles = false
+VAR owns_matches = false
 VAR owns_powerbank = false
 
 // Where the flashlight is kept: -1 undecided, 0 nowhere/drawer, 1 hallway, 2 bedside
@@ -809,6 +851,8 @@ VAR flashlight_search_done = false
 VAR search_seconds = 0
 VAR search_found = false
 VAR search_known_spot = false
+// True when the night was spent using the phone as the only light — drains it for the crisis call
+VAR phone_drained = false
 
 === category_light ===
 # CLEAR
@@ -886,17 +930,23 @@ A flashlight is safe, instant, and doesn't drain your phone. Keep it somewhere e
 {light_batteries: ✓ Fresh batteries}
 {light_headlamp: ✓ Hands-free light ready}
 {light_lantern: ✓ Area light ready}
-{light_candles: ✓ Candles & matches (backup)}
+{light_candles: ✓ Candles ready (backup)}
 {light_powerbank: ✓ Power bank charged}
 {light_rationing: ✓ Plan to make it last}
 
 What do you want to do?
 
-+ {not light_flashlight} [🔦 Find & check the flashlight — 3 min]
+// FLASHLIGHT — own it: find & position it; don't: add to shopping list
++ {not light_flashlight && owns_flashlight} [🔦 Find & check the flashlight — 3 min]
     ~ light_flashlight = true
     ~ current_time = current_time + 3
     -> light_result_flashlight
 
++ {not light_flashlight && not owns_flashlight && not shop_flashlight} [🛒 Add a flashlight to shopping list]
+    ~ shop_flashlight = true
+    -> light_shop_flashlight
+
+// BATTERIES — only relevant once you have a flashlight to power
 + {light_flashlight && not light_batteries && not shop_batteries} [🔋 Search for spare batteries at home — 3 min]
     ~ current_time = current_time + 3
     -> light_result_search_batteries
@@ -905,25 +955,45 @@ What do you want to do?
     ~ shop_batteries = true
     -> light_result_shop_batteries
 
-+ {not light_headlamp} [💡 Set out a hands-free light — 3 min]
+// HEADLAMP
++ {not light_headlamp && owns_headlamp} [💡 Set out a hands-free light — 3 min]
     ~ light_headlamp = true
     ~ current_time = current_time + 3
     -> light_result_headlamp
 
-+ {not light_lantern} [🏮 Set up an area light — 3 min]
++ {not light_headlamp && not owns_headlamp && not shop_headlamp} [🛒 Add a headlamp to shopping list]
+    ~ shop_headlamp = true
+    -> light_shop_headlamp
+
+// LANTERN
++ {not light_lantern && owns_lantern} [🏮 Set up an area light — 3 min]
     ~ light_lantern = true
     ~ current_time = current_time + 3
     -> light_result_lantern
 
-+ {not light_candles} [🕯️ Gather candles & matches — 3 min]
++ {not light_lantern && not owns_lantern && not shop_lantern} [🛒 Add a lantern to shopping list]
+    ~ shop_lantern = true
+    -> light_shop_lantern
+
+// CANDLES (backup) — set out if you have them; add matches if they'd be useless without
++ {not light_candles && owns_candles} [🕯️ Set out your candles — 3 min]
     ~ light_candles = true
     ~ current_time = current_time + 3
     -> light_result_candles
 
-+ {not light_powerbank} [🔌 Charge a power bank for your phone — 2 min]
++ {owns_candles && not owns_matches && not shop_matches} [🛒 Add matches/lighter to shopping list]
+    ~ shop_matches = true
+    -> light_shop_matches
+
+// POWER BANK — charge the one you own, or add one to the list
++ {not light_powerbank && owns_powerbank} [🔌 Charge a power bank for your phone — 2 min]
     ~ light_powerbank = true
     ~ current_time = current_time + 2
     -> light_result_powerbank
+
++ {not owns_powerbank && not shop_powerbank} [🛒 Add a power bank to shopping list]
+    ~ shop_powerbank = true
+    -> light_shop_powerbank
 
 + {not light_rationing} [🔆 Plan how to make your light last — 2 min]
     ~ light_rationing = true
@@ -936,18 +1006,42 @@ What do you want to do?
 + [← Back to preparation]
     -> preparation_hub
 
+=== light_shop_flashlight ===
+# CLEAR
+You add a <b>dedicated flashlight</b> to your shopping list — the single most important light to own, one per person if you can.
++ [← Back to light]
+    -> light_hub
+
+=== light_shop_headlamp ===
+# CLEAR
+You add a <b>headlamp</b> to your shopping list — hands-free light for cooking, first aid, or carrying a child in the dark.
++ [← Back to light]
+    -> light_hub
+
+=== light_shop_lantern ===
+# CLEAR
+You add a <b>lantern</b> to your shopping list — one area light fills a whole room so the family can stay together.
++ [← Back to light]
+    -> light_hub
+
+=== light_shop_matches ===
+# CLEAR
+You add <b>matches or a lighter</b> to your shopping list — without them those candles are just wax.
++ [← Back to light]
+    -> light_hub
+
+=== light_shop_powerbank ===
+# CLEAR
+You add a <b>power bank</b> to your shopping list — a charged one keeps the phone you need for alerts and calls alive for days.
++ [← Back to light]
+    -> light_hub
+
 === light_result_flashlight ===
 # CLEAR
 
-{owns_flashlight:
-    You find the flashlight in the hall closet and click it on — the beam is weak and yellowish.
+You find the flashlight in the hall closet and click it on — the beam is weak and yellowish.
 
-    <b>The batteries are low.</b> It'll work for a while, but won't last the night. You need fresh batteries.
-- else:
-    You don't have a dedicated flashlight here — and that's the single most important light to own. You put it at the very top of your shopping list.
-
-    <b>A handheld flashlight is safe, instant, and won't drain the phone you need for calls. Aim for at least one per person, kept somewhere everyone can find in the dark.</b>
-}
+<b>The batteries are low.</b> It'll work for a while, but won't last the night. You need fresh batteries.
 
 Now decide where it lives — so you can find it the moment the lights go out.
 
@@ -1047,11 +1141,7 @@ You gather candles from around the house and find a box of matches in the kitche
 === light_result_powerbank ===
 # CLEAR
 
-{owns_powerbank:
-    You top up the power bank to full and set it by the door with a charging cable.
-- else:
-    You don't have a power bank, but you add one to your list — and meanwhile you charge every device you do have to 100% while the power's still on.
-}
+You top up the power bank to full and set it by the door with a charging cable. While you're at it, you charge every other device to 100% — the power's still on for now.
 
 <b>Your phone is your lifeline for alerts and emergency calls. A charged power bank can keep it alive for days — charge everything before the storm hits.</b>
 
@@ -1621,7 +1711,13 @@ The power is out. The storm must have taken down the lines.
 # CLEAR
 # CONSEQUENCE: light
 
+{not search_found:
+    ~ phone_drained = true
+}
+
 {
+    - not search_found && not light_flashlight:
+        Your hand closes on nothing. You never set a flashlight aside — there's no light to reach for. Your phone becomes the only lamp, screen blazing as you carry it room to room. By morning it's down to 9%.
     - not search_found:
         You never get a proper light in your hands. Your phone screen lights the way — bright enough, but not made for this. By morning, the battery is at 23%.
     - search_known_spot:
@@ -1638,7 +1734,9 @@ The power is out. The storm must have taken down the lines.
     }
 }
 
-<b>A flashlight in a spot you can reach from bed turns a frightening scramble in the dark into a few seconds. Decide the spot — and make sure everyone knows it.</b>
+{light_flashlight:
+    <b>A flashlight in a spot you can reach from bed turns a frightening scramble in the dark into a few seconds. Decide the spot — and make sure everyone knows it.</b>
+}
 
 * [Continue]
     -> night_heat
@@ -1649,7 +1747,7 @@ The power is out. The storm must have taken down the lines.
 
 {
     - prep_heat == 0:
-        The heating dies with the power. Within an hour you can see your breath. By dawn{has_elderly: , {elderly_relation} won't stop shivering — they need warmth you can't give them right now.| , your fingers are numb and the cold is relentless.}
+        {home_heating == "electric": Your electric heating dies the moment the power does.|{home_heating == "wood_gas": No fire is lit, and the house cools fast.|The district heating pump stops and the radiators go cold.}} Within an hour you can see your breath.{home_high_heat_loss:  The exposed walls give up heat even faster.} By dawn{has_elderly: , {elderly_relation} won't stop shivering — they need warmth you can't give them right now.| , your fingers are numb and the cold is relentless.}
     - prep_heat == 1:
         You pull every blanket you own and seal the worst of the drafts. Cold, but survivable. {has_elderly: {elderly_relation} sleeps fitfully.| You drift in and out of sleep.} By dawn you can see your breath.
     - else:
@@ -1864,9 +1962,13 @@ Your child is having a severe reaction — hives spreading, throat swelling. Thi
 ~ current_call_scenario = "power_outage"
 # PHONE_KEYPAD: power_outage
 
-You pick up your phone. The battery shows 23%.
+You pick up your phone. The battery shows {phone_drained: just 9% — you used it for light all night| 23%}.
 
 The power has been out for over 12 hours. You're lightheaded and cold. You need to report this and get help.
+
+{phone_drained:
+    The screen dims to save what's left. You might have one call in it before it dies.
+}
 
 {heard_broadcast:
     You remember the radio broadcast mentioned different numbers for different situations...

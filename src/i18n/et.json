@@ -300,11 +300,12 @@
     "live": "● OTSE",
     "banner": "KIIRTEADE",
     "lines": [
-      "Raske tormihoiatus Eesti rannikualadele.",
+      "Raske tormihoiatus kogu Eestile.",
+      "Mõjutatud on nii ranniku- kui ka sisealad.",
       "Tuule kiirus kuni 120 km/h oodatav täna öösel.",
       "Torm saabub kell 22:00."
     ],
-    "ticker": "⚠  TORMIHOIATUS VÄLJASTATUD KÕIGILE RANNIKUALADELE  •  ELANIKEL SOOVITATAKSE VALMISTUDA  •  JÄÄGE PÄRAST 21:00 SISERUUMIDESSE  •  ELEKTRIKATKESTUSED OODATAVAD  •  PÄÄSTETEENISTUSED VALMISOLEKUS  •  ",
+    "ticker": "⚠  TORMIHOIATUS VÄLJASTATUD ÜLE RIIGI — NII RANNIKU- KUI KA SISEMAA PIIRKONNAD  •  ELANIKEL SOOVITATAKSE VALMISTUDA  •  JÄÄGE PÄRAST 21:00 SISERUUMIDESSE  •  ELEKTRIKATKESTUSED OODATAVAD  •  PÄÄSTETEENISTUSED VALMISOLEKUS  •  ",
     "tickerLabel": "HOIATUS",
     "continue": "Jätka"
   },
@@ -485,31 +486,49 @@
 
   "homeSetup": {
     "title": "Kõnni oma kodu läbi",
-    "subtitle": "Märgi, mis su kodu kohta käib",
-    "realCheckNote": "🗒️ <strong>Vaata oma päriskodus ringi</strong> — aknad, uksed, torud. Ära pakkuda.",
+    "subtitle": "Räägi, kus sa elad — see kujundab, kuidas külm tabab",
+    "realCheckNote": "🗒️ <strong>Vaata oma päriskodus ringi</strong> — hoone, küte, aknad, torud. Ära pakkuda.",
+    "buildingTitle": "Mis tüüpi hoone?",
+    "buildingTypes": {
+      "apartment": "Korter",
+      "detached": "Eramaja",
+      "terraced": "Ridaelamu",
+      "rural": "Vana või maamaja"
+    },
+    "heatingTitle": "Kuidas seda köetakse?",
+    "heatingTypes": {
+      "district": "Kaug- või keskküte",
+      "electric": "Elektriküte või põrandaküte",
+      "wood_gas": "Puuahi või gaas"
+    },
+    "itemsTitle": "Mis veel selle kohta käib?",
     "items": {
-      "apartment": "Korterelamu",
-      "exposed_layout": "Ülemine korrus / nurgakorter / eraldiseisev maja",
       "old_windows": "Vanad või ühekordsed aknad",
       "balcony_door": "Rõduuks või suur klaaspind",
-      "exposed_pipes": "Avatud torud (kelder, garaaž, välisseinad)",
-      "wood_stove": "Puuahi või kamin"
+      "exposed_layout": "Ülemine korrus / nurgakorter / eraldiseisev maja",
+      "exposed_pipes": "Avatud torud (kelder, garaaž, välisseinad)"
     },
     "continueBtn": "Vaata, millele keskenduda →",
+    "continueHint": "Vali hoone ja kütte tüüp",
     "backBtn": "← Tagasi",
     "summaryTitle": "Sinu kodu raport",
     "summarySubtitle": "Mis on soojas püsimiseks kõige tähtsam",
-    "weakSpotsTitle": "Nõrgad kohad, millele keskenduda",
+    "weakSpotsTitle": "Nõrgad kohad, mida enne tormi tihendada",
     "weakSpotsEmpty": "Selgeid nõrku kohti pole — aga tihenda ikkagi enne tormi.",
     "weakSpotLabels": {
       "old_windows": "Vanad aknad (suurim soojakadu)",
       "balcony_door": "Rõduuks / suur klaaspind",
-      "exposed_layout": "Ülemine korrus või eraldiseisev paigutus",
       "exposed_pipes": "Avatud torud (lõhkemise oht)"
+    },
+    "fixedTitle": "Püsivad asjaolud, millega arvestada",
+    "fixedLabels": {
+      "detached": "Eramaja kaotab soojust igast küljest — tihenda hoolega ja vali üks ruum, mida soojas hoida.",
+      "rural": "Vanem või maamaja kipub soojust lekkima — tihendamine ja varuküttekoht on siin tähtsamad.",
+      "exposed_layout": "Ülemine korrus, nurgakorter või eraldiseisev maja on külmale rohkem avatud — seda muuta ei saa, seega planeeri kompenseerimine: tihenda põhjalikult ja koonda soojus ühte ruumi."
     },
     "tipsTitle": "Hea teada",
     "tipLabels": {
-      "no_stove_aspirational": "Puuahju pole? Tihendamine ja sooja ruumi seadmine annavad ~80% kasust. Ahi on kuldne, kui see kunagi tuleb.",
+      "no_stove_aspirational": "Puuahju ega gaasi pole? Tihendamine ja sooja ruumi seadmine annavad ~80% kasust. Ahi on kuldne, kui see kunagi tuleb.",
       "apartment_neighbors": "Korteris aitavad naabrite seinad — sulge vähem kasutatavate tubade uksed, et see soojus tööle panna."
     },
     "doneBtn": "Valmis — hakka ette valmistama",
@@ -520,12 +539,14 @@
     "title": "Sinu kodu prioriteedid",
     "covered": "tehtud",
     "chips": {
+      "seal_house": "Tihenda maja",
       "seal_weak_spots": "Tihenda nõrgad kohad",
       "insulate_pipes": "Isoleeri avatud torud",
-      "concentrate_heat": "Koonda soojus ühte tuppa"
+      "concentrate_heat": "Sea üles soe tuba"
     },
+    "writeDown": "Kirjuta need prioriteedid oma märkmikku — vajad neid, kui torm saabub.",
     "tips": {
-      "no_stove": "Puuahju pole? Tihendamine + soe tuba on kõige suurema mõjuga sammud, mida saad teha."
+      "no_stove": "Ilma puuahju või gaasita ei saa katkestuse ajal uut sooja toota — seega hoia olemasolevat sooja: tihenda maja ja sea üles üks soe tuba (allolevad tegevused)."
     }
   },
 
@@ -537,7 +558,8 @@
       "flashlight": "Taskulamp",
       "headlamp": "Pealamp (käed-vabad)",
       "lantern": "Latern (valgustab tuba)",
-      "candles": "Küünlad ja tikud",
+      "candles": "Küünlad",
+      "matches": "Tikud või välgumihkel",
       "power_bank": "Akupank"
     },
     "continueBtn": "Vaata, millele keskenduda →",
@@ -550,6 +572,7 @@
       "no_flashlight": "Pole eraldi taskulampi (kõige olulisem omada)",
       "no_handsfree": "Pole käed-vabad valgust — pealamp vabastab käed",
       "no_area": "Pole ruumivalgust — latern valgustab kogu toa",
+      "candles_no_matches": "Küünlad on, aga tikke ega välgumihklit pole — hoia süütevahend nende juures",
       "no_powerbank": "Pole akupanka telefoni elus hoidmiseks"
     },
     "tipsTitle": "Hea teada",
@@ -572,8 +595,28 @@
       "charge_powerbank": "Lae telefoni jaoks akupank",
       "make_it_last": "Planeeri, kuidas valgus 3 ööd vastu peaks"
     },
+    "onList": "ostunimekirjas",
+    "writeDown": "Kirjuta oma valgusplaan märkmikku — millist valgust esimesena haarata ja kuidas see kõik kolm ööd vastu peaks.",
     "tips": {
       "candle_safety": "Kasutad küünlaid? Hoia need süttivatest asjadest eemal ja ära jäta kunagi järelevalveta."
+    }
+  },
+
+  "shoppingList": {
+    "title": "Ostunimekiri",
+    "hint": "Lisatakse ettevalmistuse käigus — käi enne tormi poes ja osta kõik ära.",
+    "items": {
+      "water": "Pudelivesi",
+      "water_amount": "Pudelivesi ({n}L)",
+      "food": "Hädaabitoit",
+      "flashlight": "Taskulamp",
+      "batteries": "Patareid",
+      "powerbank": "Akupank",
+      "headlamp": "Pealamp",
+      "lantern": "Latern",
+      "matches": "Tikud / välgumihkel",
+      "warm": "Tekid ja soojad tarbed",
+      "meds": "Ravimid"
     }
   },
 
@@ -602,6 +645,8 @@
     "foundKnown": "Täpselt seal, kuhu jätsid.",
     "foundFumble": "Leidsid — lõpuks ometi.",
     "giveUp": "Anna alla — kasuta telefoni",
+    "giveUpNoLight": "Kasuta telefoni valgusena",
+    "noLightRealize": "Kusagil pole taskulampi — sa ei pannud ühtegi kõrvale. Telefon on ainus järelejäänud valgus.",
     "continue": "Jätka"
   },
 
@@ -666,7 +711,12 @@
     "verdicts": {
       "keep": "Jäta",
       "restock": "Osta juurde",
-      "toss": "Viska ära"
+      "toss": "Viska ära ja asenda"
+    },
+    "verdictHints": {
+      "keep": "Korras ja piisavalt — pole vaja osta",
+      "restock": "Korras, aga otsakorral — osta juurde, see jäta alles",
+      "toss": "Aegunud või ohtlik — viska ära JA osta uus"
     },
     "correct": "Hea valik.",
     "incorrect": "Ettevaatust — parem oleks",

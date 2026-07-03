@@ -4,32 +4,59 @@ import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useDialog } from '../hooks/useDialog';
 
-const ITEMS = [
-  { id: 'apartment',      emoji: '🏢' },
-  { id: 'exposed_layout', emoji: '🌡️' },
-  { id: 'old_windows',    emoji: '🪟' },
-  { id: 'balcony_door',   emoji: '🚪' },
-  { id: 'exposed_pipes',  emoji: '🧊' },
-  { id: 'wood_stove',     emoji: '🪵' },
+// Building type — a fixed fact about where you live (pick one).
+const BUILDINGS = [
+  { id: 'apartment', emoji: '🏢' },
+  { id: 'detached',  emoji: '🏠' },
+  { id: 'terraced',  emoji: '🏘️' },
+  { id: 'rural',     emoji: '🏡' },
 ];
 
-function computeResult(toggled) {
+// Heating system — determines what fails in the outage (pick one).
+const HEATINGS = [
+  { id: 'district', emoji: '♨️' },
+  { id: 'electric', emoji: '🔌' },
+  { id: 'wood_gas', emoji: '🪵' },
+];
+
+// Things you can toggle that are true about the place (some fixable, some not).
+const ITEMS = [
+  { id: 'old_windows',    emoji: '🪟' },
+  { id: 'balcony_door',   emoji: '🚪' },
+  { id: 'exposed_layout', emoji: '🌡️' },
+  { id: 'exposed_pipes',  emoji: '🧊' },
+];
+
+function computeResult(building, heating, toggled) {
   const has = (id) => !!toggled[id];
 
+  // Weak spots you can actually do something about before the storm.
   const weakSpots = [];
-  if (has('old_windows'))    weakSpots.push('old_windows');
-  if (has('balcony_door'))   weakSpots.push('balcony_door');
-  if (has('exposed_layout')) weakSpots.push('exposed_layout');
+  if (has('old_windows'))  weakSpots.push('old_windows');
+  if (has('balcony_door')) weakSpots.push('balcony_door');
+
+  // Fixed structural facts you cannot change — only plan around.
+  const fixed = [];
+  if (building === 'detached') fixed.push('detached');
+  if (building === 'rural')    fixed.push('rural');
+  if (has('exposed_layout'))   fixed.push('exposed_layout');
+
+  const hasStove = heating === 'wood_gas';
+  const highHeatLoss =
+    building === 'detached' || building === 'rural' || has('exposed_layout');
 
   const tips = [];
-  if (!has('wood_stove'))    tips.push('no_stove_aspirational');
-  if (has('apartment'))      tips.push('apartment_neighbors');
+  if (!hasStove)             tips.push('no_stove_aspirational');
+  if (building === 'apartment') tips.push('apartment_neighbors');
 
   return {
+    building,
+    heating,
     weakSpots,
+    fixed,
     needsPipeInsulation: has('exposed_pipes'),
-    highHeatLoss: !has('apartment') || has('exposed_layout'),
-    hasStove: has('wood_stove'),
+    highHeatLoss,
+    hasStove,
     tips,
   };
 }
@@ -39,16 +66,29 @@ function HomeSetup({ onClose, onCancel }) {
   const { playSfx } = useAudioContext();
   const dialogRef = useDialog({ onEscape: onCancel });
   const [screen, setScreen] = useState(1);
+  const [building, setBuilding] = useState(null);
+  const [heating, setHeating] = useState(null);
   const [toggled, setToggled] = useState({});
 
-  const result = useMemo(() => computeResult(toggled), [toggled]);
+  const result = useMemo(
+    () => computeResult(building, heating, toggled),
+    [building, heating, toggled]
+  );
+
+  const canContinue = !!building && !!heating;
 
   const toggle = (id) => {
     playSfx('click');
     setToggled(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const pick = (setter) => (id) => {
+    playSfx('click');
+    setter(id);
+  };
+
   const goToSummary = () => {
+    if (!canContinue) return;
     playSfx('click');
     setScreen(2);
   };
@@ -74,6 +114,37 @@ function HomeSetup({ onClose, onCancel }) {
               __html: t('homeSetup.realCheckNote')
             }} />
 
+            <div className="hs-group-label">{t('homeSetup.buildingTitle')}</div>
+            <div className="hs-items-grid">
+              {BUILDINGS.map(item => (
+                <button
+                  key={item.id}
+                  className={`hs-item ${building === item.id ? 'hs-item-on' : ''}`}
+                  onClick={() => pick(setBuilding)(item.id)}
+                >
+                  <span className="hs-item-emoji">{item.emoji}</span>
+                  <span className="hs-item-name">{t(`homeSetup.buildingTypes.${item.id}`)}</span>
+                  {building === item.id && <span className="hs-item-check">✓</span>}
+                </button>
+              ))}
+            </div>
+
+            <div className="hs-group-label">{t('homeSetup.heatingTitle')}</div>
+            <div className="hs-items-grid">
+              {HEATINGS.map(item => (
+                <button
+                  key={item.id}
+                  className={`hs-item ${heating === item.id ? 'hs-item-on' : ''}`}
+                  onClick={() => pick(setHeating)(item.id)}
+                >
+                  <span className="hs-item-emoji">{item.emoji}</span>
+                  <span className="hs-item-name">{t(`homeSetup.heatingTypes.${item.id}`)}</span>
+                  {heating === item.id && <span className="hs-item-check">✓</span>}
+                </button>
+              ))}
+            </div>
+
+            <div className="hs-group-label">{t('homeSetup.itemsTitle')}</div>
             <div className="hs-items-grid">
               {ITEMS.map(item => {
                 const on = !!toggled[item.id];
@@ -91,8 +162,8 @@ function HomeSetup({ onClose, onCancel }) {
               })}
             </div>
 
-            <button className="hs-btn-primary" onClick={goToSummary}>
-              {t('homeSetup.continueBtn')}
+            <button className="hs-btn-primary" onClick={goToSummary} disabled={!canContinue}>
+              {canContinue ? t('homeSetup.continueBtn') : t('homeSetup.continueHint')}
             </button>
 
             <button className="hs-btn-back" onClick={() => { playSfx('close'); onCancel?.(); }}>
@@ -133,6 +204,23 @@ function HomeSetup({ onClose, onCancel }) {
                 </ul>
               )}
             </div>
+
+            {result.fixed.length > 0 && (
+              <div className="hs-summary-section hs-summary-fixed">
+                <div className="hs-summary-heading">
+                  <span className="hs-summary-dot hs-dot-amber" />
+                  {t('homeSetup.fixedTitle')}
+                </div>
+                <ul className="hs-summary-list">
+                  {result.fixed.map(id => (
+                    <li key={id}>
+                      <span className="hs-summary-bullet">•</span>
+                      {t(`homeSetup.fixedLabels.${id}`)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {result.tips.length > 0 && (
               <div className="hs-summary-section hs-summary-tips">

@@ -194,8 +194,27 @@
   border-radius: 50%;
 }
 
-.hs-dot-red  { background: #ff7878; box-shadow: 0 0 8px rgba(255, 120, 120, 0.5); }
-.hs-dot-blue { background: #6fb6ff; box-shadow: 0 0 8px rgba(120, 180, 230, 0.5); }
+.hs-dot-red   { background: #ff7878; box-shadow: 0 0 8px rgba(255, 120, 120, 0.5); }
+.hs-dot-blue  { background: #6fb6ff; box-shadow: 0 0 8px rgba(120, 180, 230, 0.5); }
+.hs-dot-amber { background: #ffc06a; box-shadow: 0 0 8px rgba(255, 192, 106, 0.5); }
+
+/* Group heading above each select grid on screen 1 */
+.hs-group-label {
+  align-self: flex-start;
+  margin: 0.9rem 0 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #9fb0c6;
+}
+.hs-group-label:first-of-type { margin-top: 0.4rem; }
+
+.hs-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: none;
+}
 
 .hs-summary-list {
   list-style: none;

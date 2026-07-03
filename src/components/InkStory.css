@@ -289,7 +289,7 @@
   border: 1px solid rgba(185, 124, 44, 0.4);
   border-radius: 12px;
   color: #d4a54a;
-  cursor: default;
+  cursor: pointer;
   transition: all 0.25s ease;
   font-family: inherit;
   position: relative;
@@ -852,44 +852,39 @@
    SHOPPING LIST
    ============================================ */
 
-.shopping-list {
-  position: fixed;
-  bottom: var(--bottom-bar-height);
-  left: 20px;
-  background: rgba(20, 20, 20, 0.95);
-  border: 1px solid rgba(255, 153, 51, 0.3);
-  border-radius: 12px;
-  padding: 12px 16px;
-  z-index: 98;
-  min-width: 180px;
-  animation: list-slide-in 0.4s ease;
+/* Compact prep status chips (grouped "✓ …" story lines) */
+.prep-status-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px 8px;
+  margin: 6px auto 10px;
+  max-width: 560px;
 }
 
-@keyframes list-slide-in {
-  from { transform: translateX(-20px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-.shopping-list-header {
-  font-size: 14px;
-  font-weight: 700;
-  color: #ff9933;
-  margin-bottom: 8px;
-  letter-spacing: 0.5px;
-}
-
-.shopping-list-items {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.shopping-list-items li {
+.prep-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
   font-size: 13px;
-  color: #ddd;
-  padding: 4px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  line-height: 1.2;
+  color: #cdeccf;
+  background: rgba(70, 185, 100, 0.12);
+  border: 1px solid rgba(70, 185, 100, 0.4);
+  border-radius: 999px;
 }
+
+.prep-status-check {
+  color: #72d48a;
+  font-weight: 700;
+}
+
+@media (max-width: 639px) {
+  .prep-status-chip { font-size: 12px; padding: 3px 9px; }
+}
+
+/* Shopping-list styles now live in ShoppingList.css (inline widget). */
 
 /* ============================================
    CLOCK DISPLAY
@@ -1693,22 +1688,6 @@
     width: 28px;
     height: 28px;
     font-size: 14px;
-  }
-
-  /* Shopping list */
-  .shopping-list {
-    bottom: 60px;
-    left: 10px;
-    min-width: 150px;
-    padding: 10px 12px;
-  }
-
-  .shopping-list-header {
-    font-size: 12px;
-  }
-
-  .shopping-list-items li {
-    font-size: 11px;
   }
 
   /* SMS overlay */

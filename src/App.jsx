@@ -18,6 +18,17 @@ function AppContent() {
 
   const { playAmbient } = useAudioContext();
 
+  // DEV: ?scene=<key> skips the intro UI and drops straight into the game,
+  // where InkStory jumps to the matching slice (see DEV_SCENES in InkStory).
+  // Optional ?lang=et. Dev build only.
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    const params = new URLSearchParams(window.location.search);
+    if (!params.get('scene')) return;
+    setLanguage(params.get('lang') === 'et' ? 'et' : 'en');
+    setCurrentScreen('game');
+  }, [setLanguage]);
+
   // Play menu ambient whenever we return to the menu (user has already interacted by then)
   useEffect(() => {
     if (currentScreen === 'menu') {

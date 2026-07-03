@@ -39,6 +39,9 @@ VAR home_seal_count = 0
 VAR home_has_exposed_pipes = false
 VAR home_high_heat_loss = false
 VAR home_has_stove = false
+// Püsivad kodu asjaolud HomeSetupist: building = apartment|detached|terraced|rural; heating = district|electric|wood_gas
+VAR home_building = ""
+VAR home_heating = ""
 
 // Veekonteinerid täidetud
 VAR water_target = 18
@@ -69,6 +72,12 @@ VAR shop_water_amount = 0
 VAR shop_food = false
 VAR shop_batteries = false
 VAR shop_meds = false
+VAR shop_warm = false
+VAR shop_flashlight = false
+VAR shop_powerbank = false
+VAR shop_headlamp = false
+VAR shop_lantern = false
+VAR shop_matches = false
 VAR shop_visited = false
 
 // Telefonikõne tulemuse jälgimine
@@ -198,7 +207,7 @@ Mida soovid ette valmistada?
 + [💊 Ravimid{prep_medication: ✓}]
     -> category_medication
 
-+ {(shop_water || shop_food || shop_batteries || shop_meds) && not shop_visited} [🛒 Mine poodi]
++ {(shop_water || shop_food || shop_batteries || shop_meds || shop_warm || shop_flashlight || shop_powerbank || shop_headlamp || shop_lantern || shop_matches) && not shop_visited} [🛒 Mine poodi]
     -> go_to_store
 
 + [Ettevalmistused tehtud - oota tormi]
@@ -544,6 +553,26 @@ Maksad ja kiirustad varudega koju. Tuul tugevneb.
     Haarasid kaasa <b>uued patareid</b> taskulambi ja raadio jaoks.
 }
 
+{shop_flashlight:
+    Võtsid kaasa <b>korraliku taskulambi</b> — üks valgus, mida tasub omada üle kõige.
+}
+
+{shop_powerbank:
+    Haarasid <b>akupanga</b>, et hoida telefon katkestuse ajal elus.
+}
+
+{shop_headlamp || shop_lantern:
+    Lisasid {shop_headlamp && shop_lantern: <b>pealambi ja laterna</b>|{shop_headlamp: <b>pealambi</b>|<b>laterna</b>}}, et valgustus oleks terviklik.
+}
+
+{shop_matches:
+    Haarasid <b>tikud</b>, et su küünlad poleks kasutud.
+}
+
+{shop_warm:
+    Haarasid <b>lisatekid ja soojad tarbed</b>, et külmadel öödel rohkem sooja kinni püüda.
+}
+
 {shop_meds:
     Põikad ka apteeki ja täiendad <b>ravimeid</b>, mille märkisid — aegunud asendatud, vähesed juurde ostetud.
 }
@@ -590,7 +619,7 @@ VAR heat_clothing = false
 
 {
     - prep_heat == 0:
-        Mõtled ette — kui elekter läheb ära, seiskub keskküte. Väljas on {temperature}°C.
+        Mõtled ette — kui elekter läheb ära, {home_heating == "electric": sureb su elektriküte täielikult|{home_heating == "wood_gas": maja jahtub, kui sa ahju ei köeta|seiskub kaugkütte pump ja radiaatorid jahtuvad}}. Väljas on {temperature}°C.
 
         Mis on kõige tähtsam teha ESIMESENA?
 
@@ -680,11 +709,23 @@ Mida soovid teha?
     ~ current_time = current_time + 3
     -> heat_result_clothing
 
++ {not shop_warm} [🛒 Lisa tekid ja soojad tarbed ostunimekirja]
+    ~ shop_warm = true
+    -> heat_added_to_list
+
 + [✓ Soojusega valmis]
     -> heat_complete
 
 + [← Tagasi ettevalmistustesse]
     -> preparation_hub
+
+=== heat_added_to_list ===
+# CLEAR
+
+Lisad <b>lisatekid ja soojad tarbed</b> oma ostunimekirja — rohkem kihte tähendab rohkem kinnipüütud sooja, kui see peab kaua vastu pidama.
+
++ [← Tagasi soojuse juurde]
+    -> heat_hub
 
 === heat_result_sealed ===
 # CLEAR
@@ -800,6 +841,7 @@ VAR owns_flashlight = false
 VAR owns_headlamp = false
 VAR owns_lantern = false
 VAR owns_candles = false
+VAR owns_matches = false
 VAR owns_powerbank = false
 
 // Kus taskulampi hoitakse: -1 otsustamata, 0 mitte kusagil/sahtlis, 1 esikus, 2 öökapil
@@ -809,6 +851,8 @@ VAR flashlight_search_done = false
 VAR search_seconds = 0
 VAR search_found = false
 VAR search_known_spot = false
+// Tõene, kui öö möödus telefoni kui ainsa valgusallikaga — tühjendab selle kriisikõneks
+VAR phone_drained = false
 
 === category_light ===
 # CLEAR
@@ -886,17 +930,23 @@ Taskulamp on turvaline, kohene ja ei tühjenda telefoni akut. Hoia seda kohas, m
 {light_batteries: ✓ Uued patareid}
 {light_headlamp: ✓ Käed-vabad valgus valmis}
 {light_lantern: ✓ Ruumivalgus valmis}
-{light_candles: ✓ Küünlad ja tikud (varuks)}
+{light_candles: ✓ Küünlad valmis (varuks)}
 {light_powerbank: ✓ Akupank laetud}
 {light_rationing: ✓ Plaan, kuidas see vastu peaks}
 
 Mida soovid teha?
 
-+ {not light_flashlight} [🔦 Otsi taskulamp ja kontrolli — 3 min]
+// TASKULAMP — kui omad, otsi ja paiguta; kui ei, lisa ostunimekirja
++ {not light_flashlight && owns_flashlight} [🔦 Otsi taskulamp ja kontrolli — 3 min]
     ~ light_flashlight = true
     ~ current_time = current_time + 3
     -> light_result_flashlight
 
++ {not light_flashlight && not owns_flashlight && not shop_flashlight} [🛒 Lisa taskulamp ostunimekirja]
+    ~ shop_flashlight = true
+    -> light_shop_flashlight
+
+// PATAREID — alles siis, kui on taskulamp, mida toita
 + {light_flashlight && not light_batteries && not shop_batteries} [🔋 Otsi varupatareisid kodust — 3 min]
     ~ current_time = current_time + 3
     -> light_result_search_batteries
@@ -905,25 +955,45 @@ Mida soovid teha?
     ~ shop_batteries = true
     -> light_result_shop_batteries
 
-+ {not light_headlamp} [💡 Pane välja käed-vabad valgus — 3 min]
+// PEALAMP
++ {not light_headlamp && owns_headlamp} [💡 Pane välja käed-vabad valgus — 3 min]
     ~ light_headlamp = true
     ~ current_time = current_time + 3
     -> light_result_headlamp
 
-+ {not light_lantern} [🏮 Sea üles ruumivalgus — 3 min]
++ {not light_headlamp && not owns_headlamp && not shop_headlamp} [🛒 Lisa pealamp ostunimekirja]
+    ~ shop_headlamp = true
+    -> light_shop_headlamp
+
+// LATERN
++ {not light_lantern && owns_lantern} [🏮 Sea üles ruumivalgus — 3 min]
     ~ light_lantern = true
     ~ current_time = current_time + 3
     -> light_result_lantern
 
-+ {not light_candles} [🕯️ Kogu küünlad ja tikud — 3 min]
++ {not light_lantern && not owns_lantern && not shop_lantern} [🛒 Lisa latern ostunimekirja]
+    ~ shop_lantern = true
+    -> light_shop_lantern
+
+// KÜÜNLAD (varuks) — sea välja, kui on; lisa tikud, kui muidu kasutud
++ {not light_candles && owns_candles} [🕯️ Sea küünlad välja — 3 min]
     ~ light_candles = true
     ~ current_time = current_time + 3
     -> light_result_candles
 
-+ {not light_powerbank} [🔌 Lae telefoni jaoks akupank — 2 min]
++ {owns_candles && not owns_matches && not shop_matches} [🛒 Lisa tikud/välgumihkel ostunimekirja]
+    ~ shop_matches = true
+    -> light_shop_matches
+
+// AKUPANK — lae olemasolev või lisa nimekirja
++ {not light_powerbank && owns_powerbank} [🔌 Lae telefoni jaoks akupank — 2 min]
     ~ light_powerbank = true
     ~ current_time = current_time + 2
     -> light_result_powerbank
+
++ {not owns_powerbank && not shop_powerbank} [🛒 Lisa akupank ostunimekirja]
+    ~ shop_powerbank = true
+    -> light_shop_powerbank
 
 + {not light_rationing} [🔆 Planeeri, kuidas valgus vastu peaks — 2 min]
     ~ light_rationing = true
@@ -936,18 +1006,42 @@ Mida soovid teha?
 + [← Tagasi ettevalmistustesse]
     -> preparation_hub
 
+=== light_shop_flashlight ===
+# CLEAR
+Lisad <b>korraliku taskulambi</b> oma ostunimekirja — kõige olulisem valgus, mida omada, võimalusel üks inimese kohta.
++ [← Tagasi valguse juurde]
+    -> light_hub
+
+=== light_shop_headlamp ===
+# CLEAR
+Lisad <b>pealambi</b> oma ostunimekirja — käed-vabad valgus toiduvalmistamiseks, esmaabiks või lapse kandmiseks pimedas.
++ [← Tagasi valguse juurde]
+    -> light_hub
+
+=== light_shop_lantern ===
+# CLEAR
+Lisad <b>laterna</b> oma ostunimekirja — üks ruumivalgus täidab kogu toa, et pere saaks koos püsida.
++ [← Tagasi valguse juurde]
+    -> light_hub
+
+=== light_shop_matches ===
+# CLEAR
+Lisad <b>tikud või välgumihkli</b> oma ostunimekirja — ilma nendeta on need küünlad lihtsalt vaha.
++ [← Tagasi valguse juurde]
+    -> light_hub
+
+=== light_shop_powerbank ===
+# CLEAR
+Lisad <b>akupanga</b> oma ostunimekirja — laetud akupank hoiab alertide ja kõnede jaoks vajaliku telefoni päevi elus.
++ [← Tagasi valguse juurde]
+    -> light_hub
+
 === light_result_flashlight ===
 # CLEAR
 
-{owns_flashlight:
-    Leiad taskulambi esikukapi seest ja vajutad sisse — kiir on nõrk ja kollakas.
+Leiad taskulambi esikukapi seest ja vajutad sisse — kiir on nõrk ja kollakas.
 
-    <b>Patareid on peaaegu tühjad.</b> Mõnda aega töötab, aga öö üle ei pea. Vajad uusi patareisid.
-- else:
-    Sul pole siin eraldi taskulampi — ja just see on kõige olulisem valgusallikas, mis omada. Paned selle ostunimekirja kõige etteotsa.
-
-    <b>Käes hoitav taskulamp on turvaline, kohene ja ei tühjenda telefoni akut, mida vajad kõnedeks. Soovita vähemalt üks inimese kohta, hoituna kohas, mille kõik pimedas üles leiavad.</b>
-}
+<b>Patareid on peaaegu tühjad.</b> Mõnda aega töötab, aga öö üle ei pea. Vajad uusi patareisid.
 
 Nüüd otsusta, kus see asub — et leiad selle hetkel, kui tuled kustuvad.
 
@@ -1047,11 +1141,7 @@ Kogud majast küünlad kokku ja leiad köögisahtlist tikud. Paned need stabiils
 === light_result_powerbank ===
 # CLEAR
 
-{owns_powerbank:
-    Laed akupanga täis ja jätad selle laadimisjuhtmega ukse juurde.
-- else:
-    Sul pole akupanka, aga lisad selle nimekirja — ja vahepeal laed kõik olemasolevad seadmed 100%-ni, kuni elekter veel on.
-}
+Laed akupanga täis ja jätad selle laadimisjuhtmega ukse juurde. Samal ajal laed kõik teised seadmed 100%-ni — elekter on praegu veel olemas.
 
 <b>Su telefon on su elujoon hoiatuste ja hädaabikõnede jaoks. Laetud akupank hoiab seda päevi elus — lae kõik enne tormi täis.</b>
 
@@ -1621,7 +1711,13 @@ Elekter on ära. Torm pidi liinid maha võtma.
 # CLEAR
 # CONSEQUENCE: light
 
+{not search_found:
+    ~ phone_drained = true
+}
+
 {
+    - not search_found && not light_flashlight:
+        Käsi haarab tühjust. Sa ei pannud taskulampi kõrvale — pole valgust, mille järele sirutada. Telefon saab ainsaks lambiks, ekraan põleb, kui kannad seda toast tuppa. Hommikuks on see 9% juures.
     - not search_found:
         Sa ei saagi korralikku valgust kätte. Telefoni ekraan valgustab teed — piisavalt hele, aga pole selleks mõeldud. Hommikuks on aku 23% juures.
     - search_known_spot:
@@ -1638,7 +1734,9 @@ Elekter on ära. Torm pidi liinid maha võtma.
     }
 }
 
-<b>Taskulamp kohas, mille saad voodist kätte, muudab hirmutava pimedas rabelemise mõneks sekundiks. Otsusta koht — ja veendu, et kõik teavad seda.</b>
+{light_flashlight:
+    <b>Taskulamp kohas, mille saad voodist kätte, muudab hirmutava pimedas rabelemise mõneks sekundiks. Otsusta koht — ja veendu, et kõik teavad seda.</b>
+}
 
 * [Jätka]
     -> night_heat
@@ -1649,7 +1747,7 @@ Elekter on ära. Torm pidi liinid maha võtma.
 
 {
     - prep_heat == 0:
-        Küte sureb koos elektriga. Tunni jooksul näed oma hingeõhku. Koidu ajaks{has_elderly: ei lõpeta {elderly_relation} värisemist — nad vajavad soojust, mida sa praegu anda ei saa.| on sõrmed tuimad ja külm on halastamatu.}
+        {home_heating == "electric": Su elektriküte sureb samal hetkel kui elekter.|{home_heating == "wood_gas": Ahju pole köetud ja maja jahtub kiiresti.|Kaugkütte pump seiskub ja radiaatorid jahtuvad.}} Tunni jooksul näed oma hingeõhku.{home_high_heat_loss:  Avatud seinad annavad sooja veelgi kiiremini ära.} Koidu ajaks{has_elderly: ei lõpeta {elderly_relation} värisemist — nad vajavad soojust, mida sa praegu anda ei saa.| on sõrmed tuimad ja külm on halastamatu.}
     - prep_heat == 1:
         Tõmbad kõik tekid kokku ja tihendad halvimad tuuletõmbed. Külm, aga ellujäädav. {has_elderly: {elderly_relation} magab rahutult.| Tukkud vaheldumisi.} Hommikuks näed oma hingeõhku.
     - else:
@@ -1864,9 +1962,13 @@ Sinu lapsel on raske reaktsioon — lööve levib, kõri paisub. See on eluohtli
 ~ current_call_scenario = "power_outage"
 # PHONE_KEYPAD: power_outage
 
-Võtad telefoni. Aku näitab 23%.
+Võtad telefoni. Aku näitab {phone_drained: vaid 9% — kasutasid seda terve öö valgusena| 23%}.
 
 Elekter on olnud üle 12 tunni ära. Peas käib ringi ja on külm. Pead sellest teatama ja abi saama.
+
+{phone_drained:
+    Ekraan tumeneb, et säästa, mis veel alles. Ehk on selles üks kõne, enne kui see sureb.
+}
 
 {heard_broadcast:
     Mäletad, et raadioülekandes mainiti erinevaid numbreid erinevateks olukordadeks...

@@ -101,3 +101,27 @@
   font-size: 11.5px;
   line-height: 1.4;
 }
+
+.heat-note-write {
+  margin-top: 12px;
+  padding: 11px 13px;
+  background: rgba(255, 176, 70, 0.16);
+  border: 1.5px solid rgba(255, 192, 106, 0.6);
+  border-left-width: 4px;
+  border-radius: 8px;
+  color: #ffe3b8;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  box-shadow: 0 0 14px rgba(255, 176, 70, 0.18);
+  animation: heat-note-write-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes heat-note-write-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 176, 70, 0.15); }
+  50%      { box-shadow: 0 0 18px rgba(255, 176, 70, 0.38); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heat-note-write { animation: none; }
+}

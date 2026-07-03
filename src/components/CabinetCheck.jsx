@@ -168,7 +168,8 @@ function CabinetCheck({ household, onClose }) {
                     onClick={() => judge(vd.id)}
                   >
                     <span className="cc-verdict-emoji">{vd.emoji}</span>
-                    {t(`cabinetCheck.verdicts.${vd.id}`)}
+                    <span className="cc-verdict-label">{t(`cabinetCheck.verdicts.${vd.id}`)}</span>
+                    <span className="cc-verdict-hint">{t(`cabinetCheck.verdictHints.${vd.id}`)}</span>
                   </button>
                 ))}
               </div>

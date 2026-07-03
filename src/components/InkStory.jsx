@@ -5,6 +5,7 @@ import './InkStory.css';
 import PhoneKeypad from './PhoneKeypad';
 import CallResult from './CallResult';
 import TimeBar from './TimeBar';
+import ShoppingList from './ShoppingList';
 import StoreOverlay from './StoreOverlay';
 import WaterCalculation from './WaterCalculation';
 import ConsequenceCard from './ConsequenceCard';
@@ -27,6 +28,69 @@ import { useTranslation } from '../hooks/useTranslation';
 
 // localStorage key for the in-progress save (bump the suffix if the shape changes)
 export const SAVE_KEY = 'storm_save_v1';
+
+// DEV-ONLY scene jumps for quick testing of a slice without playing the intro.
+// Use ?scene=<key> in the URL (dev build only). Each preset seeds a sensible
+// household + ink vars, sets the weather stage, then jumps to an Ink knot.
+// Add new slices here as needed.
+const DEV_SCENES = {
+  // Crisis night, solo player who prepared NO light → flashlight search + drained phone
+  'crisis-nolight': {
+    path: 'wake_up', weather: 2,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1, has_elderly: false, has_children: false, heard_broadcast: true, light_flashlight: false },
+  },
+  // Crisis night, solo player who DID prepare a flashlight in a known spot
+  'crisis-light': {
+    path: 'wake_up', weather: 2,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1, has_elderly: false, has_children: false, heard_broadcast: true,
+            light_flashlight: true, flashlight_spot: 2, light_batteries: true, light_rationing: true },
+  },
+  // Straight to the medicine Cabinet Check overlay
+  'cabinet-check': {
+    path: 'category_medication', weather: 1,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1, in_preparation: true },
+  },
+  // Straight to the Light Audit overlay (what light do you have)
+  'light-audit': {
+    path: 'category_light', weather: 1,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1, in_preparation: true },
+  },
+  // Straight to the Home Setup overlay (building + heating + weak spots)
+  'home-setup': {
+    path: 'category_heat', weather: 1,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1 },
+  },
+  // Straight to the TV breaking-news overlay (storm warning)
+  'breaking-news': {
+    path: 'tv_start', weather: 1,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1 },
+  },
+  // Straight into the flashlight search overlay, NO light prepared (instant)
+  'flashlight-nolight': {
+    path: 'reach_for_light', weather: 2,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1, has_elderly: false, has_children: false, light_flashlight: false },
+  },
+  // Straight into the flashlight search overlay, light prepared in a known spot
+  'flashlight-light': {
+    path: 'reach_for_light', weather: 2,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1, has_elderly: false, has_children: false,
+            light_flashlight: true, flashlight_spot: 2, light_batteries: true },
+  },
+  // Straight to the power-outage emergency call with a drained phone (1343)
+  'call-power': {
+    path: 'call_power_outage', weather: 2,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1, has_elderly: false, has_children: false, heard_broadcast: true, phone_drained: true },
+  },
+};
 
 // Structural prep-choice data — translatable text comes from t() at render time
 const PREP_CHOICE_ICONS = {
@@ -255,9 +319,14 @@ function InkStory({ onReturnToMenu, resume = false }) {
     inkScript.onload = () => {
       console.log('Ink.js loaded!');
 
-      // STEP 2: Load the compiled story
+      // STEP 2: Load the compiled story.
+      // The story is a public/ file pulled in via <script>, which the browser
+      // caches and vite does NOT hot-reload. In dev, bust the cache so a
+      // recompiled .ink (npm run compile-ink) is always picked up on reload —
+      // otherwise you can see stale narrative and think it's a deadend.
       const storyScript = document.createElement('script');
-      storyScript.src = import.meta.env.BASE_URL + storyFile;
+      const bust = import.meta.env.DEV ? `?v=${Date.now()}` : '';
+      storyScript.src = import.meta.env.BASE_URL + storyFile + bust;
       storyScript.async = true;
 
       storyScript.onload = () => {
@@ -268,6 +337,10 @@ function InkStory({ onReturnToMenu, resume = false }) {
           const story = new window.inkjs.Story(window[storyVar]);
 
           storyRef.current = story;
+
+          // Dev: expose the live story so you can jump from the console:
+          //   window.story.ChoosePathString('call_power_outage')
+          if (import.meta.env.DEV) window.story = story;
 
           // STEP 4: Either resume a saved game or start from the beginning
           let resumed = false;
@@ -292,6 +365,21 @@ function InkStory({ onReturnToMenu, resume = false }) {
           }
 
           if (!resumed) {
+            // Dev scene jump: ?scene=<key> skips the intro and lands on a slice.
+            const sceneKey = import.meta.env.DEV
+              ? new URLSearchParams(window.location.search).get('scene')
+              : null;
+            const cfg = sceneKey && DEV_SCENES[sceneKey];
+            if (cfg) {
+              console.log('[dev scene] jumping to', sceneKey, '→', cfg.path);
+              if (cfg.household) setHousehold(cfg.household);
+              if (typeof cfg.weather === 'number') setWeatherStage(cfg.weather);
+              Object.entries(cfg.vars || {}).forEach(([k, v]) => {
+                try { story.variablesState[k] = v; } catch (e) { console.warn('[dev scene] var', k, e); }
+              });
+              try { story.ChoosePathString(cfg.path); }
+              catch (e) { console.error('[dev scene] bad path', cfg.path, e); }
+            }
             continueStory();
           }
 
@@ -433,6 +521,12 @@ function InkStory({ onReturnToMenu, resume = false }) {
       shop_food: story.variablesState["shop_food"],
       shop_batteries: story.variablesState["shop_batteries"],
       shop_meds: story.variablesState["shop_meds"],
+      shop_warm: story.variablesState["shop_warm"],
+      shop_flashlight: story.variablesState["shop_flashlight"],
+      shop_powerbank: story.variablesState["shop_powerbank"],
+      shop_headlamp: story.variablesState["shop_headlamp"],
+      shop_lantern: story.variablesState["shop_lantern"],
+      shop_matches: story.variablesState["shop_matches"],
       shop_visited: story.variablesState["shop_visited"],
       // Heat sub-vars
       heat_sealed: story.variablesState["heat_sealed"],
@@ -935,6 +1029,8 @@ function InkStory({ onReturnToMenu, resume = false }) {
     story.variablesState["home_has_exposed_pipes"] = !!result?.needsPipeInsulation;
     story.variablesState["home_high_heat_loss"]    = !!result?.highHeatLoss;
     story.variablesState["home_has_stove"]         = !!result?.hasStove;
+    story.variablesState["home_building"]          = result?.building || "";
+    story.variablesState["home_heating"]           = result?.heating || "";
 
     continueStory();
   };
@@ -952,6 +1048,7 @@ function InkStory({ onReturnToMenu, resume = false }) {
     story.variablesState["owns_headlamp"]    = !!result?.hasHeadlamp;
     story.variablesState["owns_lantern"]     = !!result?.hasLantern;
     story.variablesState["owns_candles"]     = !!result?.hasCandles;
+    story.variablesState["owns_matches"]     = !!result?.hasMatches;
     story.variablesState["owns_powerbank"]   = !!result?.hasPowerBank;
 
     continueStory();
@@ -1236,18 +1333,8 @@ function InkStory({ onReturnToMenu, resume = false }) {
         />
       )}
 
-      {/* Shopping List - visible during preparation when items added */}
-      {!!gameVars.in_preparation && (!!gameVars.shop_water || !!gameVars.shop_food || !!gameVars.shop_batteries || !!gameVars.shop_meds) && !gameVars.shop_visited && (
-        <div className="shopping-list">
-          <div className="shopping-list-header">🛒 Shopping List</div>
-          <ul className="shopping-list-items">
-            {!!gameVars.shop_water && <li>💧 Bottled water ({gameVars.shop_water_amount}L)</li>}
-            {!!gameVars.shop_food && <li>🍞 Emergency food</li>}
-            {!!gameVars.shop_batteries && <li>🔋 Batteries</li>}
-            {!!gameVars.shop_meds && <li>💊 Medicines</li>}
-          </ul>
-        </div>
-      )}
+      {/* Live shopping list — visible during prep, updates as items are added */}
+      {!!gameVars.in_preparation && <ShoppingList vars={gameVars} />}
 
       <div className={`story-wrapper ${textSpeed === 'instant' ? 'text-instant' : ''} ${atPrepHub ? 'prep-hub-mode' : ''}`}>
         {!storyLoaded ? (
@@ -1258,9 +1345,36 @@ function InkStory({ onReturnToMenu, resume = false }) {
             {storyText.some((line) => line.trim() !== '') && (
               <div className={`story-content${atPrepHub ? ' story-content-fixed' : ''}`}>
                 <div className="story-text">
-                  {storyText.map((line, index) => (
-                    <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
-                  ))}
+                  {(() => {
+                    // Group consecutive "✓ …" status lines into one compact chip
+                    // row so prep checklists don't take a full paragraph each.
+                    const blocks = [];
+                    storyText.forEach((line, index) => {
+                      const isCheck = /^\s*✓/.test(line.replace(/<[^>]+>/g, ''));
+                      const last = blocks[blocks.length - 1];
+                      if (isCheck) {
+                        const chip = line.replace(/^\s*✓\s*/, '').trim();
+                        if (last && last.type === 'chips') last.items.push(chip);
+                        else blocks.push({ type: 'chips', items: [chip], key: index });
+                      } else {
+                        blocks.push({ type: 'p', html: line, key: index });
+                      }
+                    });
+                    return blocks.map((b) =>
+                      b.type === 'chips' ? (
+                        <div key={b.key} className="prep-status-chips">
+                          {b.items.map((c, i) => (
+                            <span key={i} className="prep-status-chip">
+                              <span className="prep-status-check">✓</span>
+                              <span dangerouslySetInnerHTML={{ __html: c }} />
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <p key={b.key} dangerouslySetInnerHTML={{ __html: b.html }} />
+                      )
+                    );
+                  })()}
                 </div>
                 {currentScene === 'heat_hub' && (
                   <HeatNote
@@ -1276,11 +1390,18 @@ function InkStory({ onReturnToMenu, resume = false }) {
                   <LightNote
                     lightResult={lightResult}
                     done={{
-                      batteries: !!gameVars.light_batteries || !!gameVars.shop_batteries,
+                      batteries: !!gameVars.light_batteries,
                       headlamp:  !!gameVars.light_headlamp,
                       lantern:   !!gameVars.light_lantern,
                       powerbank: !!gameVars.light_powerbank,
                       rationing: !!gameVars.light_rationing,
+                    }}
+                    listed={{
+                      flashlight: !!gameVars.shop_flashlight,
+                      batteries:  !!gameVars.shop_batteries,
+                      headlamp:   !!gameVars.shop_headlamp,
+                      lantern:    !!gameVars.shop_lantern,
+                      powerbank:  !!gameVars.shop_powerbank,
                     }}
                   />
                 )}
@@ -1346,6 +1467,7 @@ function InkStory({ onReturnToMenu, resume = false }) {
                         };
 
                         return (
+                          // Whole card is clickable (header + description area).
                           <div
                             key={index}
                             className={[
@@ -1354,20 +1476,18 @@ function InkStory({ onReturnToMenu, resume = false }) {
                               isLocked   ? 'prep-choice-locked'   : '',
                               isExpanded ? 'prep-choice-expanded' : '',
                             ].filter(Boolean).join(' ')}
+                            onClick={handleHeaderClick}
+                            role={isLocked ? undefined : 'button'}
+                            tabIndex={isLocked ? -1 : 0}
+                            onKeyDown={(e) => {
+                              if ((e.key === 'Enter' || e.key === ' ') && !isLocked) {
+                                e.preventDefault();
+                                handleHeaderClick();
+                              }
+                            }}
                           >
                             {/* Always-visible header row */}
-                            <div
-                              className="prep-card-header"
-                              onClick={handleHeaderClick}
-                              role={isLocked ? undefined : 'button'}
-                              tabIndex={isLocked ? -1 : 0}
-                              onKeyDown={(e) => {
-                                if ((e.key === 'Enter' || e.key === ' ') && !isLocked) {
-                                  e.preventDefault();
-                                  handleHeaderClick();
-                                }
-                              }}
-                            >
+                            <div className="prep-card-header">
                               <span className="prep-choice-icon">{meta.icon}</span>
                               <div className="prep-card-header-text">
                                 <span className="prep-choice-label">{stripEmoji(choice.text)}</span>
@@ -1386,7 +1506,10 @@ function InkStory({ onReturnToMenu, resume = false }) {
                                 <p className="prep-choice-desc">{meta.description}</p>
                               )}
                               {!isDone && !isLocked && (
-                                <button className="prep-card-prepare-btn" onClick={handleCardClick}>
+                                <button
+                                  className="prep-card-prepare-btn"
+                                  onClick={(e) => { e.stopPropagation(); handleCardClick(); }}
+                                >
                                   Prepare
                                 </button>
                               )}

@@ -300,11 +300,12 @@
     "live": "● LIVE",
     "banner": "BREAKING NEWS",
     "lines": [
-      "Severe storm warning for coastal Estonia.",
+      "Severe storm warning across all of Estonia.",
+      "Coastal and inland regions alike affected.",
       "Wind speeds up to 120 km/h expected tonight.",
       "Storm arrives at 22:00."
     ],
-    "ticker": "⚠  STORM WARNING ISSUED FOR ALL COASTAL REGIONS  •  RESIDENTS ADVISED TO PREPARE  •  STAY INDOORS AFTER 21:00  •  POWER OUTAGES EXPECTED  •  EMERGENCY SERVICES ON STANDBY  •  ",
+    "ticker": "⚠  STORM WARNING ISSUED NATIONWIDE — COASTAL AND INLAND REGIONS  •  RESIDENTS ADVISED TO PREPARE  •  STAY INDOORS AFTER 21:00  •  POWER OUTAGES EXPECTED  •  EMERGENCY SERVICES ON STANDBY  •  ",
     "tickerLabel": "ALERT",
     "continue": "Continue"
   },
@@ -485,31 +486,49 @@
 
   "homeSetup": {
     "title": "Walk Through Your Home",
-    "subtitle": "Tick what's true about where you live",
-    "realCheckNote": "🗒️ <strong>Look around your real home</strong> — windows, doors, pipes. Don't guess.",
+    "subtitle": "Tell us about where you live — it shapes how the cold hits",
+    "realCheckNote": "🗒️ <strong>Look around your real home</strong> — building, heating, windows, pipes. Don't guess.",
+    "buildingTitle": "What kind of building?",
+    "buildingTypes": {
+      "apartment": "Apartment / flat",
+      "detached": "Detached house",
+      "terraced": "Terraced / row house",
+      "rural": "Old or rural house"
+    },
+    "heatingTitle": "How is it heated?",
+    "heatingTypes": {
+      "district": "District / central heating",
+      "electric": "Electric heaters or floor",
+      "wood_gas": "Wood stove or gas"
+    },
+    "itemsTitle": "What else is true about it?",
     "items": {
-      "apartment": "Apartment building",
-      "exposed_layout": "Top floor / corner / freestanding",
       "old_windows": "Old or single-pane windows",
       "balcony_door": "Balcony door or big glass",
-      "exposed_pipes": "Exposed pipes (basement, garage, outside wall)",
-      "wood_stove": "Wood stove or fireplace"
+      "exposed_layout": "Top floor / corner / freestanding",
+      "exposed_pipes": "Exposed pipes (basement, garage, outside wall)"
     },
     "continueBtn": "See what to focus on →",
+    "continueHint": "Pick a building and heating type",
     "backBtn": "← Back",
     "summaryTitle": "Your Home Report",
     "summarySubtitle": "What matters most for keeping warm",
-    "weakSpotsTitle": "Weak spots to address",
+    "weakSpotsTitle": "Weak spots to seal before the storm",
     "weakSpotsEmpty": "No obvious weak spots — still seal up before the storm.",
     "weakSpotLabels": {
       "old_windows": "Old windows (biggest heat loss)",
       "balcony_door": "Balcony door / large glass area",
-      "exposed_layout": "Top-floor or freestanding layout",
       "exposed_pipes": "Exposed pipes (burst risk)"
+    },
+    "fixedTitle": "Fixed facts to plan around",
+    "fixedLabels": {
+      "detached": "A detached house loses heat on every side — seal hard and pick one room to hold warmth.",
+      "rural": "An older or rural house tends to leak heat — sealing and a backup heat source matter more here.",
+      "exposed_layout": "A top-floor, corner, or freestanding home is more exposed to the cold — you can't change that, so plan to compensate: seal thoroughly and concentrate heat in one room."
     },
     "tipsTitle": "Good to know",
     "tipLabels": {
-      "no_stove_aspirational": "No wood stove? Sealing and a warm room cover ~80% of the win. A stove is gold if you ever add one.",
+      "no_stove_aspirational": "No wood stove or gas? Sealing and a warm room cover ~80% of the win. A stove is gold if you ever add one.",
       "apartment_neighbors": "In a flat, your neighbors' walls help — close doors to less-used rooms to use that warmth."
     },
     "doneBtn": "Done — start preparing",
@@ -520,12 +539,14 @@
     "title": "Your home priorities",
     "covered": "done",
     "chips": {
+      "seal_house": "Seal the house",
       "seal_weak_spots": "Seal weak spots",
       "insulate_pipes": "Insulate exposed pipes",
-      "concentrate_heat": "Concentrate heat in one room"
+      "concentrate_heat": "Set up a warm room"
     },
+    "writeDown": "Write these priorities in your notebook — you'll want them when the storm hits.",
     "tips": {
-      "no_stove": "No wood stove? Sealing + a warm room are the highest-impact moves you can make."
+      "no_stove": "No wood stove or gas means you can't make new heat once the power's out — so keep the heat you have: seal the house and set up one warm room (the actions below)."
     }
   },
 
@@ -537,7 +558,8 @@
       "flashlight": "Flashlight",
       "headlamp": "Headlamp (hands-free)",
       "lantern": "Lantern (lights a room)",
-      "candles": "Candles & matches",
+      "candles": "Candles",
+      "matches": "Matches or lighter",
       "power_bank": "Power bank"
     },
     "continueBtn": "See what to focus on →",
@@ -550,6 +572,7 @@
       "no_flashlight": "No dedicated flashlight (the #1 thing to own)",
       "no_handsfree": "No hands-free light — a headlamp frees your hands",
       "no_area": "No area light — a lantern lights a whole room",
+      "candles_no_matches": "Candles but no matches or lighter — keep a way to light them with them",
       "no_powerbank": "No power bank to keep your phone alive"
     },
     "tipsTitle": "Good to know",
@@ -572,8 +595,28 @@
       "charge_powerbank": "Charge a power bank for your phone",
       "make_it_last": "Plan how to make your light last 3 nights"
     },
+    "onList": "on shopping list",
+    "writeDown": "Write your light plan in your notebook — which light to reach for first, and how to stretch it across all three nights.",
     "tips": {
       "candle_safety": "Using candles? Keep them away from anything that burns and never leave them unattended."
+    }
+  },
+
+  "shoppingList": {
+    "title": "Shopping list",
+    "hint": "Added as you prep — visit the store before the storm to buy it all.",
+    "items": {
+      "water": "Bottled water",
+      "water_amount": "Bottled water ({n}L)",
+      "food": "Emergency food",
+      "flashlight": "Flashlight",
+      "batteries": "Batteries",
+      "powerbank": "Power bank",
+      "headlamp": "Headlamp",
+      "lantern": "Lantern",
+      "matches": "Matches / lighter",
+      "warm": "Blankets & warm supplies",
+      "meds": "Medicines"
     }
   },
 
@@ -602,6 +645,8 @@
     "foundKnown": "Right where you left it.",
     "foundFumble": "Found it — finally.",
     "giveUp": "Give up — use your phone",
+    "giveUpNoLight": "Use your phone as a light",
+    "noLightRealize": "There's no flashlight anywhere — you never set one aside. Your phone is the only light left.",
     "continue": "Continue"
   },
 
@@ -666,7 +711,12 @@
     "verdicts": {
       "keep": "Keep",
       "restock": "Restock",
-      "toss": "Bin it"
+      "toss": "Bin & replace"
+    },
+    "verdictHints": {
+      "keep": "Good and enough — nothing to buy",
+      "restock": "Fine, but running low — buy more, keep this",
+      "toss": "Expired or unsafe — throw out AND buy new"
     },
     "correct": "Good call.",
     "incorrect": "Careful — better to",

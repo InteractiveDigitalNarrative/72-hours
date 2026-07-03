@@ -6,21 +6,22 @@ function HeatNote({ homeResult, done }) {
 
   if (!homeResult) return null;
 
-  const { weakSpots = [], needsPipeInsulation, highHeatLoss, hasStove, tips = [] } = homeResult;
+  const { weakSpots = [], needsPipeInsulation, hasStove, tips = [] } = homeResult;
 
   const chips = [];
 
-  if (weakSpots.length > 0) {
-    const items = weakSpots
-      .map(id => t(`homeSetup.weakSpotLabels.${id}`))
-      .join(', ');
-    chips.push({
-      key: 'seal_weak_spots',
-      label: t('heatNote.chips.seal_weak_spots'),
-      detail: items,
-      covered: !!done?.sealed,
-    });
-  }
+  // Sealing the house is the single highest-impact move — always actionable,
+  // so always tracked. Show the specific weak spots as detail when there are any.
+  chips.push({
+    key: 'seal',
+    label: weakSpots.length > 0
+      ? t('heatNote.chips.seal_weak_spots')
+      : t('heatNote.chips.seal_house'),
+    detail: weakSpots.length > 0
+      ? weakSpots.map(id => t(`homeSetup.weakSpotLabels.${id}`)).join(', ')
+      : null,
+    covered: !!done?.sealed,
+  });
 
   if (needsPipeInsulation) {
     chips.push({
@@ -31,14 +32,13 @@ function HeatNote({ homeResult, done }) {
     });
   }
 
-  if (highHeatLoss) {
-    chips.push({
-      key: 'concentrate_heat',
-      label: t('heatNote.chips.concentrate_heat'),
-      detail: null,
-      covered: !!done?.oneRoom,
-    });
-  }
+  // A warm room concentrates body heat and is worth doing in any home — always tracked.
+  chips.push({
+    key: 'concentrate_heat',
+    label: t('heatNote.chips.concentrate_heat'),
+    detail: null,
+    covered: !!done?.oneRoom,
+  });
 
   if (chips.length === 0 && tips.length === 0) return null;
 
@@ -75,6 +75,12 @@ function HeatNote({ homeResult, done }) {
       {!hasStove && (
         <div className="heat-note-tip">
           💡 {t('heatNote.tips.no_stove')}
+        </div>
+      )}
+
+      {chips.length > 0 && (
+        <div className="heat-note-write">
+          🗒️ {t('heatNote.writeDown')}
         </div>
       )}
     </div>

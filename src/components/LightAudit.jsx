@@ -9,6 +9,7 @@ const ITEMS = [
   { id: 'headlamp',    emoji: '💡' },
   { id: 'lantern',     emoji: '🏮' },
   { id: 'candles',     emoji: '🕯️' },
+  { id: 'matches',     emoji: '🔥' },
   { id: 'power_bank',  emoji: '🔌' },
 ];
 
@@ -19,6 +20,8 @@ function computeResult(toggled) {
   if (!has('flashlight')) gaps.push('no_flashlight');
   if (!has('headlamp'))   gaps.push('no_handsfree');
   if (!has('lantern'))    gaps.push('no_area');
+  // Candles are useless without a way to light them.
+  if (has('candles') && !has('matches')) gaps.push('candles_no_matches');
   if (!has('power_bank')) gaps.push('no_powerbank');
 
   const tips = [];
@@ -31,6 +34,7 @@ function computeResult(toggled) {
     hasHeadlamp:   has('headlamp'),
     hasLantern:    has('lantern'),
     hasCandles:    has('candles'),
+    hasMatches:    has('matches'),
     hasPowerBank:  has('power_bank'),
     tips,
   };

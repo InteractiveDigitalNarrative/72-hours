@@ -36,6 +36,7 @@ function FlashlightSearch({ hasFlashlight, knownSpot = 'none', onClose }) {
 
   const [glow, setGlow] = useState({ x: 50, y: 50 });
   const [searched, setSearched] = useState({});
+  const [searchedCount, setSearchedCount] = useState(0);
   const [lastReveal, setLastReveal] = useState(null);
   const [found, setFound] = useState(false);
   const [elapsed, setElapsed] = useState(0);
@@ -91,7 +92,10 @@ function FlashlightSearch({ hasFlashlight, knownSpot = 'none', onClose }) {
 
     // A decoy spot
     playSfx('click');
-    setSearched(prev => ({ ...prev, [id]: true }));
+    setSearched(prev => {
+      if (!prev[id]) setSearchedCount(c => c + 1);
+      return { ...prev, [id]: true };
+    });
     setLastReveal(id);
   };
 
@@ -108,9 +112,14 @@ function FlashlightSearch({ hasFlashlight, knownSpot = 'none', onClose }) {
     finish({ seconds, foundIt: false, usedKnownSpot: false });
   };
 
+  // No flashlight was ever prepared — there's nothing in the room to find.
+  // After a couple of searches the player realizes it; we then teach the
+  // lesson and let them fall back to the phone immediately.
+  const realizedNoLight = !hasFlashlight && searchedCount >= 2;
+
   // The phone fallback is always reachable after a few seconds, so the
   // player can never get stuck — and giving up to use the phone is realistic.
-  const canGiveUp = !found && elapsed >= 5;
+  const canGiveUp = !found && (elapsed >= 5 || realizedNoLight);
 
   const secondsLabel = Math.floor(elapsed);
 
@@ -165,8 +174,13 @@ function FlashlightSearch({ hasFlashlight, knownSpot = 'none', onClose }) {
         </div>
 
         {/* Reveal log */}
-        {!found && lastReveal && (
+        {!found && lastReveal && !realizedNoLight && (
           <p className="fs-reveal">— {t(`flashlightSearch.reveals.${lastReveal}`)}</p>
+        )}
+
+        {/* No flashlight was ever prepared — name the lesson, don't fake a find */}
+        {!found && realizedNoLight && (
+          <p className="fs-reveal fs-reveal-nolight">— {t('flashlightSearch.noLightRealize')}</p>
         )}
 
         {found && (
@@ -184,7 +198,7 @@ function FlashlightSearch({ hasFlashlight, knownSpot = 'none', onClose }) {
 
         {canGiveUp && (
           <button className="fs-giveup" onClick={giveUp}>
-            📱 {t('flashlightSearch.giveUp')}
+            📱 {t(realizedNoLight ? 'flashlightSearch.giveUpNoLight' : 'flashlightSearch.giveUp')}
           </button>
         )}
       </div>
