@@ -1,0 +1,75 @@
+/* Floating notebook button + nudge pill */
+.nbtn-wrap {
+  position: fixed;
+  left: 14px;
+  bottom: 56px;               /* clears the prep time bar */
+  z-index: 2600;              /* above game overlays (radio 2000, store 1600, cabinet 2500) so notes are always reachable */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nbtn-fab {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 214, 140, 0.4);
+  background: rgba(28, 34, 44, 0.92);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  backdrop-filter: blur(4px);
+}
+.nbtn-fab:hover { transform: scale(1.08); border-color: rgba(255, 214, 140, 0.8); }
+
+.nbtn-fab-filled { border-color: rgba(127, 216, 154, 0.6); }
+
+.nbtn-fab-nudged {
+  animation: nbtn-pulse 1.3s ease-in-out infinite;
+  border-color: rgba(255, 176, 70, 0.9);
+}
+@keyframes nbtn-pulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(0,0,0,0.4), 0 0 0 0 rgba(255,176,70,0); }
+  50%      { box-shadow: 0 4px 14px rgba(0,0,0,0.4), 0 0 0 7px rgba(255,176,70,0.28); }
+}
+
+.nbtn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 60vw;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 176, 70, 0.6);
+  background: rgba(45, 36, 20, 0.95);
+  color: #ffe3b8;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  animation: nbtn-pill-in 0.25s ease;
+}
+@keyframes nbtn-pill-in { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
+
+.nbtn-pill-section {
+  opacity: 0.85;
+  font-weight: 700;
+  border-left: 1px solid rgba(255, 214, 140, 0.35);
+  padding-left: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nbtn-fab-nudged { animation: none; }
+}
+
+@media (max-width: 639px) {
+  .nbtn-wrap { left: 10px; bottom: 50px; }
+  .nbtn-fab { width: 42px; height: 42px; font-size: 20px; }
+  .nbtn-pill { font-size: 11.5px; max-width: 56vw; }
+}

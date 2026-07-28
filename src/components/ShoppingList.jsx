@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './ShoppingList.css';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -17,8 +18,12 @@ const ROWS = [
   { flag: 'shop_meds',       key: 'meds'       },
 ];
 
-function ShoppingList({ vars }) {
+function ShoppingList({ vars, inStore = false }) {
   const { t } = useTranslation();
+  // Manual "bought it" ticks — independent of any game state, purely so the
+  // player can cross off items as they physically grab them in the store.
+  const [checked, setChecked] = useState({});
+
   if (!vars) return null;
 
   // Once the store run is done, the list has served its purpose — hide it.
@@ -27,30 +32,45 @@ function ShoppingList({ vars }) {
   const items = ROWS.filter(r => vars[r.flag]).map(r => {
     if (r.key === 'water') {
       const amt = vars.shop_water_amount || 0;
-      return amt > 0
+      const label = amt > 0
         ? t('shoppingList.items.water_amount').replace('{n}', amt)
         : t('shoppingList.items.water');
+      return { key: r.key, label };
     }
-    return t(`shoppingList.items.${r.key}`);
+    return { key: r.key, label: t(`shoppingList.items.${r.key}`) };
   });
 
   if (items.length === 0) return null;
 
+  const toggleChecked = (key) => {
+    setChecked(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const remaining = items.filter(item => !checked[item.key]).length;
+
   return (
-    <div className="shopping-list" aria-live="polite">
+    <div className={`shopping-list${inStore ? ' shopping-list-in-store' : ''}`} aria-live="polite">
       <div className="shopping-list-header">
         <span className="shopping-list-title">🛒 {t('shoppingList.title')}</span>
-        <span className="shopping-list-count">{items.length}</span>
+        <span className="shopping-list-count">{remaining}</span>
       </div>
       <ul className="shopping-list-items">
-        {items.map((label, i) => (
-          <li key={i} className="shopping-list-item">
-            <span className="shopping-list-bullet">▢</span>
-            {label}
+        {items.map((item) => (
+          <li key={item.key}>
+            <button
+              type="button"
+              className={`shopping-list-item${checked[item.key] ? ' shopping-list-item-checked' : ''}`}
+              onClick={() => toggleChecked(item.key)}
+            >
+              <span className="shopping-list-bullet">{checked[item.key] ? '✓' : '▢'}</span>
+              {item.label}
+            </button>
           </li>
         ))}
       </ul>
-      <div className="shopping-list-hint">{t('shoppingList.hint')}</div>
+      <div className="shopping-list-hint">
+        {t(inStore ? 'shoppingList.hintInStore' : 'shoppingList.hint')}
+      </div>
     </div>
   );
 }

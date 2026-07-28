@@ -8,6 +8,9 @@ import LanguageSelect from './components/LanguageSelect.jsx';
 import Demography from './components/Demography.jsx';
 import { AudioProvider, useAudioContext } from './context/AudioContext.jsx';
 import { LanguageProvider, useLanguage } from './context/LanguageContext.jsx';
+import { NotebookProvider, useNotebook } from './context/NotebookContext.jsx';
+import Notebook from './components/Notebook.jsx';
+import NotebookButton from './components/NotebookButton.jsx';
 import './App.css';
 
 function AppContent() {
@@ -17,6 +20,7 @@ function AppContent() {
   const [resume, setResume] = useState(false);
 
   const { playAmbient } = useAudioContext();
+  const { clear: clearNotebook } = useNotebook();
 
   // DEV: ?scene=<key> skips the intro UI and drops straight into the game,
   // where InkStory jumps to the matching slice (see DEV_SCENES in InkStory).
@@ -70,6 +74,7 @@ function AppContent() {
   const handleStartGame = () => {
     // New game — discard any in-progress save so it starts clean.
     try { localStorage.removeItem(SAVE_KEY); } catch { /* ignore */ }
+    clearNotebook();
     setResume(false);
     setCurrentScreen('game');
   };
@@ -119,6 +124,14 @@ function AppContent() {
         <InkStory onReturnToMenu={handleReturnToMenu} resume={resume} />
       )}
 
+      {/* Digital notebook — available on the menu and throughout the game */}
+      {(currentScreen === 'menu' || currentScreen === 'game') && (
+        <>
+          <NotebookButton />
+          <Notebook />
+        </>
+      )}
+
     </div>
   );
 }
@@ -127,7 +140,9 @@ function App() {
   return (
     <LanguageProvider>
       <AudioProvider>
-        <AppContent />
+        <NotebookProvider>
+          <AppContent />
+        </NotebookProvider>
       </AudioProvider>
     </LanguageProvider>
   );

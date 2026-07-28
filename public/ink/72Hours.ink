@@ -114,6 +114,7 @@ VAR ending_type = ""
 === emergency_broadcast ===
 # CLEAR
 # RADIO_BROADCAST
+# NOTE_PROMPT: numbers
 ~ heard_broadcast = true
 
 The broadcast switches to emergency information...
@@ -1150,6 +1151,7 @@ You top up the power bank to full and set it by the door with a charging cable. 
 
 === light_result_rationing ===
 # CLEAR
+# NOTE_PROMPT: home
 
 You think past tonight — the power could be out for three days, not three hours.
 
@@ -1494,6 +1496,7 @@ VAR med_cabinet_total = 0
 
 === med_cabinet_result ===
 # CLEAR
+# NOTE_PROMPT: meds
 
 ~ med_pills_counted = true
 ~ med_first_aid = true

@@ -25,6 +25,7 @@ import RumorSort from './RumorSort';
 import CabinetCheck from './CabinetCheck';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { useNotebook } from '../context/NotebookContext';
 
 // localStorage key for the in-progress save (bump the suffix if the shape changes)
 export const SAVE_KEY = 'storm_save_v1';
@@ -135,6 +136,7 @@ function InkStory({ onReturnToMenu, resume = false }) {
   // ============================================
   const { muted, toggleMute, playAmbient, playSfx, setWindVolume, switchWindTrack, WIND_VOLS } = useAudioContext();
   const { t, language } = useTranslation();
+  const notebook = useNotebook();
 
   // Build prep choice metadata from translations
   const getPrepChoiceMeta = (text) => {
@@ -298,6 +300,53 @@ function InkStory({ onReturnToMenu, resume = false }) {
   const [callAttempts, setCallAttempts] = useState(0);
   const [callScore, setCallScore] = useState(0);
   const wasPrepActiveRef = useRef(false);
+
+  // Scroll-down hint — the text/choices column can overflow the screen with
+  // no visible scrollbar, so we surface a bouncing chevron whenever there's
+  // more content below the fold.
+  const storyWrapperRef = useRef(null);
+  const [showScrollHint, setShowScrollHint] = useState(false);
+
+  useEffect(() => {
+    const el = storyWrapperRef.current;
+    if (!el) return;
+
+    // Once shown, the hint reserves 42px of bottom padding for itself (see
+    // .has-scroll-hint in InkStory.css) so it never sits on top of the last
+    // button. That reserved space itself counts as "overflow" — left in the
+    // measurement, it would keep the hint stuck on forever. Subtract it back
+    // out so we're always comparing the *content's* real height.
+    const RESERVED_HINT_SPACE = 42;
+    let rafId = null;
+
+    const measure = () => {
+      const reserved = el.classList.contains('has-scroll-hint') ? RESERVED_HINT_SPACE : 0;
+      const contentHeight = el.scrollHeight - reserved;
+      const hasOverflow = contentHeight - el.clientHeight > 8;
+      const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
+      setShowScrollHint(hasOverflow && !atBottom);
+    };
+
+    // A resize fired mid-layout (e.g. content still streaming in) can catch
+    // clientHeight/scrollHeight at a transient, inaccurate moment. Defer two
+    // frames so we measure after layout has actually settled.
+    const scheduleMeasure = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        rafId = requestAnimationFrame(measure);
+      });
+    };
+
+    scheduleMeasure();
+    el.addEventListener('scroll', measure, { passive: true });
+    const ro = new ResizeObserver(scheduleMeasure);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener('scroll', measure);
+      ro.disconnect();
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   // ============================================
   // LOAD INK.JS AND INITIALIZE STORY
@@ -573,6 +622,15 @@ function InkStory({ onReturnToMenu, resume = false }) {
       // Process tags for this line
       const tags = story.currentTags;
       console.log('Tags:', tags);  // Debug log
+
+      // Pre-pass: NOTE_PROMPT nudges. Must run BEFORE the main loop because
+      // several tag handlers below `return` early (e.g. RADIO_BROADCAST), which
+      // would otherwise skip a NOTE_PROMPT tag that comes after them in the knot.
+      for (const tag of tags) {
+        if (tag.startsWith('NOTE_PROMPT:')) {
+          notebook?.nudge(tag.replace('NOTE_PROMPT:', '').trim());
+        }
+      }
 
       for (const tag of tags) {
         // Check for BACKGROUND tag
@@ -1333,10 +1391,14 @@ function InkStory({ onReturnToMenu, resume = false }) {
         />
       )}
 
-      {/* Live shopping list — visible during prep, updates as items are added */}
-      {!!gameVars.in_preparation && <ShoppingList vars={gameVars} />}
+      {/* Live shopping list — visible during prep, updates as items are added.
+          Raised above the store overlay so it can still be cross-checked while shopping. */}
+      {!!gameVars.in_preparation && <ShoppingList vars={gameVars} inStore={showStore} />}
 
-      <div className={`story-wrapper ${textSpeed === 'instant' ? 'text-instant' : ''} ${atPrepHub ? 'prep-hub-mode' : ''}`}>
+      <div
+        ref={storyWrapperRef}
+        className={`story-wrapper ${textSpeed === 'instant' ? 'text-instant' : ''} ${atPrepHub ? 'prep-hub-mode' : ''} ${showScrollHint ? 'has-scroll-hint' : ''}`}
+      >
         {!storyLoaded ? (
           <p>Loading your story...</p>
         ) : (
@@ -1586,6 +1648,14 @@ function InkStory({ onReturnToMenu, resume = false }) {
                   })}
                 </div>
               )
+            )}
+
+            {/* Scroll-down hint — pinned to the bottom of this box, only
+                shown while it actually overflows the screen. */}
+            {showScrollHint && (
+              <div className="scroll-hint" aria-hidden="true">
+                <span className="scroll-hint-chevron">⌄ more below</span>
+              </div>
             )}
           </>
         )}

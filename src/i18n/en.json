@@ -361,6 +361,9 @@
       "candles":        { "name": "Emergency Candles",    "description": "Burns 8 hrs each" },
       "first_aid":      { "name": "First Aid Kit",        "description": "Bandages, antiseptic" },
       "blanket":        { "name": "Emergency Blanket",    "description": "Retains 90% body heat" },
+      "flashlight":     { "name": "Flashlight",           "description": "Dedicated, dependable light" },
+      "headlamp":       { "name": "Headlamp",             "description": "Hands-free light" },
+      "lantern":        { "name": "Lantern",              "description": "Lights a whole room" },
       "matches":        { "name": "Waterproof Matches",   "description": "Strike anywhere", "feedback": "Handy backup, but a lighter does the same job for less. Worth having if you have no lighter." },
       "power_bank":     { "name": "Power Bank",           "description": "20,000 mAh", "feedback": "Gives your phone a few extra charges, but AA batteries last far longer for radios and torches." },
       "hand_sanitizer": { "name": "Hand Sanitizer",       "description": "No running water needed", "feedback": "Useful when the tap is dry, but stored water and soap does the same job and costs less." },
@@ -602,9 +605,42 @@
     }
   },
 
+  "notebook": {
+    "title": "My Notebook",
+    "subtitle": "Your own notes — open anytime, even during the storm. Topics appear as you play. Saved automatically.",
+    "topicsHint": "This is your free space. As you play, the game will open new topics here for things worth remembering.",
+    "open": "Open notebook",
+    "close": "Close",
+    "autosaved": "Saved automatically",
+    "nudge": "Worth noting —",
+    "sections": {
+      "numbers": {
+        "label": "Emergency numbers",
+        "placeholder": "Jot the numbers you'll want to remember — and when to use each."
+      },
+      "supplies": {
+        "label": "Supplies",
+        "placeholder": "What you still need to buy or prepare…"
+      },
+      "home": {
+        "label": "Home plan",
+        "placeholder": "How you'll keep warm and lit if the power goes…"
+      },
+      "meds": {
+        "label": "Medicines",
+        "placeholder": "What to sort out in the medicine cabinet…"
+      },
+      "other": {
+        "label": "Notes",
+        "placeholder": "Jot anything you want to remember…"
+      }
+    }
+  },
+
   "shoppingList": {
     "title": "Shopping list",
     "hint": "Added as you prep — visit the store before the storm to buy it all.",
+    "hintInStore": "Cross-check this against your basket before you check out.",
     "items": {
       "water": "Bottled water",
       "water_amount": "Bottled water ({n}L)",

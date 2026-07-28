@@ -114,6 +114,7 @@ VAR ending_type = ""
 === emergency_broadcast ===
 # CLEAR
 # RADIO_BROADCAST
+# NOTE_PROMPT: numbers
 ~ heard_broadcast = true
 
 Saade lülitub hädaolukorra infole...
@@ -1150,6 +1151,7 @@ Laed akupanga täis ja jätad selle laadimisjuhtmega ukse juurde. Samal ajal lae
 
 === light_result_rationing ===
 # CLEAR
+# NOTE_PROMPT: home
 
 Mõtled tänasest ööst kaugemale — elekter võib olla väljas kolm päeva, mitte kolm tundi.
 
@@ -1494,6 +1496,7 @@ VAR med_cabinet_total = 0
 
 === med_cabinet_result ===
 # CLEAR
+# NOTE_PROMPT: meds
 
 ~ med_pills_counted = true
 ~ med_first_aid = true

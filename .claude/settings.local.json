@@ -34,7 +34,26 @@
       "Bash(sed -n '1142,1167p' src/components/InkStory.css)",
       "Bash(sed -n '13,17p' src/components/Menu.css)",
       "Bash(sed -n '31,35p' src/components/StoreOverlay.css)",
-      "Bash(sed -n '1,6p' src/App.css)"
+      "Bash(sed -n '1,6p' src/App.css)",
+      "Bash(printf 'export CLAUDE_CONFIG_DIR=$HOME/.claude-work\\\\n')",
+      "Bash(mkdir -p /Users/ahmedpashafaisal/.claude-work)",
+      "Bash(grep -q '^\\\\.envrc$' .gitignore)",
+      "Bash(brew install *)",
+      "Bash(node .claude/skills/host-game/host.mjs)",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('src/i18n/en.json'\\)\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('src/i18n/et.json'\\)\\)\")",
+      "Bash(sed -i '' \"s/choicesCount: document.querySelectorAll\\('.choice-btn'\\).length,/choicesCount: document.querySelectorAll\\('.choice-btn'\\).length, bodyText: document.body.innerText.slice\\(0,400\\),/\" probe2.mjs)",
+      "Bash(node probe2.mjs)",
+      "Bash(grep -n \"scroll-hint\\\\|</div>\\\\s*$\" src/components/InkStory.jsx)",
+      "Bash(node /Users/ahmedpashafaisal/.claude-work/jobs/8295ff30/tmp/probe2.mjs)",
+      "Bash(sed -i '' \"s/width: 390, height: 350/width: 390, height: 700/\" probe2.mjs)",
+      "Bash(sed -i '' \"s/window-size=390,700/window-size=390,844/\" probe2.mjs)",
+      "Bash(grep -n \"className={\\\\`story-wrapper\" src/components/InkStory.jsx)",
+      "Bash(node /Users/ahmedpashafaisal/.claude-work/jobs/8295ff30/tmp/probe4.mjs)",
+      "Bash(node /Users/ahmedpashafaisal/.claude-work/jobs/8295ff30/tmp/probe6.mjs)",
+      "Bash(sed -i '' \"s#const debug = await cdp.eval\\(\\\\`JSON.stringify\\(window.__scrollHintDebug || 'undefined'\\)\\\\`\\);#const debug = await cdp.eval\\(\\\\`JSON.stringify\\(window.__scrollHintDebug || 'undefined'\\)\\\\`\\);\\\\n  const cls = await cdp.eval\\(\\\\`document.querySelector\\('.story-wrapper'\\).className\\\\`\\);\\\\n  const hintEl = await cdp.eval\\(\\\\`!!document.querySelector\\('.scroll-hint'\\)\\\\`\\);#\" probe7.mjs)",
+      "Bash(sed -i '' \"s#console.log\\('debug:', debug\\);#console.log\\('debug:', debug\\); console.log\\('class:', cls, 'hintDomPresent:', hintEl\\);#\" probe7.mjs)",
+      "Bash(node probe7.mjs)"
     ]
   }
 }

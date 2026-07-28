@@ -44,6 +44,14 @@
   scrollbar-width: none;
 }
 
+/* Room for the scroll-hint pill so it never sits on top of the last button.
+   Only added once real overflow is detected — added unconditionally, this
+   padding would itself create a few px of overflow on borderline screens
+   that would otherwise fit exactly, triggering a false "more below". */
+.story-wrapper.has-scroll-hint {
+  padding-bottom: 42px;
+}
+
 .story-wrapper::-webkit-scrollbar {
   display: none;
 }
@@ -169,6 +177,45 @@
 /* Checkmark list items — prep hub */
 .story-text p:first-child:last-child::after {
   display: none;
+}
+
+/* "Scroll for more" hint — pinned to the bottom edge of .story-wrapper's own
+   viewport (not the page), so it reads as belonging to that scrollable box
+   rather than floating loose near the time bar / notebook button. */
+.scroll-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.scroll-hint-chevron {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(24, 24, 28, 0.92);
+  border: 1px solid rgba(212, 165, 74, 0.5);
+  color: #d4a54a;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  animation: scroll-hint-bounce 1.4s ease-in-out infinite;
+}
+
+@keyframes scroll-hint-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.8; }
+  50%      { transform: translateY(4px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-hint-chevron { animation: none; }
 }
 
 /* ============================================

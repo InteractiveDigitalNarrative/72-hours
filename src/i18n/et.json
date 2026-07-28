@@ -361,6 +361,9 @@
       "candles":        { "name": "Hädaküünlad",          "description": "Põleb 8 tundi" },
       "first_aid":      { "name": "Esmaabikomplekt",      "description": "Sidemed, antiseptik" },
       "blanket":        { "name": "Hädatekk",             "description": "Hoiab 90% kehast soojust" },
+      "flashlight":     { "name": "Taskulamp",            "description": "Usaldusväärne valgusallikas" },
+      "headlamp":       { "name": "Pealamp",              "description": "Käed vabaks jättev valgus" },
+      "lantern":        { "name": "Latern",               "description": "Valgustab terve toa" },
       "matches":        { "name": "Veekindlad tikud",     "description": "Süttivad igal pool", "feedback": "Hea varuvahend, aga välgumihkel teeb sama asja odavamalt. Kasulik, kui sul välgumihklit pole." },
       "power_bank":     { "name": "Akupank",              "description": "20 000 mAh", "feedback": "Annab telefonile paar lisalaadimist, aga AA patareid kestavad raadiote ja taskuLampide jaoks palju kauem." },
       "hand_sanitizer": { "name": "Käte desinfitseerimisvahend", "description": "Vett pole vaja", "feedback": "Kasulik, kui kraan on kuiv, aga vesi ja seep teevad sama töö odavamalt." },
@@ -602,9 +605,42 @@
     }
   },
 
+  "notebook": {
+    "title": "Minu märkmik",
+    "subtitle": "Sinu enda märkmed — ava igal ajal, ka tormi ajal. Teemad ilmuvad mängu käigus. Salvestatakse automaatselt.",
+    "topicsHint": "See on sinu vaba ruum. Mängu käigus avab mäng siia uusi teemasid asjade jaoks, mida tasub meeles pidada.",
+    "open": "Ava märkmik",
+    "close": "Sulge",
+    "autosaved": "Salvestatud automaatselt",
+    "nudge": "Tasub kirja panna —",
+    "sections": {
+      "numbers": {
+        "label": "Hädaabinumbrid",
+        "placeholder": "Pane kirja numbrid, mida tahad meeles pidada — ja millal igaüht kasutada."
+      },
+      "supplies": {
+        "label": "Ostud",
+        "placeholder": "Mida sul on veel vaja osta või ette valmistada…"
+      },
+      "home": {
+        "label": "Koduplaan",
+        "placeholder": "Kuidas hoiad sooja ja valgust, kui elekter kaob…"
+      },
+      "meds": {
+        "label": "Ravimid",
+        "placeholder": "Mida ravimikapis korda ajada…"
+      },
+      "other": {
+        "label": "Märkmed",
+        "placeholder": "Pane kirja, mida tahad meeles pidada…"
+      }
+    }
+  },
+
   "shoppingList": {
     "title": "Ostunimekiri",
     "hint": "Lisatakse ettevalmistuse käigus — käi enne tormi poes ja osta kõik ära.",
+    "hintInStore": "Võrdle seda oma ostukorviga enne kassasse minekut.",
     "items": {
       "water": "Pudelivesi",
       "water_amount": "Pudelivesi ({n}L)",
