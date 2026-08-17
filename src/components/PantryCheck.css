@@ -288,3 +288,50 @@
   background: rgba(80, 120, 160, 0.12);
   color: #cfe2f5;
 }
+
+/* ── Desktop: bump text up, it reads too small at this width ── */
+@media (min-width: 768px) {
+  .pc-panel {
+    max-width: 620px;
+  }
+
+  .pc-header h2 {
+    font-size: 26px;
+  }
+
+  .pc-subtitle {
+    font-size: 16px;
+  }
+
+  .pc-note-reminder {
+    font-size: 15px;
+  }
+
+  .pc-summary-heading {
+    font-size: 17px;
+  }
+
+  .pc-summary-list li {
+    font-size: 15px;
+  }
+
+  .pc-summary-reason {
+    font-size: 13px;
+  }
+
+  .pc-summary-empty {
+    font-size: 14px;
+  }
+
+  .pc-med-reminder {
+    font-size: 15px;
+  }
+
+  .pc-btn-primary {
+    font-size: 17px;
+  }
+
+  .pc-btn-back {
+    font-size: 15px;
+  }
+}

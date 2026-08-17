@@ -265,3 +265,42 @@
   background: rgba(160, 130, 80, 0.14);
   color: #ecdcc0;
 }
+
+/* ── Desktop: bump text up, it reads too small at this width ── */
+@media (min-width: 768px) {
+  .la-panel {
+    max-width: 620px;
+  }
+
+  .la-header h2 {
+    font-size: 26px;
+  }
+
+  .la-subtitle {
+    font-size: 16px;
+  }
+
+  .la-note-reminder {
+    font-size: 15px;
+  }
+
+  .la-summary-heading {
+    font-size: 17px;
+  }
+
+  .la-summary-list li {
+    font-size: 15px;
+  }
+
+  .la-summary-empty {
+    font-size: 14px;
+  }
+
+  .la-btn-primary {
+    font-size: 17px;
+  }
+
+  .la-btn-back {
+    font-size: 15px;
+  }
+}

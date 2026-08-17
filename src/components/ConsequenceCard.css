@@ -101,3 +101,36 @@
   padding-top: 8px;
   line-height: 1.4;
 }
+
+/* ── Desktop: bump text up, it reads too small at this width ── */
+@media (min-width: 768px) {
+  .cq-card {
+    max-width: 560px;
+    padding: 20px 24px;
+  }
+
+  .cq-icon {
+    font-size: 1.9rem;
+  }
+
+  .cq-label {
+    font-size: 1.05rem;
+  }
+
+  .cq-level-label {
+    font-size: 0.88rem;
+  }
+
+  .cq-prepared {
+    font-size: 0.92rem;
+  }
+
+  .cq-consequence {
+    font-size: 1.15rem;
+    line-height: 1.5;
+  }
+
+  .cq-tip {
+    font-size: 0.9rem;
+  }
+}

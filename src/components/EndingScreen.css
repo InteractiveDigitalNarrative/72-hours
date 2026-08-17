@@ -316,6 +316,54 @@
 }
 
 /* ============================================
+   RESPONSIVE - DESKTOP (text reads too small here)
+   ============================================ */
+
+@media (min-width: 769px) {
+  .ending-summary {
+    font-size: 18px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .report-card {
+    padding: 18px;
+  }
+
+  .card-icon {
+    font-size: 26px;
+  }
+
+  .card-label {
+    font-size: 16px;
+  }
+
+  .card-consequence {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .card-feedback {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .num-desc {
+    font-size: 16px;
+  }
+
+  .numbers-hint {
+    font-size: 15px;
+  }
+
+  .takeaways li {
+    font-size: 16px;
+  }
+}
+
+/* ============================================
    RESPONSIVE - TABLET
    ============================================ */
 

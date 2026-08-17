@@ -337,3 +337,46 @@
 }
 
 .cc-btn-primary:hover { filter: brightness(1.1); }
+
+/* ── Desktop: bump text up, it reads too small at this width ── */
+@media (min-width: 768px) {
+  .cc-panel {
+    max-width: 620px;
+  }
+
+  .cc-header h2 {
+    font-size: 26px;
+  }
+
+  .cc-subtitle {
+    font-size: 16px;
+  }
+
+  .cc-feedback-verdict {
+    font-size: 16px;
+  }
+
+  .cc-why {
+    font-size: 15px;
+  }
+
+  .cc-score-label {
+    font-size: 14px;
+  }
+
+  .cc-restock-head {
+    font-size: 15px;
+  }
+
+  .cc-restock-list li {
+    font-size: 15px;
+  }
+
+  .cc-takeaway {
+    font-size: 15.5px;
+  }
+
+  .cc-btn-primary {
+    font-size: 17px;
+  }
+}

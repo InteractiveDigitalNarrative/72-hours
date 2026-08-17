@@ -54,6 +54,12 @@ const DEV_SCENES = {
     household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
     vars: { family_size: 1, in_preparation: true },
   },
+  // Straight to the Pantry Check overlay (Kitchen Report)
+  'pantry-check': {
+    path: 'food_kitchen_result', weather: 1,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1, in_preparation: true },
+  },
   // Straight to the Light Audit overlay (what light do you have)
   'light-audit': {
     path: 'category_light', weather: 1,
@@ -90,6 +96,32 @@ const DEV_SCENES = {
     path: 'call_power_outage', weather: 2,
     household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
     vars: { family_size: 1, has_elderly: false, has_children: false, heard_broadcast: true, phone_drained: true },
+  },
+  // Per-category ConsequenceCard overlay (report panel after each prep phase) — well prepared
+  'consequence-light': {
+    path: 'crisis_night', weather: 2,
+    household: { size: 2, elderlyRelation: 'Grandma', hasElderly: true, hasChildren: false },
+    vars: {
+      family_size: 2, has_elderly: true, has_children: false, prep_light: 2,
+      light_flashlight: true, search_found: true, search_known_spot: true,
+      search_seconds: 2, light_batteries: true, light_rationing: true,
+    },
+  },
+  // Same overlay, underprepared — check the red/level-0 variant too
+  'consequence-light-bad': {
+    path: 'crisis_night', weather: 2,
+    household: { size: 2, elderlyRelation: 'Grandma', hasElderly: true, hasChildren: false },
+    vars: { family_size: 2, has_elderly: true, has_children: false, prep_light: 0 },
+  },
+  // Final ending/report screen, mixed prep levels
+  'ending-screen': {
+    path: 'ending_summary', weather: 2,
+    household: { size: 2, elderlyRelation: 'Grandma', hasElderly: true, hasChildren: false },
+    vars: {
+      family_size: 2, has_elderly: true, has_children: false,
+      prep_light: 2, prep_heat: 1, prep_water: 2, prep_food: 1, prep_info: 0, prep_medication: 2,
+      total_prep: 8, ending_type: 'partial', call_outcome: 'help_partial', dialed_number: '1220',
+    },
   },
 };
 
