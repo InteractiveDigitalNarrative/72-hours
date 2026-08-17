@@ -48,6 +48,9 @@ const GO_CHECK_TASKS = {
   // what to look for (expired / running low / needs cold), then the player
   // applies those criteria to their own medicines.
   medicines:  { flatCost: 3,  next: 'story'  },
+  // Driven from inside WaterCalculation rather than by a tag, so it has no
+  // `next` — the overlay decides what follows.
+  water:      { flatCost: 3 },
 };
 
 const DEV_SCENES = {
@@ -75,6 +78,12 @@ const DEV_SCENES = {
     path: 'food_kitchen_result', weather: 1,
     household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
     vars: { family_size: 1, in_preparation: true },
+  },
+  // Preparation hub — click the Water card to reach the water calculation
+  'prep-hub': {
+    path: 'preparation_hub', weather: 1,
+    household: { size: 2, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 2, in_preparation: true },
   },
   // Light hub with the flashlight fetch available (audit already done)
   'flashlight-fetch': {
@@ -1087,6 +1096,15 @@ function InkStory({ onReturnToMenu, resume = false }) {
     setWaterCalcPendingIndex(null);
   };
 
+  // Time spent away counting containers, charged mid-overlay.
+  const handleWaterAwayTime = (minutes) => {
+    const story = storyRef.current;
+    if (!story) return;
+    story.variablesState["current_time"] =
+      (story.variablesState["current_time"] || 1200) + minutes;
+    readGameVars(story);
+  };
+
   const handleWaterCalcClose = (wasCorrect, measuredLitres = 0) => {
     setShowWaterCalc(false);
     const pendingIndex = waterCalcPendingIndex;
@@ -1866,7 +1884,13 @@ function InkStory({ onReturnToMenu, resume = false }) {
 
       {/* Water Calculation Quiz */}
       {showWaterCalc && (
-        <WaterCalculation familySize={household.size} onClose={handleWaterCalcClose} onCancel={handleWaterCalcCancel} />
+        <WaterCalculation
+          familySize={household.size}
+          awayFlatCost={GO_CHECK_TASKS.water.flatCost}
+          onAwayTime={handleWaterAwayTime}
+          onClose={handleWaterCalcClose}
+          onCancel={handleWaterCalcCancel}
+        />
       )}
 
       {/* Store Overlay */}

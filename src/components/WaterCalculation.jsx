@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import './WaterCalculation.css';
+import GoCheck from './GoCheck';
 import { useAudioContext } from '../context/AudioContext';
 import { useTranslation } from '../hooks/useTranslation';
 
-function WaterCalculation({ familySize = 2, onClose, onCancel }) {
+// Order matters here. The player is given the rate, then sent away to count
+// what they actually have, and only then asked to do the sum — by which point
+// the numbers are off screen and several real minutes have passed. Whether
+// they wrote them down is the whole lesson, so the wrong answers on offer are
+// the plausible mis-rememberings: forgetting the 3 days, or misrecalling the
+// rate as 2 L.
+const STEPS = { RATE: 'rate', AWAY: 'away', MEASURE: 'measure', CALCULATE: 'calculate' };
+
+function WaterCalculation({ familySize = 2, awayFlatCost = 3, onAwayTime, onClose, onCancel }) {
   const { playSfx } = useAudioContext();
   const { t } = useTranslation();
   const PEOPLE = familySize;
@@ -41,9 +50,14 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
     arr.findIndex(o => o.value === opt.value) === i
   );
 
-  const [screen, setScreen] = useState(1);
+  const [step, setStep] = useState(STEPS.RATE);
   const [selected, setSelected] = useState(null);
   const [measuredLitres, setMeasuredLitres] = useState('');
+
+  const handleBackFromCheck = (minutes) => {
+    onAwayTime?.(minutes);
+    setStep(STEPS.MEASURE);
+  };
 
   const handleSelect = (opt) => {
     playSfx(opt.correct ? 'success' : 'fail');
@@ -73,12 +87,24 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
   const isAre = PEOPLE === 1 ? t('waterCalc.is') : t('waterCalc.are');
   const personPeople = PEOPLE === 1 ? t('waterCalc.person') : t('waterCalc.people');
 
+  // The walk-away gate replaces the panel entirely — it is its own overlay.
+  if (step === STEPS.AWAY) {
+    return (
+      <GoCheck
+        task="water"
+        flatCost={awayFlatCost}
+        onBack={handleBackFromCheck}
+        onSkip={handleBackFromCheck}
+      />
+    );
+  }
+
   return (
     <div className="wc-overlay">
       <div className="wc-panel">
 
-        {/* ── SCREEN 1: Hint ────────────────────────────── */}
-        {screen === 1 && (
+        {/* ── STEP 1: the rate, and the nudge to write it down ── */}
+        {step === STEPS.RATE && (
           <div className="wc-screen">
             <div className="wc-header">
               <span className="wc-icon">💧</span>
@@ -99,7 +125,7 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
               }} />
             </div>
 
-            <button className="wc-btn-primary" onClick={() => { playSfx('click'); setScreen(2); }}>
+            <button className="wc-btn-primary" onClick={() => { playSfx('click'); setStep(STEPS.AWAY); }}>
               {t('waterCalc.screen1Btn')}
             </button>
 
@@ -109,8 +135,8 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
           </div>
         )}
 
-        {/* ── SCREEN 3: Kitchen measurement ─────────────── */}
-        {screen === 3 && (
+        {/* ── STEP 2: what they found while they were away ── */}
+        {step === STEPS.MEASURE && (
           <div className="wc-screen">
             <div className="wc-header">
               <span className="wc-icon">🚰</span>
@@ -135,14 +161,14 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
               <p className="wc-text wc-text-hint">{t('waterCalc.screen3Hint')}</p>
             </div>
 
-            <button className="wc-btn-primary" onClick={() => { playSfx('click'); onClose(selected?.correct ?? false, measuredLitres === '' ? 0 : Number(measuredLitres)); }}>
+            <button className="wc-btn-primary" onClick={() => { playSfx('click'); setStep(STEPS.CALCULATE); }}>
               {t('waterCalc.screen3Btn')}
             </button>
           </div>
         )}
 
-        {/* ── SCREEN 2: Quiz ────────────────────────────── */}
-        {screen === 2 && (
+        {/* ── STEP 3: the sum, with the rate no longer on screen ── */}
+        {step === STEPS.CALCULATE && (
           <div className="wc-screen">
             <div className="wc-header">
               <span className="wc-icon">🧮</span>
@@ -182,7 +208,13 @@ function WaterCalculation({ familySize = 2, onClose, onCancel }) {
             </div>
 
             {selected && (
-              <button className="wc-btn-primary" onClick={() => { playSfx('click'); setScreen(3); }}>
+              <button
+                className="wc-btn-primary"
+                onClick={() => {
+                  playSfx('click');
+                  onClose(selected.correct, measuredLitres === '' ? 0 : Number(measuredLitres));
+                }}
+              >
                 {selected.correct ? t('waterCalc.screen2BtnCorrect') : t('waterCalc.screen2BtnWrong')}
               </button>
             )}

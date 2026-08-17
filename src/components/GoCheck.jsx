@@ -22,6 +22,7 @@ const TASK_ICONS = {
   kitchen:    '🚶',
   flashlight: '🔦',
   radio:      '📻',
+  water:      '🚰',
   medicines:  '💊',
   home:       '🏠',
 };
