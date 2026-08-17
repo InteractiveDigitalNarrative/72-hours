@@ -6,25 +6,40 @@ import { useDialog } from '../hooks/useDialog';
 
 // Item pool. Distinct emoji per item; `fridge` flags a cold-chain medicine.
 // The shelf is assembled from the player's household, so it stays personal.
+//
+// `expiryMonths` is an offset from today, not a fixed date — the label the
+// player reads is derived at render time so the shelf can never go stale.
+// The offsets are constants, so the gaps quoted in each item's `why` text
+// ("that date was 8 months ago") stay accurate forever.
 const POOL = {
   base: [
-    { id: 'painkillers', emoji: '💊', correct: 'toss' },
-    { id: 'plasters',    emoji: '🩹', correct: 'keep' },
-    { id: 'antiseptic',  emoji: '🧴', correct: 'restock' },
+    { id: 'painkillers', emoji: '💊', correct: 'toss',    expiryMonths: -8 },
+    { id: 'plasters',    emoji: '🩹', correct: 'keep',    expiryMonths: 26 },
+    { id: 'antiseptic',  emoji: '🧴', correct: 'restock', expiryMonths: 14 },
   ],
   solo: [
-    { id: 'allergy',  emoji: '🤧', correct: 'toss' },
-    { id: 'vitamins', emoji: '🟢', correct: 'keep' },
+    { id: 'allergy',  emoji: '🤧', correct: 'toss', expiryMonths: -1 },
+    { id: 'vitamins', emoji: '🟢', correct: 'keep', expiryMonths: 9 },
   ],
   elderly: [
-    { id: 'bp_pills', emoji: '❤️', correct: 'restock' },
-    { id: 'insulin',  emoji: '🧪', correct: 'keep', fridge: true },
+    { id: 'bp_pills', emoji: '❤️', correct: 'restock', expiryMonths: 11 },
+    { id: 'insulin',  emoji: '🧪', correct: 'keep', fridge: true, expiryMonths: 10 },
   ],
   children: [
-    { id: 'fever_syrup', emoji: '🍼', correct: 'restock' },
-    { id: 'epipen',      emoji: '💉', correct: 'restock' },
+    { id: 'fever_syrup', emoji: '🍼', correct: 'restock', expiryMonths: 1 },
+    { id: 'epipen',      emoji: '💉', correct: 'restock', expiryMonths: -2 },
   ],
 };
+
+// Medicine labels carry MM/YYYY, so that's what the player reads and compares
+// against today. Snap to the 1st before shifting months, or a 31st rolls over
+// into the following month.
+function expiryLabel(monthsFromNow = 0) {
+  const d = new Date();
+  d.setDate(1);
+  d.setMonth(d.getMonth() + monthsFromNow);
+  return `${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+}
 
 function buildItems(household) {
   const items = [...POOL.base];
@@ -127,7 +142,12 @@ function CabinetCheck({ household, onClose }) {
           <p className="cc-subtitle">{t('cabinetCheck.subtitle')}</p>
         </div>
 
-        <div className="cc-progress">{checkedCount} / {items.length}</div>
+        {/* Reference point for every date on the shelf — without it the
+            player can't fairly judge what's expired. */}
+        <div className="cc-meta">
+          <span className="cc-today">{t('cabinetCheck.todayLabel', { date: expiryLabel(0) })}</span>
+          <span className="cc-progress">{checkedCount} / {items.length}</span>
+        </div>
 
         <div className="cc-shelf">
           {items.map(it => {
@@ -153,7 +173,12 @@ function CabinetCheck({ household, onClose }) {
               <span className="cc-inspect-name">
                 {selectedItem.emoji} {t(`cabinetCheck.items.${selected}.name`)}
               </span>
-              <span className="cc-inspect-date">{t(`cabinetCheck.items.${selected}.detail`)}</span>
+              {/* The raw label, deliberately unstyled by verdict — reading the
+                  date and judging it is the skill being taught. */}
+              <span className="cc-inspect-date">
+                {t('cabinetCheck.expLabel')} {expiryLabel(selectedItem.expiryMonths)}
+              </span>
+              <span className="cc-inspect-qty">{t(`cabinetCheck.items.${selected}.qty`)}</span>
               {selectedItem.fridge && (
                 <span className="cc-inspect-fridge">❄️ {t('cabinetCheck.fridgeTag')}</span>
               )}

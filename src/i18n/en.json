@@ -772,9 +772,11 @@
   "cabinetCheck": {
     "title": "Sort This Medicine Shelf",
     "summaryTitle": "Shelf Sorted",
-    "subtitle": "Practise here first — tap each item, read the label, and decide what to do with it.",
-    "hint": "Tap an item to check its date and quantity.",
+    "subtitle": "Practise here first — read each label and judge it against the next 6 months, not just this storm.",
+    "hint": "Tap an item to read its label.",
     "fridgeTag": "Keep refrigerated",
+    "expLabel": "EXP",
+    "todayLabel": "Today: {{date}}",
     "verdicts": {
       "keep": "Keep",
       "restock": "Restock",
@@ -795,48 +797,48 @@
     "items": {
       "painkillers": {
         "name": "Painkillers",
-        "detail": "Expired 8 months ago",
-        "why": "Expired painkillers lose strength — bin them and add a fresh box to your list."
+        "qty": "Unopened box",
+        "why": "That date was 8 months ago. Expired painkillers lose strength — bin them and add a fresh box to your list."
       },
       "plasters": {
         "name": "Plasters",
-        "detail": "In date · well stocked",
-        "why": "In date and plenty left. Keep it — the backbone of your first-aid kit."
+        "qty": "20 in the box",
+        "why": "Years left on the date and plenty in the box. Keep it — the backbone of your first-aid kit."
       },
       "antiseptic": {
         "name": "Antiseptic",
-        "detail": "Almost empty bottle",
-        "why": "Nearly out — restock it. You'll want it for cleaning cuts when you can't just pop to a clinic."
+        "qty": "A few drops left",
+        "why": "The date is fine — the bottle isn't. Nearly out, so restock it. You'll want it for cleaning cuts when you can't just pop to a clinic."
       },
       "allergy": {
         "name": "Allergy tablets",
-        "detail": "Expired last month",
-        "why": "Expired — bin it. If anyone reacts to pollen, dust or stings, replace it so it works when needed."
+        "qty": "Half a pack",
+        "why": "That date passed last month. Bin it — and if anyone reacts to pollen, dust or stings, replace it so it works when needed."
       },
       "vitamins": {
         "name": "Daily vitamins",
-        "detail": "In date",
-        "why": "Fine to keep — no harm in it. Just don't let it crowd out the medicines that actually matter in a crisis."
+        "qty": "Most of the jar",
+        "why": "Nine months left and plenty in the jar — fine to keep. Just don't let it crowd out the medicines that actually matter in a crisis."
       },
       "bp_pills": {
         "name": "Blood-pressure pills",
-        "detail": "In date · only 5 days left",
-        "why": "A daily prescription with just 5 days left. Restock now — keep a 7-day buffer so a closed pharmacy never catches you out."
+        "qty": "5 tablets left",
+        "why": "The date is nearly a year off, but that's not the problem — this is a daily prescription with 5 tablets left. Restock now and keep a 7-day buffer, so a closed pharmacy never catches you out."
       },
       "insulin": {
         "name": "Insulin",
-        "detail": "In date · half a pen left",
-        "why": "In date — keep it. But it must stay cold: in an outage the fridge holds about 4 hours closed, then move it to a cool bag with ice packs. Ask your pharmacist how long yours can be out."
+        "qty": "Half a pen left",
+        "why": "Date and quantity are both fine — keep it. The catch is cold: in an outage the fridge holds about 4 hours closed, then move it to a cool bag with ice packs. Ask your pharmacist how long yours can be out."
       },
       "fever_syrup": {
         "name": "Child's fever syrup",
-        "detail": "Expires next week · half a bottle",
-        "why": "About to expire and half gone. Replace it now so it's ready if a fever hits mid-storm."
+        "qty": "Half a bottle",
+        "why": "That date is next month — it won't see out the winter. Replace it now so it's ready if a fever hits mid-storm."
       },
       "epipen": {
         "name": "Adrenaline pen (EpiPen)",
-        "detail": "Expired 2 months ago",
-        "why": "An expired adrenaline pen may not work in a severe allergic reaction. Replace it straight away and keep it where everyone can find it — this is a 112 situation."
+        "qty": "1 pen",
+        "why": "That date passed 2 months ago, and an expired adrenaline pen may not work in a severe allergic reaction. Replace it straight away and keep it where everyone can find it — this is a 112 situation."
       }
     }
   },

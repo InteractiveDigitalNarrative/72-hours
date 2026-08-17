@@ -772,9 +772,11 @@
   "cabinetCheck": {
     "title": "Sorteeri see ravimiriiul",
     "summaryTitle": "Riiul sorteeritud",
-    "subtitle": "Harjuta kõigepealt siin — koputa igal esemel, loe silti ja otsusta, mida sellega teha.",
-    "hint": "Koputa esemel, et näha selle kuupäeva ja kogust.",
+    "subtitle": "Harjuta kõigepealt siin — loe iga silti ja hinda seda järgmise 6 kuu, mitte ainult selle tormi järgi.",
+    "hint": "Koputa esemel, et selle silti lugeda.",
     "fridgeTag": "Hoia külmas",
+    "expLabel": "KÕLBLIK KUNI",
+    "todayLabel": "Täna: {{date}}",
     "verdicts": {
       "keep": "Jäta",
       "restock": "Osta juurde",
@@ -795,48 +797,48 @@
     "items": {
       "painkillers": {
         "name": "Valuvaigistid",
-        "detail": "Aegus 8 kuud tagasi",
-        "why": "Aegunud valuvaigistid kaotavad toime — viska ära ja lisa värske pakk nimekirja."
+        "qty": "Avamata pakk",
+        "why": "See kuupäev oli 8 kuud tagasi. Aegunud valuvaigistid kaotavad toime — viska ära ja lisa värske pakk nimekirja."
       },
       "plasters": {
         "name": "Plaastrid",
-        "detail": "Kehtiv · hästi varustatud",
-        "why": "Kehtiv ja palju järel. Jäta alles — see on su esmaabikomplekti tugisammas."
+        "qty": "Karbis 20 tükki",
+        "why": "Kuupäevani on aastaid ja karp on täis. Jäta alles — see on su esmaabikomplekti tugisammas."
       },
       "antiseptic": {
         "name": "Antiseptik",
-        "detail": "Pudel peaaegu tühi",
-        "why": "Peaaegu otsas — osta juurde. Seda läheb haavade puhastamiseks vaja, kui kliinikusse niisama põigata ei saa."
+        "qty": "Paar tilka järel",
+        "why": "Kuupäevaga on kõik korras — pudeliga mitte. Peaaegu otsas, seega osta juurde. Seda läheb haavade puhastamiseks vaja, kui kliinikusse niisama põigata ei saa."
       },
       "allergy": {
         "name": "Allergiatabletid",
-        "detail": "Aegus eelmisel kuul",
-        "why": "Aegunud — viska ära. Kui keegi reageerib õietolmule, tolmule või putukahammustusele, vaheta välja, et see vajadusel toimiks."
+        "qty": "Pool pakki",
+        "why": "See kuupäev möödus eelmisel kuul. Viska ära — ja kui keegi reageerib õietolmule, tolmule või putukahammustusele, vaheta välja, et see vajadusel toimiks."
       },
       "vitamins": {
         "name": "Igapäevased vitamiinid",
-        "detail": "Kehtiv",
-        "why": "Võib alles jätta — kahju pole. Ära lase sel lihtsalt tõrjuda välja ravimeid, mis kriisis tegelikult loevad."
+        "qty": "Purk enam-vähem täis",
+        "why": "Üheksa kuud jäänud ja purk täis — võib alles jätta. Ära lase sel lihtsalt tõrjuda välja ravimeid, mis kriisis tegelikult loevad."
       },
       "bp_pills": {
         "name": "Vererõhuravimid",
-        "detail": "Kehtiv · jäänud vaid 5 päeva",
-        "why": "Igapäevane retseptiravim, mida on jäänud vaid 5 päeva. Osta kohe juurde — hoia 7 päeva varu, et suletud apteek sind kunagi üllatama ei jääks."
+        "qty": "5 tabletti järel",
+        "why": "Kuupäevani on ligi aasta, aga probleem pole selles — see on igapäevane retseptiravim, mida on järel 5 tabletti. Osta kohe juurde ja hoia 7 päeva varu, et suletud apteek sind kunagi üllatama ei jääks."
       },
       "insulin": {
         "name": "Insuliin",
-        "detail": "Kehtiv · pool penni järel",
-        "why": "Kehtiv — jäta alles. Aga see peab külmas püsima: voolukatkestuse ajal hoiab külmkapp umbes 4 tundi suletuna, siis tõsta külmakotti jääkottidega. Küsi apteekrilt, kui kaua sinu oma väljas olla tohib."
+        "qty": "Pool penni järel",
+        "why": "Nii kuupäev kui kogus on korras — jäta alles. Konks on külmas: voolukatkestuse ajal hoiab külmkapp umbes 4 tundi suletuna, siis tõsta külmakotti jääkottidega. Küsi apteekrilt, kui kaua sinu oma väljas olla tohib."
       },
       "fever_syrup": {
         "name": "Lapse palavikusiirup",
-        "detail": "Aegub järgmisel nädalal · pool pudelit",
-        "why": "Aegumas ja pool otsas. Vaheta kohe välja, et see oleks valmis, kui keset tormi palavik tuleb."
+        "qty": "Pool pudelit",
+        "why": "See kuupäev on juba järgmisel kuul — talve see välja ei vea. Vaheta kohe välja, et see oleks valmis, kui keset tormi palavik tuleb."
       },
       "epipen": {
         "name": "Adrenaliinipenn (EpiPen)",
-        "detail": "Aegus 2 kuud tagasi",
-        "why": "Aegunud adrenaliinipenn ei pruugi raske allergilise reaktsiooni korral toimida. Vaheta kohe välja ja hoia kohas, kust kõik selle leiavad — see on 112 olukord."
+        "qty": "1 penn",
+        "why": "See kuupäev möödus 2 kuud tagasi ja aegunud adrenaliinipenn ei pruugi raske allergilise reaktsiooni korral toimida. Vaheta kohe välja ja hoia kohas, kust kõik selle leiavad — see on 112 olukord."
       }
     }
   },
