@@ -12,7 +12,7 @@ import ConsequenceCard from './ConsequenceCard';
 import EndingScreen from './EndingScreen';
 import CrisisScreen from './CrisisScreen';
 import StormArrival from './StormArrival';
-import BreakingNews from './BreakingNews';
+// import BreakingNews from './BreakingNews'; // Breaking News section disabled
 import OutcomeScreen from './OutcomeScreen';
 import FamilySetup from './FamilySetup';
 import PantryCheck from './PantryCheck';
@@ -204,8 +204,8 @@ function InkStory({ onReturnToMenu, resume = false }) {
   // Outcome screen overlay
   const [showOutcomeScreen, setShowOutcomeScreen] = useState(false);
 
-  // Breaking news overlay
-  const [showBreakingNews, setShowBreakingNews] = useState(false);
+  // Breaking news overlay (disabled — keeping only official SMS)
+  // const [showBreakingNews, setShowBreakingNews] = useState(false);
 
   // Storm arrival overlay
   const [showStormArrival, setShowStormArrival] = useState(false);
@@ -760,13 +760,13 @@ function InkStory({ onReturnToMenu, resume = false }) {
           return;
         }
 
-        // Check for BREAKING_NEWS tag
-        if (tag === 'BREAKING_NEWS') {
-          setShowBreakingNews(true);
-          setStoryText([]);
-          setChoices([]);
-          return;
-        }
+        // Check for BREAKING_NEWS tag (disabled — keeping only official SMS)
+        // if (tag === 'BREAKING_NEWS') {
+        //   setShowBreakingNews(true);
+        //   setStoryText([]);
+        //   setChoices([]);
+        //   return;
+        // }
 
         // Check for RADIO_BROADCAST tag
         if (tag === 'RADIO_BROADCAST') {
@@ -1269,15 +1269,16 @@ function InkStory({ onReturnToMenu, resume = false }) {
   // CRISIS SCREEN HANDLER
   // ============================================
 
-  const handleBreakingNewsClose = () => {
-    setShowBreakingNews(false);
-    const story = storyRef.current;
-    if (!story) return;
-    if (story.currentChoices.length > 0) {
-      story.ChooseChoiceIndex(0);
-      continueStory();
-    }
-  };
+  // Disabled — keeping only official SMS
+  // const handleBreakingNewsClose = () => {
+  //   setShowBreakingNews(false);
+  //   const story = storyRef.current;
+  //   if (!story) return;
+  //   if (story.currentChoices.length > 0) {
+  //     story.ChooseChoiceIndex(0);
+  //     continueStory();
+  //   }
+  // };
 
   const handleCrisisClose = () => {
     playSfx('click');
@@ -1796,10 +1797,10 @@ function InkStory({ onReturnToMenu, resume = false }) {
         />
       )}
 
-      {/* Breaking News Overlay */}
-      {showBreakingNews && (
+      {/* Breaking News Overlay (disabled — keeping only official SMS) */}
+      {/* {showBreakingNews && (
         <BreakingNews onContinue={handleBreakingNewsClose} />
-      )}
+      )} */}
 
       {/* Sleep Fade Overlay */}
       {showSleepFade && (
