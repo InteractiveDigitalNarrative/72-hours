@@ -40,11 +40,14 @@ export const SAVE_KEY = 'storm_save_v1';
 // checking honestly is never more expensive than guessing — see GoCheck.jsx.
 // `next` is what opens once the time has been charged.
 const GO_CHECK_TASKS = {
-  kitchen:    { flatCost: 10, next: 'pantry'  },
-  flashlight: { flatCost: 3,  next: 'story'   },
-  radio:      { flatCost: 3,  next: 'story'   },
-  cabinet:    { flatCost: 3,  next: 'cabinet' },
-  home:       { flatCost: 5,  next: 'home'    },
+  kitchen:    { flatCost: 10, next: 'pantry' },
+  flashlight: { flatCost: 3,  next: 'story'  },
+  radio:      { flatCost: 3,  next: 'story'  },
+  home:       { flatCost: 5,  next: 'home'   },
+  // Unlike the others this gate comes *after* its mini-game: the drill teaches
+  // what to look for (expired / running low / needs cold), then the player
+  // applies those criteria to their own medicines.
+  medicines:  { flatCost: 3,  next: 'story'  },
 };
 
 const DEV_SCENES = {
@@ -825,9 +828,10 @@ function InkStory({ onReturnToMenu, resume = false }) {
         }
 
         // Check for MED_CABINET tag — medicine cabinet triage mini-game
+        // The medicine drill runs first and the real-world check follows it —
+        // see handleCabinetCheckClose.
         if (tag === 'MED_CABINET') {
-          console.log('Showing go-check timer before cabinet check');
-          setGoCheckTask('cabinet');
+          setShowCabinetCheck(true);
           setStoryText(lines);
           setChoices([]);
           return;
@@ -1150,7 +1154,6 @@ function InkStory({ onReturnToMenu, resume = false }) {
 
     switch (task?.next) {
       case 'pantry':  setShowPantryCheck(true);  break;
-      case 'cabinet': setShowCabinetCheck(true); break;
       case 'home':    setShowHomeSetup(true);    break;
       // 'story' — nothing to open, just resume the narrative
       default:        continueStory();           break;
@@ -1244,15 +1247,18 @@ function InkStory({ onReturnToMenu, resume = false }) {
     setShowCabinetCheck(false);
 
     const story = storyRef.current;
-    if (!story) return;
-    story.variablesState["med_cabinet_done"]  = true;
-    story.variablesState["med_cabinet_score"] = result?.correct ?? 0;
-    story.variablesState["med_cabinet_total"] = result?.total ?? 0;
-    if ((result?.restock ?? 0) > 0) {
-      story.variablesState["shop_meds"] = true;
+    if (story) {
+      story.variablesState["med_cabinet_done"]  = true;
+      story.variablesState["med_cabinet_score"] = result?.correct ?? 0;
+      story.variablesState["med_cabinet_total"] = result?.total ?? 0;
+      if ((result?.restock ?? 0) > 0) {
+        story.variablesState["shop_meds"] = true;
+      }
     }
 
-    continueStory();
+    // Now that the drill has taught the criteria, send them to their own
+    // medicines. The gate resumes the story once the time is charged.
+    setGoCheckTask('medicines');
   };
 
   // STORE OVERLAY HANDLER

@@ -449,9 +449,9 @@
         "subtitle": "Go find your battery radio and turn it on",
         "body": "🗒️ Does it still pick up a station? The storm clock keeps running while you're gone."
       },
-      "cabinet": {
-        "subtitle": "Go look in your real medicine cabinet",
-        "body": "🗒️ Read the labels — check the expiry dates and how much is left. The storm clock keeps running while you're gone."
+      "medicines": {
+        "subtitle": "Now go check your own medicines — wherever you keep them",
+        "body": "🗒️ Cabinet, kitchen drawer, bedside, handbag. Look for the same three things: out of date, running low, needs to stay cold. The storm clock keeps running while you're gone."
       },
       "home": {
         "subtitle": "Walk through your home — windows, heating, pipes",
@@ -587,7 +587,7 @@
   "lightAudit": {
     "title": "What Light Do You Have?",
     "subtitle": "Tick the light sources you actually own",
-    "realCheckNote": "🗒️ <strong>Think about your real home</strong> — drawers, closets, the car. Don't count what you mean to buy.",
+    "realCheckNote": "🗒️ <strong>Check your real home</strong> — drawers, closets, the car. Don't count what you mean to buy.",
     "items": {
       "flashlight": "Flashlight",
       "headlamp": "Headlamp (hands-free)",
@@ -770,9 +770,9 @@
   },
 
   "cabinetCheck": {
-    "title": "Check the Medicine Cabinet",
-    "summaryTitle": "Cabinet Checked",
-    "subtitle": "Tap each item, read the label, and decide what to do with it.",
+    "title": "Sort This Medicine Shelf",
+    "summaryTitle": "Shelf Sorted",
+    "subtitle": "Practise here first — tap each item, read the label, and decide what to do with it.",
     "hint": "Tap an item to check its date and quantity.",
     "fridgeTag": "Keep refrigerated",
     "verdicts": {

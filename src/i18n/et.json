@@ -449,9 +449,9 @@
         "subtitle": "Mine otsi patareiraadio üles ja lülita sisse",
         "body": "🗒️ Kas see püüab veel jaama? Tormikell tiksub edasi, kuni sa ära oled."
       },
-      "cabinet": {
-        "subtitle": "Mine vaata oma päris ravimikappi",
-        "body": "🗒️ Loe silte — kontrolli aegumiskuupäevi ja seda, kui palju alles on. Tormikell tiksub edasi, kuni sa ära oled."
+      "medicines": {
+        "subtitle": "Nüüd vaata oma ravimeid — kus sa neid ka ei hoiaks",
+        "body": "🗒️ Kapp, köögisahtel, öökapp, käekott. Otsi sama kolme asja: aegunud, otsakorral, peab külmas seisma. Tormikell tiksub edasi, kuni sa ära oled."
       },
       "home": {
         "subtitle": "Käi oma kodu läbi — aknad, küte, torud",
@@ -587,7 +587,7 @@
   "lightAudit": {
     "title": "Milline valgus sul on?",
     "subtitle": "Märgi valgusallikad, mis sul tegelikult olemas on",
-    "realCheckNote": "🗒️ <strong>Mõtle oma päris kodu peale</strong> — sahtlid, kapid, auto. Ära loe seda, mida alles plaanid osta.",
+    "realCheckNote": "🗒️ <strong>Kontrolli oma päris kodu</strong> — sahtlid, kapid, auto. Ära loe seda, mida alles plaanid osta.",
     "items": {
       "flashlight": "Taskulamp",
       "headlamp": "Pealamp (käed-vabad)",
@@ -770,9 +770,9 @@
   },
 
   "cabinetCheck": {
-    "title": "Kontrolli ravimikappi",
-    "summaryTitle": "Kapp kontrollitud",
-    "subtitle": "Koputa igal esemel, loe silti ja otsusta, mida sellega teha.",
+    "title": "Sorteeri see ravimiriiul",
+    "summaryTitle": "Riiul sorteeritud",
+    "subtitle": "Harjuta kõigepealt siin — koputa igal esemel, loe silti ja otsusta, mida sellega teha.",
     "hint": "Koputa esemel, et näha selle kuupäeva ja kogust.",
     "fridgeTag": "Hoia külmas",
     "verdicts": {
