@@ -490,9 +490,10 @@ Mõtled toiduvarude peale.
         Sul on korralikud hädaolukorra toiduvarud.
 }
 
-+ {prep_food == 0} [🔍 Vaata, mis köögis on (10 min)]
+// Aeg arvestatakse Reactis (GoCheck.jsx): tegelikult kulunud minutid, kuni 10,
+// või terve 10, kui mängija ei käi vaatamas ja pakub.
++ {prep_food == 0} [🔍 Mine vaata, mis köögis on (kuni 10 min)]
     ~ prep_food = 1
-    ~ current_time = current_time + 10
     -> food_kitchen_result
 
 + {not shop_food} [🛒 Lisa hädaolukorra toit ostunimekirja]
@@ -938,9 +939,9 @@ Taskulamp on turvaline, kohene ja ei tühjenda telefoni akut. Hoia seda kohas, m
 Mida soovid teha?
 
 // TASKULAMP — kui omad, otsi ja paiguta; kui ei, lisa ostunimekirja
-+ {not light_flashlight && owns_flashlight} [🔦 Otsi taskulamp ja kontrolli — 3 min]
+// Aeg arvestatakse Reactis GO_CHECK sildi kaudu — tegelikud minutid, kuni 3.
++ {not light_flashlight && owns_flashlight} [🔦 Mine otsi taskulamp ja kontrolli — kuni 3 min]
     ~ light_flashlight = true
-    ~ current_time = current_time + 3
     -> light_result_flashlight
 
 + {not light_flashlight && not owns_flashlight && not shop_flashlight} [🛒 Lisa taskulamp ostunimekirja]
@@ -1039,6 +1040,7 @@ Lisad <b>akupanga</b> oma ostunimekirja — laetud akupank hoiab alertide ja kõ
 
 === light_result_flashlight ===
 # CLEAR
+# GO_CHECK: flashlight
 
 Leiad taskulambi esikukapi seest ja vajutad sisse — kiir on nõrk ja kollakas.
 
@@ -1288,9 +1290,9 @@ Telefonikõned kulutavad akut ja sinu sõber teab ilmselt sama palju kui sina. K
 {info_drill_done: ✓ Harjutasid kuulujuttude äratundmist}
 {info_contact_plan: ✓ Sidepidamise plaan kokku lepitud}
 
-+ {not info_radio} [📻 Otsi patareiraadio — 3 min]
+// Aeg arvestatakse Reactis GO_CHECK sildi kaudu — tegelikud minutid, kuni 3.
++ {not info_radio} [📻 Mine otsi patareiraadio — kuni 3 min]
     ~ info_radio = true
-    ~ current_time = current_time + 3
     -> info_result_radio
 
 + {info_radio && not info_radio_batteries && not shop_batteries} [🔋 Otsi varupatareisid — 3 min]
@@ -1341,6 +1343,7 @@ Reegel, mis peab: <b>usalda ametlikke allikaid, kontrolli kõike kinnitamata enn
 
 === info_result_radio ===
 # CLEAR
+# GO_CHECK: radio
 
 Tuhnid esikukapis ja leiad vana patareiraadio. Keerad nuppu — kõigepealt staatiline müra, siis nõrgad hääled. Hädaolukorra teade tuleb ikka läbi.
 

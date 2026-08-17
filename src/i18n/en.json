@@ -434,6 +434,37 @@
     "people": "people"
   },
 
+  "goCheck": {
+    "title": "Go and Look — For Real",
+    "tasks": {
+      "kitchen": {
+        "subtitle": "Walk to your kitchen and see what's actually there",
+        "body": "🗒️ The storm clock keeps running while you're gone. Come back as soon as you've looked."
+      },
+      "flashlight": {
+        "subtitle": "Go find your flashlight and switch it on",
+        "body": "🗒️ Does it work? How strong is the beam? The storm clock keeps running while you're gone."
+      },
+      "radio": {
+        "subtitle": "Go find your battery radio and turn it on",
+        "body": "🗒️ Does it still pick up a station? The storm clock keeps running while you're gone."
+      },
+      "cabinet": {
+        "subtitle": "Go look in your real medicine cabinet",
+        "body": "🗒️ Read the labels — check the expiry dates and how much is left. The storm clock keeps running while you're gone."
+      },
+      "home": {
+        "subtitle": "Walk through your home — windows, heating, pipes",
+        "body": "🗒️ Look for the draughty spots and the cold corners. The storm clock keeps running while you're gone."
+      }
+    },
+    "away": "Time away",
+    "cost": "−{{minutes}} min from your window",
+    "cappedTag": "(capped)",
+    "backBtn": "✓ I'm back",
+    "skipBtn": "I can't check right now"
+  },
+
   "pantry": {
     "title": "Check Your Kitchen",
     "subtitle": "Tick everything you actually have at home right now",

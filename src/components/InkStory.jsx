@@ -16,6 +16,7 @@ import StormArrival from './StormArrival';
 import OutcomeScreen from './OutcomeScreen';
 import FamilySetup from './FamilySetup';
 import PantryCheck from './PantryCheck';
+import GoCheck from './GoCheck';
 import HomeSetup from './HomeSetup';
 import HeatNote from './HeatNote';
 import LightAudit from './LightAudit';
@@ -34,6 +35,18 @@ export const SAVE_KEY = 'storm_save_v1';
 // Use ?scene=<key> in the URL (dev build only). Each preset seeds a sensible
 // household + ink vars, sets the weather stage, then jumps to an Ink knot.
 // Add new slices here as needed.
+// Real-time "go and look" actions. `flatCost` is what the player pays if they
+// estimate instead of going, and doubles as the cap on the real-time charge, so
+// checking honestly is never more expensive than guessing — see GoCheck.jsx.
+// `next` is what opens once the time has been charged.
+const GO_CHECK_TASKS = {
+  kitchen:    { flatCost: 10, next: 'pantry'  },
+  flashlight: { flatCost: 3,  next: 'story'   },
+  radio:      { flatCost: 3,  next: 'story'   },
+  cabinet:    { flatCost: 3,  next: 'cabinet' },
+  home:       { flatCost: 5,  next: 'home'    },
+};
+
 const DEV_SCENES = {
   // Crisis night, solo player who prepared NO light → flashlight search + drained phone
   'crisis-nolight': {
@@ -59,6 +72,18 @@ const DEV_SCENES = {
     path: 'food_kitchen_result', weather: 1,
     household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
     vars: { family_size: 1, in_preparation: true },
+  },
+  // Light hub with the flashlight fetch available (audit already done)
+  'flashlight-fetch': {
+    path: 'light_hub', weather: 1,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1, in_preparation: true, light_audit_done: true, owns_flashlight: true },
+  },
+  // Info hub with the radio fetch available (rumor drill already done)
+  'radio-fetch': {
+    path: 'info_hub', weather: 1,
+    household: { size: 1, elderlyRelation: null, hasElderly: false, hasChildren: false },
+    vars: { family_size: 1, in_preparation: true, info_drill_done: true },
   },
   // Straight to the Light Audit overlay (what light do you have)
   'light-audit': {
@@ -259,6 +284,10 @@ function InkStory({ onReturnToMenu, resume = false }) {
 
   // Pantry check state — populated by PantryCheck overlay, consumed by StoreOverlay
   const [showPantryCheck, setShowPantryCheck] = useState(false);
+
+  // Key into GO_CHECK_TASKS while the real-time "go and look" gate is open,
+  // null when it isn't.
+  const [goCheckTask, setGoCheckTask] = useState(null);
   const [pantryResult, setPantryResult] = useState({ gaps: [], useFirst: [] });
 
   // Home setup state — populated by HomeSetup overlay, consumed by HeatNote widget
@@ -731,10 +760,21 @@ function InkStory({ onReturnToMenu, resume = false }) {
           return;
         }
 
-        // Check for PANTRY_CHECK tag
+        // The real-time "go and look" gate fronts every physical check: it
+        // charges the time, then opens the overlay (or resumes the story).
+        // GO_CHECK: <task> covers the fetch actions that have no overlay.
+        if (tag.startsWith('GO_CHECK:')) {
+          const task = tag.replace('GO_CHECK:', '').trim();
+          console.log('Showing go-check timer for', task);
+          setGoCheckTask(task);
+          setStoryText(lines);
+          setChoices([]);
+          return;
+        }
+
         if (tag === 'PANTRY_CHECK') {
-          console.log('Showing pantry check');
-          setShowPantryCheck(true);
+          console.log('Showing go-check timer before pantry check');
+          setGoCheckTask('kitchen');
           setStoryText(lines);
           setChoices([]);
           return;
@@ -742,8 +782,8 @@ function InkStory({ onReturnToMenu, resume = false }) {
 
         // Check for HOME_SETUP tag
         if (tag === 'HOME_SETUP') {
-          console.log('Showing home setup');
-          setShowHomeSetup(true);
+          console.log('Showing go-check timer before home setup');
+          setGoCheckTask('home');
           setStoryText(lines);
           setChoices([]);
           return;
@@ -786,7 +826,8 @@ function InkStory({ onReturnToMenu, resume = false }) {
 
         // Check for MED_CABINET tag — medicine cabinet triage mini-game
         if (tag === 'MED_CABINET') {
-          setShowCabinetCheck(true);
+          console.log('Showing go-check timer before cabinet check');
+          setGoCheckTask('cabinet');
           setStoryText(lines);
           setChoices([]);
           return;
@@ -1089,6 +1130,31 @@ function InkStory({ onReturnToMenu, resume = false }) {
 
     // Continue the story from where it paused to get the remaining text + choices
     continueStory();
+  };
+
+  // GO-CHECK (real-time walk-away) HANDLER
+  // ============================================
+  // Both paths charge time and then open whatever the task leads to; they
+  // differ only in what they charge — real minutes away vs the flat cost of
+  // estimating instead.
+  const applyGoCheckCost = (minutes) => {
+    const task = GO_CHECK_TASKS[goCheckTask];
+    setGoCheckTask(null);
+
+    const story = storyRef.current;
+    if (story) {
+      story.variablesState["current_time"] =
+        (story.variablesState["current_time"] || 1200) + minutes;
+      readGameVars(story);
+    }
+
+    switch (task?.next) {
+      case 'pantry':  setShowPantryCheck(true);  break;
+      case 'cabinet': setShowCabinetCheck(true); break;
+      case 'home':    setShowHomeSetup(true);    break;
+      // 'story' — nothing to open, just resume the narrative
+      default:        continueStory();           break;
+    }
   };
 
   // PANTRY CHECK OVERLAY HANDLER
@@ -1864,6 +1930,16 @@ function InkStory({ onReturnToMenu, resume = false }) {
       {/* Family Setup Overlay */}
       {showFamilySetup && (
         <FamilySetup onClose={handleFamilySetupClose} />
+      )}
+
+      {/* Go-Check Overlay — real-time gate in front of every physical check */}
+      {goCheckTask && (
+        <GoCheck
+          task={goCheckTask}
+          flatCost={GO_CHECK_TASKS[goCheckTask]?.flatCost ?? 10}
+          onBack={applyGoCheckCost}
+          onSkip={applyGoCheckCost}
+        />
       )}
 
       {/* Pantry Check Overlay */}

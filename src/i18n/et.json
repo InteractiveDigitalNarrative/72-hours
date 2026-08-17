@@ -434,6 +434,37 @@
     "people": "inimest"
   },
 
+  "goCheck": {
+    "title": "Mine vaata — päriselt",
+    "tasks": {
+      "kitchen": {
+        "subtitle": "Mine kööki ja vaata, mis seal tegelikult on",
+        "body": "🗒️ Tormikell tiksub edasi, kuni sa ära oled. Tule tagasi kohe, kui oled vaadanud."
+      },
+      "flashlight": {
+        "subtitle": "Mine otsi taskulamp üles ja lülita see sisse",
+        "body": "🗒️ Kas see töötab? Kui tugev on valgusvihk? Tormikell tiksub edasi, kuni sa ära oled."
+      },
+      "radio": {
+        "subtitle": "Mine otsi patareiraadio üles ja lülita sisse",
+        "body": "🗒️ Kas see püüab veel jaama? Tormikell tiksub edasi, kuni sa ära oled."
+      },
+      "cabinet": {
+        "subtitle": "Mine vaata oma päris ravimikappi",
+        "body": "🗒️ Loe silte — kontrolli aegumiskuupäevi ja seda, kui palju alles on. Tormikell tiksub edasi, kuni sa ära oled."
+      },
+      "home": {
+        "subtitle": "Käi oma kodu läbi — aknad, küte, torud",
+        "body": "🗒️ Otsi tõmbetuulega kohti ja külmi nurki. Tormikell tiksub edasi, kuni sa ära oled."
+      }
+    },
+    "away": "Eemal oldud aeg",
+    "cost": "−{{minutes}} min sinu ajaaknast",
+    "cappedTag": "(ülempiir)",
+    "backBtn": "✓ Olen tagasi",
+    "skipBtn": "Ma ei saa praegu vaadata"
+  },
+
   "pantry": {
     "title": "Kontrolli oma kööki",
     "subtitle": "Märgi kõik, mis sul praegu päriselt kodus on",

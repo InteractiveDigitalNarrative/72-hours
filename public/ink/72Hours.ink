@@ -490,9 +490,10 @@ You think about food supplies.
         You've got proper emergency food supplies.
 }
 
-+ {prep_food == 0} [🔍 Check what's in the kitchen (10 min)]
+// Time is charged in React (GoCheck.jsx): real minutes spent away, capped at
+// 10, or the full 10 if the player opts out and estimates instead.
++ {prep_food == 0} [🔍 Go check what's in the kitchen (up to 10 min)]
     ~ prep_food = 1
-    ~ current_time = current_time + 10
     -> food_kitchen_result
 
 + {not shop_food} [🛒 Add emergency food to shopping list]
@@ -938,9 +939,9 @@ A flashlight is safe, instant, and doesn't drain your phone. Keep it somewhere e
 What do you want to do?
 
 // FLASHLIGHT — own it: find & position it; don't: add to shopping list
-+ {not light_flashlight && owns_flashlight} [🔦 Find & check the flashlight — 3 min]
+// Time charged in React via the GO_CHECK tag below — real minutes, capped at 3.
++ {not light_flashlight && owns_flashlight} [🔦 Go find & check the flashlight — up to 3 min]
     ~ light_flashlight = true
-    ~ current_time = current_time + 3
     -> light_result_flashlight
 
 + {not light_flashlight && not owns_flashlight && not shop_flashlight} [🛒 Add a flashlight to shopping list]
@@ -1039,6 +1040,7 @@ You add a <b>power bank</b> to your shopping list — a charged one keeps the ph
 
 === light_result_flashlight ===
 # CLEAR
+# GO_CHECK: flashlight
 
 You find the flashlight in the hall closet and click it on — the beam is weak and yellowish.
 
@@ -1288,9 +1290,9 @@ Phone calls drain battery, and your friend probably knows as much as you do. In 
 {info_drill_done: ✓ Practised spotting rumors}
 {info_contact_plan: ✓ Contact plan agreed}
 
-+ {not info_radio} [📻 Find the battery radio — 3 min]
+// Time charged in React via the GO_CHECK tag below — real minutes, capped at 3.
++ {not info_radio} [📻 Go find the battery radio — up to 3 min]
     ~ info_radio = true
-    ~ current_time = current_time + 3
     -> info_result_radio
 
 + {info_radio && not info_radio_batteries && not shop_batteries} [🔋 Search for spare batteries — 3 min]
@@ -1341,6 +1343,7 @@ The rule that holds up: <b>trust official sources, verify anything unconfirmed b
 
 === info_result_radio ===
 # CLEAR
+# GO_CHECK: radio
 
 You dig through the hall closet and find the old battery radio. You turn the dial — static, then faint voices. The emergency broadcast still comes through.
 
