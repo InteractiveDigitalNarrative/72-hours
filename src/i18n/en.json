@@ -466,6 +466,7 @@
     "cost": "−{{minutes}} min from your window",
     "cappedTag": "(capped)",
     "backBtn": "✓ I'm back",
+    "backBtnLocked": "✓ I'm back · {{seconds}}s",
     "skipBtn": "I can't check right now"
   },
 

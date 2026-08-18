@@ -466,6 +466,7 @@
     "cost": "−{{minutes}} min sinu ajaaknast",
     "cappedTag": "(ülempiir)",
     "backBtn": "✓ Olen tagasi",
+    "backBtnLocked": "✓ Olen tagasi · {{seconds}} s",
     "skipBtn": "Ma ei saa praegu vaadata"
   },
 

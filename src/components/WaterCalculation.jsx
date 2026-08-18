@@ -12,7 +12,7 @@ import { useTranslation } from '../hooks/useTranslation';
 // rate as 2 L.
 const STEPS = { RATE: 'rate', AWAY: 'away', MEASURE: 'measure', CALCULATE: 'calculate' };
 
-function WaterCalculation({ familySize = 2, awayFlatCost = 3, onAwayTime, onClose, onCancel }) {
+function WaterCalculation({ familySize = 2, awayFlatCost = 3, awayMinSeconds, onAwayTime, onClose, onCancel }) {
   const { playSfx } = useAudioContext();
   const { t } = useTranslation();
   const PEOPLE = familySize;
@@ -93,6 +93,7 @@ function WaterCalculation({ familySize = 2, awayFlatCost = 3, onAwayTime, onClos
       <GoCheck
         task="water"
         flatCost={awayFlatCost}
+        minAwaySeconds={awayMinSeconds}
         onBack={handleBackFromCheck}
         onSkip={handleBackFromCheck}
       />

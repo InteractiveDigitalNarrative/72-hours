@@ -38,19 +38,21 @@ export const SAVE_KEY = 'storm_save_v1';
 // Real-time "go and look" actions. `flatCost` is what the player pays if they
 // estimate instead of going, and doubles as the cap on the real-time charge, so
 // checking honestly is never more expensive than guessing — see GoCheck.jsx.
-// `next` is what opens once the time has been charged.
+// `next` is what opens once the time has been charged. `minAway` is how long
+// "I'm back" stays locked, set to roughly the fastest anyone could plausibly
+// do that particular errand.
 const GO_CHECK_TASKS = {
-  kitchen:    { flatCost: 10, next: 'pantry' },
-  flashlight: { flatCost: 3,  next: 'story'  },
-  radio:      { flatCost: 3,  next: 'story'  },
-  home:       { flatCost: 5,  next: 'home'   },
+  kitchen:    { flatCost: 10, minAway: 45, next: 'pantry' },
+  flashlight: { flatCost: 3,  minAway: 30, next: 'story'  },
+  radio:      { flatCost: 3,  minAway: 30, next: 'story'  },
+  home:       { flatCost: 5,  minAway: 60, next: 'home'   },
   // Unlike the others this gate comes *after* its mini-game: the drill teaches
   // what to look for (expired / running low / needs cold), then the player
   // applies those criteria to their own medicines.
-  medicines:  { flatCost: 3,  next: 'story'  },
+  medicines:  { flatCost: 3,  minAway: 45, next: 'story' },
   // Driven from inside WaterCalculation rather than by a tag, so it has no
   // `next` — the overlay decides what follows.
-  water:      { flatCost: 3 },
+  water:      { flatCost: 3,  minAway: 45 },
 };
 
 const DEV_SCENES = {
@@ -1887,6 +1889,7 @@ function InkStory({ onReturnToMenu, resume = false }) {
         <WaterCalculation
           familySize={household.size}
           awayFlatCost={GO_CHECK_TASKS.water.flatCost}
+          awayMinSeconds={GO_CHECK_TASKS.water.minAway}
           onAwayTime={handleWaterAwayTime}
           onClose={handleWaterCalcClose}
           onCancel={handleWaterCalcCancel}
@@ -1967,6 +1970,7 @@ function InkStory({ onReturnToMenu, resume = false }) {
         <GoCheck
           task={goCheckTask}
           flatCost={GO_CHECK_TASKS[goCheckTask]?.flatCost ?? 10}
+          minAwaySeconds={GO_CHECK_TASKS[goCheckTask]?.minAway}
           onBack={applyGoCheckCost}
           onSkip={applyGoCheckCost}
         />

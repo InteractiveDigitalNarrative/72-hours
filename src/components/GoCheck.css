@@ -140,6 +140,17 @@
 
 .gc-btn-primary:hover { filter: brightness(1.12); }
 
+/* Locked until enough time has passed to have plausibly gone and looked. */
+.gc-btn-locked,
+.gc-btn-locked:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #6f8aa6;
+  box-shadow: none;
+  cursor: not-allowed;
+  filter: none;
+  font-variant-numeric: tabular-nums;
+}
+
 .gc-btn-skip {
   background: transparent;
   border: 1px solid rgba(120, 160, 200, 0.25);

@@ -18,6 +18,13 @@ import { useTranslation } from '../hooks/useTranslation';
 
 const MIN_COST = 1;
 
+// "I'm back" stays locked for a bit, because otherwise the cheapest route
+// through the game is to click it instantly and go nowhere — cheaper even than
+// opting out. This can't make anyone actually walk to the kitchen, but it does
+// stop a reflex click from being the optimal play. The opt-out stays available
+// throughout, so nobody who genuinely can't get up is held here.
+const DEFAULT_MIN_AWAY_SECONDS = 45;
+
 const TASK_ICONS = {
   kitchen:    '🚶',
   flashlight: '🔦',
@@ -42,7 +49,13 @@ function formatClock(elapsedMs) {
   return `${mm}:${ss}`;
 }
 
-export default function GoCheck({ task = 'kitchen', flatCost = 10, onBack, onSkip }) {
+export default function GoCheck({
+  task = 'kitchen',
+  flatCost = 10,
+  minAwaySeconds = DEFAULT_MIN_AWAY_SECONDS,
+  onBack,
+  onSkip,
+}) {
   const { t } = useTranslation();
   const { playSfx } = useAudioContext();
 
@@ -59,7 +72,11 @@ export default function GoCheck({ task = 'kitchen', flatCost = 10, onBack, onSki
   const cost = costFor(elapsedMs, flatCost);
   const capped = cost >= flatCost;
 
+  const lockRemainingSec = Math.ceil(Math.max(0, minAwaySeconds * 1000 - elapsedMs) / 1000);
+  const locked = lockRemainingSec > 0;
+
   const handleBack = () => {
+    if (locked) return;
     playSfx('success');
     onBack?.(costFor(Date.now() - startedAt.current, flatCost));
   };
@@ -89,8 +106,14 @@ export default function GoCheck({ task = 'kitchen', flatCost = 10, onBack, onSki
           </div>
         </div>
 
-        <button className="gc-btn-primary" onClick={handleBack}>
-          {t('goCheck.backBtn')}
+        <button
+          className={`gc-btn-primary ${locked ? 'gc-btn-locked' : ''}`}
+          onClick={handleBack}
+          disabled={locked}
+        >
+          {locked
+            ? t('goCheck.backBtnLocked', { seconds: lockRemainingSec })
+            : t('goCheck.backBtn')}
         </button>
 
         <button className="gc-btn-skip" onClick={handleSkip}>
